@@ -1,0 +1,8 @@
+# 5ed4c4629fe50bf208ea96c35a72be86
+$ psv in a.tsv // rename b:Name // md
+|   a | Name   |        c | d     |
+|----:|:-------|---------:|:------|
+|   1 | b1     |   23.763 | xspdf |
+|   2 | b2     |  -98.73  | qwer  |
+|   3 | b3     | 3451     | bixop |
+|   1 | b4     |    1.234 | zxy   |
