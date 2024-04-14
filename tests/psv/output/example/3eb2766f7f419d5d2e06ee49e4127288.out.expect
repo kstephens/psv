@@ -24,25 +24,25 @@ $ psv in a.tsv // -tsv // csv- // out a.csv
 
     table-in    
 ----------------
-# -table: Parse generic table:
+# Parse generic table:
 $ psv in users.txt // -table --fs=':'
 
-# -table: Skip users w/o login:
+# Skip users w/o login:
 $ psv in users.txt // -table --fs=':' --skip='.*nologin'
 
-# -table: Generate columns named col01, col02, ...:
+# Generate columns named col01, col02, ...:
 $ psv in users.txt // -table --fs=':' --column='col%02d'
 
-# -table: Set column names or generate them:
+# Set column names or generate them:
 $ psv in users.txt // -table --fs=':' --columns=login,,uid,gid,,home,shell
 
 # Convert text data to CSV:
 $ psv in us-states.txt // -table --header --fs="\s{2,}" // csv- // o us-states.csv
 
-# -table: Split fields by 2 or more whitespace chars:
+# Split fields by 2 or more whitespace chars:
 $ psv in us-states.txt // -table --header --fs="\s{2,}" // head 5 // md
 
-# -table: Split 3 fields:
+# Split 3 fields:
 $ psv in users.txt // -table --fs=':' --max-cols=3
 
 
@@ -105,7 +105,7 @@ $ cat a.tsv | psv -tsv // md
 
     json-out    
 ----------------
-# csv, json: Convert CSV to JSON:
+# Convert CSV to JSON:
 $ psv in a.csv // -csv // json-
 
 
@@ -130,7 +130,7 @@ $ w3m -dump users-with-fs.html
 
     sql-    
 ------------
-# sql: Convert TSV to SQL schema:
+# Convert TSV to SQL schema:
 $ psv in a.tsv // sql
 
 
@@ -187,13 +187,13 @@ $ psv in us-states.txt // -table // head 5 // md
 
     tail    
 ------------
-# tail: last 3 rows:
+# Last 3 rows:
 $ psv in us-states.txt // -table // tail 3 // md
 
 
     reverse    
 ---------------
-# reverse:
+# Added sequence column and reverse rows:
 $ psv in a.tsv // seq // tac // md
 
 
@@ -204,20 +204,22 @@ $ psv in a.tsv // shuffle --seed=5 // md
 
     cut    
 -----------
-# cut: select columns by index and name:
-# cut: remove c, put d before other columns,
+# Select columns by index and name:
+$ psv in a.tsv // cut 2,d // md
+
+# Remove c, put d before other columns,
 $ psv in a.tsv // cut d '*' c:- // md
 
 
     sort    
 ------------
-# sort: increasing:
+# Sort increasing:
 $ psv in a.tsv // seq i // sort c // md
 
-# sort: decreasing:
+# Sort decreasing:
 $ psv in a.tsv // seq i // sort -r c // md
 
-# sort: by a decreasing, c increasing:
+# Sort by a decreasing, c increasing:
 $ psv in a.tsv // seq i // md
 
 $ psv in a.tsv // seq i // sort a:- c // md
@@ -225,29 +227,29 @@ $ psv in a.tsv // seq i // sort a:- c // md
 
     grep    
 ------------
-# grep: match columns by regex:
+# Match columns by regex:
 $ psv in a.tsv // grep d 'x' // md
 
 $ psv in a.tsv // grep d '^x' // md
 
 $ psv in a.tsv // grep d 'x.+p' // md
 
-# grep: match where d contains "x" and b ends with "3":
+# Match where d contains "x" and b ends with "3":
 $ psv in a.tsv // grep d 'x' b '3$' // md
 
 
     translate    
 -----------------
-# translate: change characters in specific field:
+# Change characters in specific field:
 $ psv in us-states.txt // -table --header --fs="\s{2,}" // tr ',' '_' Population // head // md
 
-# translate: delete characters:
+# Delete characters:
 $ psv in us-states.txt // -table --header --fs="\s{2,}" // tr -d ', ' // head // md
 
 
     null    
 ------------
-# null: does nothing:
+# Does nothing:
 $ psv in a.tsv // null IGNORED --OPTION=VALUE // md
 
 
@@ -305,25 +307,25 @@ $ psv in us-states-sample.csv // coerce Population:int // sort Population
 
     add-sequence    
 --------------------
-# add-sequence: add a column with a sequence:
+# Add a column with a sequence:
 $ psv in a.tsv // seq // md
 
-# add-sequence: start at 0:
+# Start at 0:
 $ psv in a.tsv // seq --start=0 // md
 
-# add-sequence: step by 2:
+# Step by 2:
 $ psv in a.tsv // seq --step=2 // md
 
-# add-sequence: start at 5, step by -2:
+# Start at 5, step by -2:
 $ psv in a.tsv // seq --start=5 --step=-2 // md
 
-# add-sequence: generate UUIDs:
+# Generate UUIDs:
 $ psv in a.tsv // seq --uuid // md
 
 
     rename-columns    
 ----------------------
-# rename-columns: rename column 'b' to 'Name':
+# Rename column 'b' to 'Name':
 $ psv in a.tsv // rename b:Name // md
 
 
@@ -338,7 +340,7 @@ $ psv in a.tsv // cols // cut name,dtype.name,dtype.kind,dtype.isnative // md
 
     env-    
 ------------
-# env: display proccessing info:
+# Display proccessing info:
 $ psv in a.tsv // show-columns // md // env-
 
 

@@ -14,6 +14,9 @@ class JsonIn(FormatIn):
 
   --orient=ORIENT  |  Orientation: see pandas read_json.
 
+# Convert JSON to Markdown:
+# $ psv in a.json // -json // md
+
   :suffixes: .json
   '''
   def format_in(self, readable, _env):
@@ -26,7 +29,7 @@ class JsonOut(FormatOut):
   json-out - Generate JSON array of objects.
   aliases: json-, json, js-, js
 
-# csv, json: Convert CSV to JSON:
+# Convert CSV to JSON:
 $ psv in a.csv // -csv // json-
 
   :suffixes: .json

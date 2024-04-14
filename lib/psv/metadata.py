@@ -20,19 +20,19 @@ class AddSequence(Command):
   --step=STEP    |  Default: 1.
   --uuid         |  Generate a UUID-4.
 
-# add-sequence: add a column with a sequence:
+# Add a column with a sequence:
 $ psv in a.tsv // seq // md
 
-# add-sequence: start at 0:
+# Start at 0:
 $ psv in a.tsv // seq --start=0 // md
 
-# add-sequence: step by 2:
+# Step by 2:
 $ psv in a.tsv // seq --step=2 // md
 
-# add-sequence: start at 5, step by -2:
+# Start at 5, step by -2:
 $ psv in a.tsv // seq --start=5 --step=-2 // md
 
-# add-sequence: generate UUIDs:
+# Generate UUIDs:
 $ psv in a.tsv // seq --uuid // md
 
   '''
@@ -77,7 +77,7 @@ class RenameColumns(Command):
 
   OLD-COL:NEW-NAME ...  |  Columns to rename.
 
-# rename-columns: rename column 'b' to 'Name':
+# Rename column 'b' to 'Name':
 $ psv in a.tsv // rename b:Name // md
   '''
   def xform(self, inp, _env):
@@ -131,7 +131,7 @@ class EnvOut(Command):
   '''
   env- - Show env.
 
-# env: display proccessing info:
+# Display proccessing info:
 $ psv in a.tsv // show-columns // md // env-
 
   '''

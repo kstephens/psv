@@ -184,21 +184,21 @@
         {
           "command": "psv in a.tsv // seq i // sort c // md",
           "comments": [
-            "sort: increasing:"
+            "Sort increasing:"
           ],
           "output": "|   a | b   |        c | d     |   i |\n|----:|:----|---------:|:------|----:|\n|   2 | b2  |  -98.73  | qwer  |   2 |\n|   1 | b4  |    1.234 | zxy   |   4 |\n|   1 | b1  |   23.763 | xspdf |   1 |\n|   3 | b3  | 3451     | bixop |   3 |\n"
         },
         {
           "command": "psv in a.tsv // seq i // sort -r c // md",
           "comments": [
-            "sort: decreasing:"
+            "Sort decreasing:"
           ],
           "output": "|   a | b   |        c | d     |   i |\n|----:|:----|---------:|:------|----:|\n|   3 | b3  | 3451     | bixop |   3 |\n|   1 | b1  |   23.763 | xspdf |   1 |\n|   1 | b4  |    1.234 | zxy   |   4 |\n|   2 | b2  |  -98.73  | qwer  |   2 |\n"
         },
         {
           "command": "psv in a.tsv // seq i // md",
           "comments": [
-            "sort: by a decreasing, c increasing:"
+            "Sort by a decreasing, c increasing:"
           ],
           "output": "|   a | b   |        c | d     |   i |\n|----:|:----|---------:|:------|----:|\n|   1 | b1  |   23.763 | xspdf |   1 |\n|   2 | b2  |  -98.73  | qwer  |   2 |\n|   3 | b3  | 3451     | bixop |   3 |\n|   1 | b4  |    1.234 | zxy   |   4 |\n"
         },

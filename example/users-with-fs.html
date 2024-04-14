@@ -1,4 +1,4 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!DOCTYPE html>
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -2070,6 +2070,12 @@ window.$ === undefined && (window.$ = Zepto)
 </script>
 
 <script>
+/*!
+ * Parser Combinators.
+ * Copyright 2021-2024 Kurt Stephens
+ * git@kurtstephens.com
+ */
+
 var parser_combininator
   = (
     function () {
@@ -2120,7 +2126,7 @@ var parser_combininator
       function description(x) {
         switch ( typeof x ) {
         case 'undefined':
-          return'undefined';
+          return 'undefined';
         case 'number':
           return x + '';
         case 'boolean':
@@ -2467,6 +2473,8 @@ var parser_combininator
 <script>
 /*!
  * Row filtering.
+ * Copyright 2021-2024 Kurt Stephens
+ * git@kurtstephens.com
  */
 var cx_make_filter =
   function(table_id_) {

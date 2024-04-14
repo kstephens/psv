@@ -1,0 +1,8 @@
+# 88e201475a20e68a1f10a6196b759135
+$ psv in a.tsv // cut 2,d // md
+| b   | d     |
+|:----|:------|
+| b1  | xspdf |
+| b2  | qwer  |
+| b3  | bixop |
+| b4  | zxy   |

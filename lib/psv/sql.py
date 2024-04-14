@@ -11,7 +11,7 @@ class SQLOut(FormatOut):
   sql- - Write SQL.
   alias: sql
 
-# sql: Convert TSV to SQL schema:
+# Convert TSV to SQL schema:
 $ psv in a.tsv // sql
 
   :suffixes: .sql

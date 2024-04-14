@@ -20,13 +20,13 @@ Options:
 
 Examples:
 
-# sort: increasing:
+# Sort increasing:
 $ psv in a.tsv // seq i // sort c // md
 
-# sort: decreasing:
+# Sort decreasing:
 $ psv in a.tsv // seq i // sort -r c // md
 
-# sort: by a decreasing, c increasing:
+# Sort by a decreasing, c increasing:
 $ psv in a.tsv // seq i // md
 
 $ psv in a.tsv // seq i // sort a:- c // md

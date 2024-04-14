@@ -22,25 +22,25 @@ class TableIn(FormatIn):
   --encoding=ENC      |  Encoding of input.  Default: "utf-8".
   --skip=REGEX        |  Records matching REGEX are skipped.
 
-# -table: Parse generic table:
+# Parse generic table:
 $ psv in users.txt // -table --fs=':'
 
-# -table: Skip users w/o login:
+# Skip users w/o login:
 $ psv in users.txt // -table --fs=':' --skip='.*nologin'
 
-# -table: Generate columns named col01, col02, ...:
+# Generate columns named col01, col02, ...:
 $ psv in users.txt // -table --fs=':' --column='col%02d'
 
-# -table: Set column names or generate them:
+# Set column names or generate them:
 $ psv in users.txt // -table --fs=':' --columns=login,,uid,gid,,home,shell
 
 # Convert text data to CSV:
 $ psv in us-states.txt // -table --header --fs="\s{2,}" // csv- // o us-states.csv
 
-# -table: Split fields by 2 or more whitespace chars:
+# Split fields by 2 or more whitespace chars:
 $ psv in us-states.txt // -table --header --fs="\s{2,}" // head 5 // md
 
-# -table: Split 3 fields:
+# Split 3 fields:
 $ psv in users.txt // -table --fs=':' --max-cols=3
 
   :suffix: .txt

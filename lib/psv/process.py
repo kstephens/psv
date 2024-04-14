@@ -73,7 +73,7 @@ class Tail(Command):
 
   N : Default: 10
 
-# tail: last 3 rows:
+# Last 3 rows:
 $ psv in us-states.txt // -table // tail 3 // md
 
   '''
@@ -88,7 +88,7 @@ class Reverse(Command):
 
   Aliases: tac
 
-# reverse:
+# Added sequence column and reverse rows:
 $ psv in a.tsv // seq // tac // md
 
   '''
@@ -132,10 +132,10 @@ class Cut(Command):
   *       |  Add all columns.
   NAME*   |  Any columns starting with "NAME".
 
-# cut: select columns by index and name:
-psv in a.tsv // cut 2,d // md
+# Select columns by index and name:
+$ psv in a.tsv // cut 2,d // md
 
-# cut: remove c, put d before other columns,
+# Remove c, put d before other columns,
 $ psv in a.tsv // cut d '*' c:- // md
 
   '''
@@ -170,13 +170,13 @@ class Sort(Command):
   --numeric, -n     |  Sort as numeric.
   --coerce=TYPE     |  Sort by coerced value.
 
-# sort: increasing:
+# Sort increasing:
 $ psv in a.tsv // seq i // sort c // md
 
-# sort: decreasing:
+# Sort decreasing:
 $ psv in a.tsv // seq i // sort -r c // md
 
-# sort: by a decreasing, c increasing:
+# Sort by a decreasing, c increasing:
 $ psv in a.tsv // seq i // md
 $ psv in a.tsv // seq i // sort a:- c // md
 
@@ -221,12 +221,12 @@ class Grep(Command):
   --ignore-case, -i      |  Ignore case distinctions.
   --invert-match, -v     |  Invert the sense of matching, to select non-matching rows.
 
-# grep: match columns by regex:
+# Match columns by regex:
 $ psv in a.tsv // grep d 'x' // md
 $ psv in a.tsv // grep d '^x' // md
 $ psv in a.tsv // grep d 'x.+p' // md
 
-# grep: match where d contains "x" and b ends with "3":
+# Match where d contains "x" and b ends with "3":
 $ psv in a.tsv // grep d 'x' b '3$' // md
 
   '''
@@ -300,10 +300,10 @@ class Translate(Command):
   -d DEL COL,...   |  Delete chars in DEL in each COL.
   --delete, -d     |  Delete characters.
 
-# translate: change characters in specific field:
+# Change characters in specific field:
 $ psv in us-states.txt // -table --header --fs="\s{2,}" // tr ',' '_' Population // head // md
 
-# translate: delete characters:
+# Delete characters:
 $ psv in us-states.txt // -table --header --fs="\s{2,}" // tr -d ', ' // head // md
 
   '''
@@ -328,7 +328,7 @@ class NullXform(Command):
   '''
   null - Does nothing.
 
-# null: does nothing:
+# Does nothing:
 $ psv in a.tsv // null IGNORED --OPTION=VALUE // md
 '''
   def xform(self, inp, _env):

@@ -80,25 +80,25 @@ Options:
 
 Examples:
 
-# -table: Parse generic table:
+# Parse generic table:
 $ psv in users.txt // -table --fs=':'
 
-# -table: Skip users w/o login:
+# Skip users w/o login:
 $ psv in users.txt // -table --fs=':' --skip='.*nologin'
 
-# -table: Generate columns named col01, col02, ...:
+# Generate columns named col01, col02, ...:
 $ psv in users.txt // -table --fs=':' --column='col%02d'
 
-# -table: Set column names or generate them:
+# Set column names or generate them:
 $ psv in users.txt // -table --fs=':' --columns=login,,uid,gid,,home,shell
 
 # Convert text data to CSV:
 $ psv in us-states.txt // -table --header --fs="\s{2,}" // csv- // o us-states.csv
 
-# -table: Split fields by 2 or more whitespace chars:
+# Split fields by 2 or more whitespace chars:
 $ psv in us-states.txt // -table --header --fs="\s{2,}" // head 5 // md
 
-# -table: Split 3 fields:
+# Split 3 fields:
 $ psv in users.txt // -table --fs=':' --max-cols=3
 
 
@@ -251,7 +251,7 @@ Aliases: json-, json, js-, js
 
 Examples:
 
-# csv, json: Convert CSV to JSON:
+# Convert CSV to JSON:
 $ psv in a.csv // -csv // json-
 
 
@@ -319,7 +319,7 @@ Aliases: sql
 
 Examples:
 
-# sql: Convert TSV to SQL schema:
+# Convert TSV to SQL schema:
 $ psv in a.tsv // sql
 
 
@@ -456,7 +456,7 @@ N : Default: 10
 
 Examples:
 
-# tail: last 3 rows:
+# Last 3 rows:
 $ psv in us-states.txt // -table // tail 3 // md
 
 
@@ -470,7 +470,7 @@ Aliases: tac
 
 Examples:
 
-# reverse:
+# Added sequence column and reverse rows:
 $ psv in a.tsv // seq // tac // md
 
 
@@ -499,8 +499,6 @@ cut - Cut specified columns.
 
 Aliases: c, x
 
-psv in a.tsv // cut 2,d // md
-
 Arguments:
 
   NAME  | Select name.
@@ -511,8 +509,10 @@ Arguments:
 
 Examples:
 
-# cut: select columns by index and name:
-# cut: remove c, put d before other columns,
+# Select columns by index and name:
+$ psv in a.tsv // cut 2,d // md
+
+# Remove c, put d before other columns,
 $ psv in a.tsv // cut d '*' c:- // md
 
 
@@ -546,13 +546,13 @@ Options:
 
 Examples:
 
-# sort: increasing:
+# Sort increasing:
 $ psv in a.tsv // seq i // sort c // md
 
-# sort: decreasing:
+# Sort decreasing:
 $ psv in a.tsv // seq i // sort -r c // md
 
-# sort: by a decreasing, c increasing:
+# Sort by a decreasing, c increasing:
 $ psv in a.tsv // seq i // md
 
 $ psv in a.tsv // seq i // sort a:- c // md
@@ -581,14 +581,14 @@ Options:
 
 Examples:
 
-# grep: match columns by regex:
+# Match columns by regex:
 $ psv in a.tsv // grep d 'x' // md
 
 $ psv in a.tsv // grep d '^x' // md
 
 $ psv in a.tsv // grep d 'x.+p' // md
 
-# grep: match where d contains "x" and b ends with "3":
+# Match where d contains "x" and b ends with "3":
 $ psv in a.tsv // grep d 'x' b '3$' // md
 
 
@@ -613,10 +613,10 @@ Options:
 
 Examples:
 
-# translate: change characters in specific field:
+# Change characters in specific field:
 $ psv in us-states.txt // -table --header --fs="\s{2,}" // tr ',' '_' Population // head // md
 
-# translate: delete characters:
+# Delete characters:
 $ psv in us-states.txt // -table --header --fs="\s{2,}" // tr -d ', ' // head // md
 
 
@@ -628,7 +628,7 @@ null - Does nothing.
 
 Examples:
 
-# null: does nothing:
+# Does nothing:
 $ psv in a.tsv // null IGNORED --OPTION=VALUE // md
 
 
@@ -756,19 +756,19 @@ Options:
 
 Examples:
 
-# add-sequence: add a column with a sequence:
+# Add a column with a sequence:
 $ psv in a.tsv // seq // md
 
-# add-sequence: start at 0:
+# Start at 0:
 $ psv in a.tsv // seq --start=0 // md
 
-# add-sequence: step by 2:
+# Step by 2:
 $ psv in a.tsv // seq --step=2 // md
 
-# add-sequence: start at 5, step by -2:
+# Start at 5, step by -2:
 $ psv in a.tsv // seq --start=5 --step=-2 // md
 
-# add-sequence: generate UUIDs:
+# Generate UUIDs:
 $ psv in a.tsv // seq --uuid // md
 
 
@@ -786,7 +786,7 @@ Arguments:
 
 Examples:
 
-# rename-columns: rename column 'b' to 'Name':
+# Rename column 'b' to 'Name':
 $ psv in a.tsv // rename b:Name // md
 
 
@@ -825,7 +825,7 @@ env- - Show env.
 
 Examples:
 
-# env: display proccessing info:
+# Display proccessing info:
 $ psv in a.tsv // show-columns // md // env-
 
 
