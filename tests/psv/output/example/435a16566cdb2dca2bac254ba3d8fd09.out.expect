@@ -559,7 +559,7 @@ Examples:
 
 ```NONE
 # Convert CSV to JSON:
-$ psv in a.csv // -csv // json-
+$ psv in a.csv // -csv // json- // o a.json -
 [
   {
     "a":1,

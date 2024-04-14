@@ -30,13 +30,14 @@ class JsonOut(FormatOut):
   aliases: json-, json, js-, js
 
 # Convert CSV to JSON:
-$ psv in a.csv // -csv // json-
+$ psv in a.csv // -csv // json- // o a.json -
 
   :suffixes: .json
   '''
   def format_out(self, inp, _env, writeable):
     if isinstance(inp, pd.DataFrame):
-      inp.to_json(writeable, orient='records', date_format='iso', index=False, indent=2)
+      orient = self.opt('orient', 'records')
+      inp.to_json(writeable, orient=orient, date_format='iso', index=False, indent=2)
     else:
       json.dump(inp, writeable, indent=2)
     # to_json doesn't terminate last line:

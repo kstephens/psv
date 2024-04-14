@@ -575,7 +575,7 @@ Examples:
 
 ```NONE
 # Convert CSV to JSON:
-$ psv in a.csv // -csv // json-
+$ psv in a.csv // -csv // json- // o a.json -
 [
   {
     "a":1,
@@ -1954,7 +1954,7 @@ Examples:
 # Display proccessing info:
 $ psv in a.tsv // show-columns // md // env-
 {
-  "now": "2024-04-13 22:16:15.808988+0000",
+  "now": "2024-04-14 17:00:58.087063+0000",
   "history": [
     [
       "<< IoIn: in a.tsv >>",
