@@ -1929,7 +1929,7 @@ Examples:
 # env: display proccessing info:
 $ psv in a.tsv // show-columns // md // env-
 {
-  "now": "2024-03-15 01:57:38.891398+0000",
+  "now": "2024-04-12 22:25:06.981495+0000",
   "history": [
     [
       "<< IoIn: in a.tsv >>",

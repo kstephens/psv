@@ -2,6 +2,9 @@
 
 psv - Pandas Separated Values
 
+- Copyright 2021-2024 Kurt Stephens
+- git@kurtstephens.com
+
 `psv` is a command-line that manipulates tabular data in multiple formats.
 It's design is influenced by the `Unix Principle` of "small tools connected by pipes".
 
@@ -1942,7 +1945,7 @@ Examples:
 # env: display proccessing info:
 $ psv in a.tsv // show-columns // md // env-
 {
-  "now": "2024-03-15 01:57:38.891398+0000",
+  "now": "2024-04-12 22:25:06.981495+0000",
   "history": [
     [
       "<< IoIn: in a.tsv >>",

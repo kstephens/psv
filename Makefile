@@ -8,5 +8,5 @@ README.md: doc/README-*.md
 	cat doc/README-*.md > README.md
 
 doc/README-10-help.md: lib/psv/*
-	psv help --markdown --verbose > tmp/README-10-help.md
+	bin/psv help --markdown --verbose > tmp/README-10-help.md
 	mv tmp/README-10-help.md $@
