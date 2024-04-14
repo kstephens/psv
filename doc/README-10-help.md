@@ -134,7 +134,7 @@ Options:
 Examples:
 
 ```NONE
-# -table: Parse generic table:
+# Parse generic table:
 $ psv in users.txt // -table --fs=':'
        c1 c2     c3     c4      c5              c6                 c7
 0    root  x      0      0    root           /root          /bin/bash
@@ -151,7 +151,7 @@ $ psv in users.txt // -table --fs=':'
 
 
 ```NONE
-# -table: Skip users w/o login:
+# Skip users w/o login:
 $ psv in users.txt // -table --fs=':' --skip='.*nologin'
      c1 c2 c3 c4    c5     c6         c7
 0  root  x  0  0  root  /root  /bin/bash
@@ -159,7 +159,7 @@ $ psv in users.txt // -table --fs=':' --skip='.*nologin'
 
 
 ```NONE
-# -table: Generate columns named col01, col02, ...:
+# Generate columns named col01, col02, ...:
 $ psv in users.txt // -table --fs=':' --column='col%02d'
        c1 c2     c3     c4      c5              c6                 c7
 0    root  x      0      0    root           /root          /bin/bash
@@ -176,7 +176,7 @@ $ psv in users.txt // -table --fs=':' --column='col%02d'
 
 
 ```NONE
-# -table: Set column names or generate them:
+# Set column names or generate them:
 $ psv in users.txt // -table --fs=':' --columns=login,,uid,gid,,home,shell
     login c2    uid    gid      c5            home              shell
 0    root  x      0      0    root           /root          /bin/bash
@@ -200,7 +200,7 @@ $ psv in us-states.txt // -table --header --fs="\s{2,}" // csv- // o us-states.c
 
 
 ```NONE
-# -table: Split fields by 2 or more whitespace chars:
+# Split fields by 2 or more whitespace chars:
 $ psv in us-states.txt // -table --header --fs="\s{2,}" // head 5 // md
 |   Rank | State        |   FIPS Code | Population   |
 |-------:|:-------------|------------:|:-------------|
@@ -213,7 +213,7 @@ $ psv in us-states.txt // -table --header --fs="\s{2,}" // head 5 // md
 
 
 ```NONE
-# -table: Split 3 fields:
+# Split 3 fields:
 $ psv in users.txt // -table --fs=':' --max-cols=3
        c1 c2     c3                                           c4
 0    root  x      0                       0:root:/root:/bin/bash
@@ -558,7 +558,7 @@ Aliases: `json-`, `json`, `js-`, `js`
 Examples:
 
 ```NONE
-# csv, json: Convert CSV to JSON:
+# Convert CSV to JSON:
 $ psv in a.csv // -csv // json-
 [
   {
@@ -786,7 +786,7 @@ Aliases: `sql`
 Examples:
 
 ```NONE
-# sql: Convert TSV to SQL schema:
+# Convert TSV to SQL schema:
 $ psv in a.tsv // sql
 CREATE TABLE "__table__" (
 "index" INTEGER,
@@ -1106,7 +1106,7 @@ N : Default: 10
 Examples:
 
 ```NONE
-# tail: last 3 rows:
+# Last 3 rows:
 $ psv in us-states.txt // -table // tail 3 // md
 |   c1 | c2       | c3    | c4       | c5    | c6      |
 |-----:|:---------|:------|:---------|:------|:--------|
@@ -1133,7 +1133,7 @@ Aliases: `tac`
 Examples:
 
 ```NONE
-# reverse:
+# Added sequence column and reverse rows:
 $ psv in a.tsv // seq // tac // md
 | a   | b   | c   | d   | __i__   |
 |-----|-----|-----|-----|---------|
@@ -1187,8 +1187,6 @@ psv cut [NAME] [I] [COL:-] [*] [NAME*]
 
 Aliases: `c`, `x`
 
-psv in a.tsv // cut 2,d // md
-
 Arguments:
 
 |          |                                             |
@@ -1202,8 +1200,19 @@ Arguments:
 Examples:
 
 ```NONE
-# cut: select columns by index and name:
-# cut: remove c, put d before other columns,
+# Select columns by index and name:
+$ psv in a.tsv // cut 2,d // md
+| b   | d     |
+|:----|:------|
+| b1  | xspdf |
+| b2  | qwer  |
+| b3  | bixop |
+| b4  | zxy   |
+```
+
+
+```NONE
+# Remove c, put d before other columns,
 $ psv in a.tsv // cut d '*' c:- // md
 | d     |   a | b   |
 |:------|----:|:----|
@@ -1260,7 +1269,7 @@ Options:
 Examples:
 
 ```NONE
-# sort: increasing:
+# Sort increasing:
 $ psv in a.tsv // seq i // sort c // md
 |   a | b   |        c | d     |   i |
 |----:|:----|---------:|:------|----:|
@@ -1272,7 +1281,7 @@ $ psv in a.tsv // seq i // sort c // md
 
 
 ```NONE
-# sort: decreasing:
+# Sort decreasing:
 $ psv in a.tsv // seq i // sort -r c // md
 |   a | b   |        c | d     |   i |
 |----:|:----|---------:|:------|----:|
@@ -1284,7 +1293,7 @@ $ psv in a.tsv // seq i // sort -r c // md
 
 
 ```NONE
-# sort: by a decreasing, c increasing:
+# Sort by a decreasing, c increasing:
 $ psv in a.tsv // seq i // md
 |   a | b   |        c | d     |   i |
 |----:|:----|---------:|:------|----:|
@@ -1340,7 +1349,7 @@ Options:
 Examples:
 
 ```NONE
-# grep: match columns by regex:
+# Match columns by regex:
 $ psv in a.tsv // grep d 'x' // md
 |   a | b   |        c | d     |
 |----:|:----|---------:|:------|
@@ -1368,7 +1377,7 @@ $ psv in a.tsv // grep d 'x.+p' // md
 
 
 ```NONE
-# grep: match where d contains "x" and b ends with "3":
+# Match where d contains "x" and b ends with "3":
 $ psv in a.tsv // grep d 'x' b '3$' // md
 |   a | b   |    c | d     |
 |----:|:----|-----:|:------|
@@ -1408,7 +1417,7 @@ Options:
 Examples:
 
 ```NONE
-# translate: change characters in specific field:
+# Change characters in specific field:
 $ psv in us-states.txt // -table --header --fs="\s{2,}" // tr ',' '_' Population // head // md
 |   Rank | State          |   FIPS Code |   Population |
 |-------:|:---------------|------------:|-------------:|
@@ -1426,7 +1435,7 @@ $ psv in us-states.txt // -table --header --fs="\s{2,}" // tr ',' '_' Population
 
 
 ```NONE
-# translate: delete characters:
+# Delete characters:
 $ psv in us-states.txt // -table --header --fs="\s{2,}" // tr -d ', ' // head // md
 |   Rank | State         |   FIPS Code |   Population |
 |-------:|:--------------|------------:|-------------:|
@@ -1458,7 +1467,7 @@ psv null
 Examples:
 
 ```NONE
-# null: does nothing:
+# Does nothing:
 $ psv in a.tsv // null IGNORED --OPTION=VALUE // md
 |   a | b   |        c | d     |
 |----:|:----|---------:|:------|
@@ -1749,7 +1758,7 @@ Options:
 Examples:
 
 ```NONE
-# add-sequence: add a column with a sequence:
+# Add a column with a sequence:
 $ psv in a.tsv // seq // md
 |   a | b   |        c | d     |   __i__ |
 |----:|:----|---------:|:------|--------:|
@@ -1761,7 +1770,7 @@ $ psv in a.tsv // seq // md
 
 
 ```NONE
-# add-sequence: start at 0:
+# Start at 0:
 $ psv in a.tsv // seq --start=0 // md
 |   a | b   |        c | d     |   __i__ |
 |----:|:----|---------:|:------|--------:|
@@ -1773,7 +1782,7 @@ $ psv in a.tsv // seq --start=0 // md
 
 
 ```NONE
-# add-sequence: step by 2:
+# Step by 2:
 $ psv in a.tsv // seq --step=2 // md
 |   a | b   |        c | d     |   __i__ |
 |----:|:----|---------:|:------|--------:|
@@ -1785,7 +1794,7 @@ $ psv in a.tsv // seq --step=2 // md
 
 
 ```NONE
-# add-sequence: start at 5, step by -2:
+# Start at 5, step by -2:
 $ psv in a.tsv // seq --start=5 --step=-2 // md
 |   a | b   |        c | d     |   __i__ |
 |----:|:----|---------:|:------|--------:|
@@ -1797,7 +1806,7 @@ $ psv in a.tsv // seq --start=5 --step=-2 // md
 
 
 ```NONE
-# add-sequence: generate UUIDs:
+# Generate UUIDs:
 $ psv in a.tsv // seq --uuid // md
 |   a | b   |        c | d     | __i__                                |
 |----:|:----|---------:|:------|:-------------------------------------|
@@ -1831,7 +1840,7 @@ Arguments:
 Examples:
 
 ```NONE
-# rename-columns: rename column 'b' to 'Name':
+# Rename column 'b' to 'Name':
 $ psv in a.tsv // rename b:Name // md
 |   a | Name   |        c | d     |
 |----:|:-------|---------:|:------|
@@ -1926,10 +1935,10 @@ psv env-
 Examples:
 
 ```NONE
-# env: display proccessing info:
+# Display proccessing info:
 $ psv in a.tsv // show-columns // md // env-
 {
-  "now": "2024-04-12 22:25:06.981495+0000",
+  "now": "2024-04-13 22:16:15.808988+0000",
   "history": [
     [
       "<< IoIn: in a.tsv >>",
