@@ -55,10 +55,10 @@ class Pipeline(command.Command):
           'current': current,
         })
         xform_output = xform.xform(xform_input, env)
+      # pylint: disable-next=broad-except
       except Exception as exc:
         self.log('error', '%s', f'{exc}')
-        raise exc
-      #  raise Exception(f'{xform.name} : {exc}') from exc
+        raise
       current[1] = describe_datum(xform_output)
       current[2] = env['Content-Type']
       current[3] = env['Content-Encoding']
