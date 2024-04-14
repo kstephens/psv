@@ -40,7 +40,7 @@ $ psv in a.xlsx // -xls --no-header // md
       data = list(data)
     else:
       data = list(data)
-      cols = [f'c{i}' for i in range(0, len(data[0]))]
+      cols = [f'c{i}' for i in range(len(data[0]))]
     return pd.DataFrame(data, columns=cols)
 
   def wants_input_file(self):
