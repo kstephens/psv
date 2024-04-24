@@ -623,7 +623,7 @@ Aliases: `dataframe-`, `dataframe`
 `html-out` - Generate HTML.
 
 ```NONE
-psv html-out [--title=NAME] [--header] [--simple] [--filtering] [--sorting] [--row-index] [--table-only] [--styled]
+psv html-out [--title=NAME] [--header] [--simple] [--filtering] [--filtering-tooltip] [--render-link] [--sorting] [--row-index] [--table-only] [--styled]
 ```
 
 
@@ -631,16 +631,18 @@ Aliases: `html-`, `html`
 
 Options:
 
-|                       |                                              |
-| --------------------- | -------------------------------------------- |
-|  `--title=NAME`       | Set `&lt;title&gt;` and add a `&lt;div&gt;`. |
-|  `--header`, `-h`     | Add table header.                            |
-|  `--simple`, `-S`     | Minimal format.                              |
-|  `--filtering`, `-f`  | Add filtering UI.                            |
-|  `--sorting`, `-s`    | Add sorting support.                         |
-|  `--row-index`, `-i`  | Add row index to first column.               |
-|  `--table-only`, `-T` | Render only a `&lt;table&gt;`.               |
-|  `--styled`           | Add style.                                   |
+|                        |                                              |
+| ---------------------- | -------------------------------------------- |
+|  `--title=NAME`        | Set `&lt;title&gt;` and add a `&lt;div&gt;`. |
+|  `--header`, `-h`      | Add table header.                            |
+|  `--simple`, `-S`      | Minimal format.                              |
+|  `--filtering`, `-f`   | Add filtering UI.                            |
+|  `--filtering-tooltip` | Add filtering tooltip.                       |
+|  `--render-link`, `-L` | Render http and ftp links.                   |
+|  `--sorting`, `-s`     | Add sorting support.                         |
+|  `--row-index`, `-i`   | Add row index to first column.               |
+|  `--table-only`, `-T`  | Render only a `&lt;table&gt;`.               |
+|  `--styled`            | Add style.                                   |
 
 Examples:
 
@@ -1938,7 +1940,7 @@ Examples:
 # Display proccessing info:
 $ psv in a.tsv // show-columns // md // env-
 {
-  "now": "2024-04-14 17:00:58.087063+0000",
+  "now": "2024-04-24 18:26:26.369996+0000",
   "history": [
     [
       "<< IoIn: in a.tsv >>",
@@ -1955,7 +1957,7 @@ $ psv in a.tsv // show-columns // md // env-
     [
       "<< MarkdownOut: markdown-out >>",
       "<< str: | name   | dtype.name   | dtype.kind  ... >>",
-      null,
+      "text/markdown",
       null
     ],
     [

@@ -11,14 +11,16 @@ class HtmlOut(FormatOut):
   html-out - Generate HTML.
   alias: html-, html
 
-  --title=NAME       |  Set `<title>` and add a `<div>`.
-  --header, -h       |  Add table header.  Default: True.
-  --simple, -S       |  Minimal format.
-  --filtering, -f    |  Add filtering UI.
-  --sorting, -s      |  Add sorting support.
-  --row-index, -i    |  Add row index to first column.  Default: False.
-  --table-only, -T   |  Render only a `<table>`.
-  --styled           |  Add style.  Default: True.
+  --title=NAME         |  Set `<title>` and add a `<div>`.
+  --header, -h         |  Add table header.  Default: True.
+  --simple, -S         |  Minimal format.
+  --filtering, -f      |  Add filtering UI.
+  --filtering-tooltip  |  Add filtering tooltip.
+  --render-link, -L    |  Render http and ftp links.
+  --sorting, -s        |  Add sorting support.
+  --row-index, -i      |  Add row index to first column.  Default: False.
+  --table-only, -T     |  Render only a `<table>`.
+  --styled             |  Add style.  Default: True.
 
   :suffixes: .html,.htm
 
