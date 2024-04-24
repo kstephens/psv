@@ -7,7 +7,8 @@ import devdriven.cli
 from devdriven.cli.types import Argv
 from devdriven.to_dict import to_dict
 from devdriven.random import set_seed
-from . import pipeline, io
+from devdriven.config import Config
+from . import pipeline
 
 class Main(devdriven.cli.Main):
   def __init__(self):
@@ -16,6 +17,14 @@ class Main(devdriven.cli.Main):
     super().__init__()
     self.prog_name = 'psv'
     self.env = {}
+    self.config = Config(file_default='~/.psv/config.yml', opts={}, env_prefix='PSV_', env=os.environ).load()
+    self.env.update({
+      "cwd": os.getcwd(),
+      "config": {
+        "file": self.config.config_file(),
+        "file_loaded": self.config.file_loaded,
+      }
+    })
     logging.getLogger("urllib3").setLevel(logging.WARNING)
 
   def parse_argv(self, argv: Argv):
@@ -58,15 +67,7 @@ class Main(devdriven.cli.Main):
     def parse_argv(self, argv: Argv) -> Self:
       # pylint: disable-next=no-member
       pipe = self.main.parse_pipeline('main', argv)
-      if pipe.xforms:
-        if not isinstance(pipe.xforms[0], io.IoIn):
-          in_cmd = io.IoIn()
-          in_cmd.main = self.main
-          pipe.xforms.insert(0, in_cmd)
-        if not isinstance(pipe.xforms[-1], io.IoOut):
-          out_cmd = io.IoOut()
-          out_cmd.main = self.main
-          pipe.xforms.append(out_cmd)
+      pipe.prepare_io()
       self.pipeline = pipe
       return self
 

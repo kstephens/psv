@@ -9,16 +9,21 @@ section('Format', 20)
 class HtmlOut(FormatOut):
   '''
   html-out - Generate HTML.
-  alias: html-, html
 
-  --title=NAME       |  Set `<title>` and add a `<div>`.
-  --header, -h       |  Add table header.  Default: True.
-  --simple, -S       |  Minimal format.
-  --filtering, -f    |  Add filtering UI.
-  --sorting, -s      |  Add sorting support.
-  --row-index, -i    |  Add row index to first column.  Default: False.
-  --table-only, -T   |  Render only a `<table>`.
-  --styled           |  Add style.  Default: True.
+  Aliases: html-, html
+
+  --simple, -S         |  Minimal format.
+  --title=NAME         |  Set `<title>` and add a `<div>` at the top.
+  --parent-link, -P    |  Add `..` parent link to title `<div>`.  Default: False.
+  --header, -h         |  Add table header.  Default: True.
+  --filtering, -f      |  Add filtering UI.
+  --filtering-tooltip  |  Add filtering tooltip.
+  --render-link, -L    |  Render http and ftp links.
+  --sorting, -s        |  Add sorting support.
+  --row-index, -i      |  Add row index to first column.  Default: False.
+  --stats              |  Add basic stats to the title `<div>`.
+  --table-only, -T     |  Render only a `<table>`.
+  --styled             |  Add style.  Default: True.
 
   :suffixes: .html,.htm
 
@@ -45,8 +50,17 @@ $ w3m -dump users-with-fs.html
       col_opts = column_opts[col] = {}
       dtype = inp[col].dtype
       if dtype.kind in ('i', 'f'):
-        col_opts['numeric'] = True
-        col_opts['type'] = dtype.name
+        col_opts.update({
+          'numeric': True,
+          'sort_method': 'number',
+          'type': dtype.name,
+        })
+      if dtype.kind in ('O'):
+        type_name = infer_type_name(inp, col)
+        col_opts.update({'type': type_name})
+        if type_name == 'IPv4Address':
+          col_opts.update({'sort_method': 'dotsep'})
+        # ic((col, dtype, dtype.kind, col_opts))
     opts = {k.replace('-', '_'): v for k, v in self.opts.items()}
     options = {
       'columns': column_opts,
@@ -63,3 +77,8 @@ $ w3m -dump users-with-fs.html
       output=writeable,
     )
     table.render()
+
+def infer_type_name(inp, col):
+  if inp.shape[0] > 0:
+    return type(inp.iloc[0][col]).__name__
+  return None

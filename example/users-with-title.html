@@ -3,8 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>users.txt</title>
-<style>
-/** generic *****************************************/
+<style>/** generic *****************************************/
 
 body {
   font-family: Arial, Helvetica, sans-serif;
@@ -35,14 +34,32 @@ a:hover {
   background-color: #b08080;
 }
 
-.cx-title {
-  text-align: center;
-}
 div.cx-content {
   display: inline-block;
 }
 
 /** cx-table *****************************************/
+
+.cx-table thead .cx-title-row {
+  position: sticky;
+  left: 0; /* needed for sticky? */
+  background-color: #000;
+}
+.cx-table .cx-title-th {
+  position: sticky;
+  left: 0;
+  background-color: #000;
+  padding-bottom: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+.cx-title {
+  position: sticky;
+  left: 2em;
+  float: left;
+  white-space: pre;
+  font-weight: bold;
+  background-color: #000;
+}
 
 table.cx-table {
   border-collapse: collapse;
@@ -79,6 +96,12 @@ table.cx-table {
 }
 .cx-center {
   text-align: center;
+}
+.cx-nowrap {
+  white-space: nowrap;
+}
+.cx-wrap {
+  white-space: normal;
 }
 
 /* https://css-tricks.com/position-sticky-and-table-headers/ */
@@ -127,6 +150,14 @@ table.cx-table {
 .cx-filter-row-count-span {
   vertical-align: middle;
   font-size: 80%;
+}
+
+.cx-column-sort-indicator {
+  visibility: hidden;
+  white-space: pre;
+  vertical-align: middle;
+  text-align: center;
+  font-size: 50%;
 }
 
 /** footer  *****************************************/
@@ -181,7 +212,6 @@ table.cx-table {
   visibility: visible;
   opacity: 1;
 }
-
 </style>
 
 
@@ -191,199 +221,122 @@ table.cx-table {
 
 
 <div class="cx-content">
-<div class="cx-title">users.txt</div>
 <table id="cx-table" class="cx-table">
 
 <thead class="cx-thead">
+<tr class="cx-title-row"><th class="cx-title-th" colspan="7"><span class="cx-title"><span class="cx-title-text">users.txt</span></span></th></tr>
 
 <tr class="cx-columms">
-
-<th class="cx-column" title="name: c1; index: 1; type: UNKNOWN">c1</th>
-
-<th class="cx-column" title="name: c2; index: 2; type: UNKNOWN">c2</th>
-
-<th class="cx-column" title="name: c3; index: 3; type: UNKNOWN">c3</th>
-
-<th class="cx-column" title="name: c4; index: 4; type: UNKNOWN">c4</th>
-
-<th class="cx-column" title="name: c5; index: 5; type: UNKNOWN">c5</th>
-
-<th class="cx-column" title="name: c6; index: 6; type: UNKNOWN">c6</th>
-
-<th class="cx-column" title="name: c7; index: 7; type: UNKNOWN">c7</th>
+<th class="cx-column" title="name: c1; index: 1; type: str"><span class="cx-column-name">c1</span><span class="cx-column-sort-indicator"></span></th>
+<th class="cx-column" title="name: c2; index: 2; type: str"><span class="cx-column-name">c2</span><span class="cx-column-sort-indicator"></span></th>
+<th class="cx-column" title="name: c3; index: 3; type: str"><span class="cx-column-name">c3</span><span class="cx-column-sort-indicator"></span></th>
+<th class="cx-column" title="name: c4; index: 4; type: str"><span class="cx-column-name">c4</span><span class="cx-column-sort-indicator"></span></th>
+<th class="cx-column" title="name: c5; index: 5; type: str"><span class="cx-column-name">c5</span><span class="cx-column-sort-indicator"></span></th>
+<th class="cx-column" title="name: c6; index: 6; type: str"><span class="cx-column-name">c6</span><span class="cx-column-sort-indicator"></span></th>
+<th class="cx-column" title="name: c7; index: 7; type: str"><span class="cx-column-name">c7</span><span class="cx-column-sort-indicator"></span></th>
 </tr>
 </thead>
 <tbody class="cx-tbody">
 
   
 <tr title="1 / 10">
-
-<td title="1 / 10 - c1">root</td>
-
-<td title="1 / 10 - c2">x</td>
-
-<td title="1 / 10 - c3">0</td>
-
-<td title="1 / 10 - c4">0</td>
-
-<td title="1 / 10 - c5">root</td>
-
-<td title="1 / 10 - c6">/root</td>
-
-<td title="1 / 10 - c7">/bin/bash</td>
+<td class="cx-nowrap" title="1 / 10 - c1">root</td>
+<td class="cx-nowrap" title="1 / 10 - c2">x</td>
+<td class="cx-nowrap" title="1 / 10 - c3">0</td>
+<td class="cx-nowrap" title="1 / 10 - c4">0</td>
+<td class="cx-nowrap" title="1 / 10 - c5">root</td>
+<td class="cx-nowrap" title="1 / 10 - c6">/root</td>
+<td class="cx-nowrap" title="1 / 10 - c7">/bin/bash</td>
 </tr>
   
 <tr title="2 / 10">
-
-<td title="2 / 10 - c1">daemon</td>
-
-<td title="2 / 10 - c2">x</td>
-
-<td title="2 / 10 - c3">1</td>
-
-<td title="2 / 10 - c4">1</td>
-
-<td title="2 / 10 - c5">daemon</td>
-
-<td title="2 / 10 - c6">/usr/sbin</td>
-
-<td title="2 / 10 - c7">/usr/sbin/nologin</td>
+<td class="cx-nowrap" title="2 / 10 - c1">daemon</td>
+<td class="cx-nowrap" title="2 / 10 - c2">x</td>
+<td class="cx-nowrap" title="2 / 10 - c3">1</td>
+<td class="cx-nowrap" title="2 / 10 - c4">1</td>
+<td class="cx-nowrap" title="2 / 10 - c5">daemon</td>
+<td class="cx-nowrap" title="2 / 10 - c6">/usr/sbin</td>
+<td class="cx-nowrap" title="2 / 10 - c7">/usr/sbin/nologin</td>
 </tr>
   
 <tr title="3 / 10">
-
-<td title="3 / 10 - c1">bin</td>
-
-<td title="3 / 10 - c2">x</td>
-
-<td title="3 / 10 - c3">2</td>
-
-<td title="3 / 10 - c4">2</td>
-
-<td title="3 / 10 - c5">bin</td>
-
-<td title="3 / 10 - c6">/bin</td>
-
-<td title="3 / 10 - c7">/usr/sbin/nologin</td>
+<td class="cx-nowrap" title="3 / 10 - c1">bin</td>
+<td class="cx-nowrap" title="3 / 10 - c2">x</td>
+<td class="cx-nowrap" title="3 / 10 - c3">2</td>
+<td class="cx-nowrap" title="3 / 10 - c4">2</td>
+<td class="cx-nowrap" title="3 / 10 - c5">bin</td>
+<td class="cx-nowrap" title="3 / 10 - c6">/bin</td>
+<td class="cx-nowrap" title="3 / 10 - c7">/usr/sbin/nologin</td>
 </tr>
   
 <tr title="4 / 10">
-
-<td title="4 / 10 - c1">sys</td>
-
-<td title="4 / 10 - c2">x</td>
-
-<td title="4 / 10 - c3">3</td>
-
-<td title="4 / 10 - c4">3</td>
-
-<td title="4 / 10 - c5">sys</td>
-
-<td title="4 / 10 - c6">/dev</td>
-
-<td title="4 / 10 - c7">/usr/sbin/nologin</td>
+<td class="cx-nowrap" title="4 / 10 - c1">sys</td>
+<td class="cx-nowrap" title="4 / 10 - c2">x</td>
+<td class="cx-nowrap" title="4 / 10 - c3">3</td>
+<td class="cx-nowrap" title="4 / 10 - c4">3</td>
+<td class="cx-nowrap" title="4 / 10 - c5">sys</td>
+<td class="cx-nowrap" title="4 / 10 - c6">/dev</td>
+<td class="cx-nowrap" title="4 / 10 - c7">/usr/sbin/nologin</td>
 </tr>
   
 <tr title="5 / 10">
-
-<td title="5 / 10 - c1">games</td>
-
-<td title="5 / 10 - c2">x</td>
-
-<td title="5 / 10 - c3">5</td>
-
-<td title="5 / 10 - c4">60</td>
-
-<td title="5 / 10 - c5">games</td>
-
-<td title="5 / 10 - c6">/usr/games</td>
-
-<td title="5 / 10 - c7">/usr/sbin/nologin</td>
+<td class="cx-nowrap" title="5 / 10 - c1">games</td>
+<td class="cx-nowrap" title="5 / 10 - c2">x</td>
+<td class="cx-nowrap" title="5 / 10 - c3">5</td>
+<td class="cx-nowrap" title="5 / 10 - c4">60</td>
+<td class="cx-nowrap" title="5 / 10 - c5">games</td>
+<td class="cx-nowrap" title="5 / 10 - c6">/usr/games</td>
+<td class="cx-nowrap" title="5 / 10 - c7">/usr/sbin/nologin</td>
 </tr>
   
 <tr title="6 / 10">
-
-<td title="6 / 10 - c1">man</td>
-
-<td title="6 / 10 - c2">x</td>
-
-<td title="6 / 10 - c3">6</td>
-
-<td title="6 / 10 - c4">12</td>
-
-<td title="6 / 10 - c5">man</td>
-
-<td title="6 / 10 - c6">/var/cache/man</td>
-
-<td title="6 / 10 - c7">/usr/sbin/nologin</td>
+<td class="cx-nowrap" title="6 / 10 - c1">man</td>
+<td class="cx-nowrap" title="6 / 10 - c2">x</td>
+<td class="cx-nowrap" title="6 / 10 - c3">6</td>
+<td class="cx-nowrap" title="6 / 10 - c4">12</td>
+<td class="cx-nowrap" title="6 / 10 - c5">man</td>
+<td class="cx-nowrap" title="6 / 10 - c6">/var/cache/man</td>
+<td class="cx-nowrap" title="6 / 10 - c7">/usr/sbin/nologin</td>
 </tr>
   
 <tr title="7 / 10">
-
-<td title="7 / 10 - c1">mail</td>
-
-<td title="7 / 10 - c2">x</td>
-
-<td title="7 / 10 - c3">8</td>
-
-<td title="7 / 10 - c4">8</td>
-
-<td title="7 / 10 - c5">mail</td>
-
-<td title="7 / 10 - c6">/var/mail</td>
-
-<td title="7 / 10 - c7">/usr/sbin/nologin</td>
+<td class="cx-nowrap" title="7 / 10 - c1">mail</td>
+<td class="cx-nowrap" title="7 / 10 - c2">x</td>
+<td class="cx-nowrap" title="7 / 10 - c3">8</td>
+<td class="cx-nowrap" title="7 / 10 - c4">8</td>
+<td class="cx-nowrap" title="7 / 10 - c5">mail</td>
+<td class="cx-nowrap" title="7 / 10 - c6">/var/mail</td>
+<td class="cx-nowrap" title="7 / 10 - c7">/usr/sbin/nologin</td>
 </tr>
   
 <tr title="8 / 10">
-
-<td title="8 / 10 - c1">backup</td>
-
-<td title="8 / 10 - c2">x</td>
-
-<td title="8 / 10 - c3">34</td>
-
-<td title="8 / 10 - c4">34</td>
-
-<td title="8 / 10 - c5">backup</td>
-
-<td title="8 / 10 - c6">/var/backups</td>
-
-<td title="8 / 10 - c7">/usr/sbin/nologin</td>
+<td class="cx-nowrap" title="8 / 10 - c1">backup</td>
+<td class="cx-nowrap" title="8 / 10 - c2">x</td>
+<td class="cx-nowrap" title="8 / 10 - c3">34</td>
+<td class="cx-nowrap" title="8 / 10 - c4">34</td>
+<td class="cx-nowrap" title="8 / 10 - c5">backup</td>
+<td class="cx-nowrap" title="8 / 10 - c6">/var/backups</td>
+<td class="cx-nowrap" title="8 / 10 - c7">/usr/sbin/nologin</td>
 </tr>
   
 <tr title="9 / 10">
-
-<td title="9 / 10 - c1">nobody</td>
-
-<td title="9 / 10 - c2">x</td>
-
-<td title="9 / 10 - c3">65534</td>
-
-<td title="9 / 10 - c4">65534</td>
-
-<td title="9 / 10 - c5">nobody</td>
-
-<td title="9 / 10 - c6">/nonexistent</td>
-
-<td title="9 / 10 - c7">/usr/sbin/nologin</td>
+<td class="cx-nowrap" title="9 / 10 - c1">nobody</td>
+<td class="cx-nowrap" title="9 / 10 - c2">x</td>
+<td class="cx-nowrap" title="9 / 10 - c3">65534</td>
+<td class="cx-nowrap" title="9 / 10 - c4">65534</td>
+<td class="cx-nowrap" title="9 / 10 - c5">nobody</td>
+<td class="cx-nowrap" title="9 / 10 - c6">/nonexistent</td>
+<td class="cx-nowrap" title="9 / 10 - c7">/usr/sbin/nologin</td>
 </tr>
   
 <tr title="10 / 10">
-
-<td title="10 / 10 - c1">sshd</td>
-
-<td title="10 / 10 - c2">x</td>
-
-<td title="10 / 10 - c3">122</td>
-
-<td title="10 / 10 - c4">65534</td>
-
-<td title="10 / 10 - c5"></td>
-
-<td title="10 / 10 - c6">/run/sshd</td>
-
-<td title="10 / 10 - c7">/usr/sbin/nologin</td>
+<td class="cx-nowrap" title="10 / 10 - c1">sshd</td>
+<td class="cx-nowrap" title="10 / 10 - c2">x</td>
+<td class="cx-nowrap" title="10 / 10 - c3">122</td>
+<td class="cx-nowrap" title="10 / 10 - c4">65534</td>
+<td class="cx-nowrap" title="10 / 10 - c5"></td>
+<td class="cx-nowrap" title="10 / 10 - c6">/run/sshd</td>
+<td class="cx-nowrap" title="10 / 10 - c7">/usr/sbin/nologin</td>
 </tr>
 </tbody>
 

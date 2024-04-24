@@ -1,0 +1,4 @@
+# adfe5192bcdac701faa05500989d4f8a
+$ psv in gebrselassie.csv // sql- gebrselassie 'sqlite:////tmp/geb.db'
+   rows_written
+0            16

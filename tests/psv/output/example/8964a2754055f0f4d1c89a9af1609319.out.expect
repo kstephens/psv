@@ -1,0 +1,8 @@
+# 8964a2754055f0f4d1c89a9af1609319
+$ psv in a.tsv // copy b:e d:f // md
+|   a | b   |        c | d     | e   | f     |
+|----:|:----|---------:|:------|:----|:------|
+|   1 | b1  |   23.763 | xspdf | b1  | xspdf |
+|   2 | b2  |  -98.73  | qwer  | b2  | qwer  |
+|   3 | b3  | 3451     | bixop | b3  | bixop |
+|   1 | b4  |    1.234 | zxy   | b4  | zxy   |

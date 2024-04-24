@@ -2,7 +2,6 @@ import re
 from devdriven.util import get_safe, chunks, split_flat, parse_range, make_range
 from devdriven.random import get_seed
 from .command import Command, section, command
-from .coerce import Coerce
 from .util import select_columns, parse_col_or_index
 
 section('Manipulation', 30)
@@ -25,10 +24,10 @@ class Range(Command):
   --end=END           |  Non-inclusive.  Default: last row.
   --step=STEP         |  Default: 1.
 
-  # range: select a range of rows:
+  # Select a range of rows:
   $ psv in a.tsv // seq --start=0 // range 1 3 // md
 
-  # range: every even row:
+  # Every even row:
   $ psv in a.tsv // seq --start=0 // range --step=2 // md
 
   '''
@@ -118,6 +117,29 @@ $ psv in a.tsv // shuffle --seed=5 // md
     return inp.sample(frac=1, random_state=seed)
 
 @command
+class Copy(Command):
+  '''
+  copy - Copy columns.
+
+  Aliases: cp, dup
+
+  Arguments:
+
+  SRC:DST ...   |  Source and Destination columns.
+
+# Copy columns by name:
+$ psv in a.tsv // copy b:e d:f // md
+
+  '''
+  def xform(self, inp, _env):
+    out = inp.copy()
+    # ???: handle numeric columns: `copy 2:e d:f`:
+    for src_dst in split_flat(self.args, ','):
+      src, dst = src_dst.split(':', 2)
+      out[dst] = out[src]
+    return out
+
+@command
 class Cut(Command):
   '''
   cut - Cut specified columns.
@@ -167,8 +189,6 @@ class Sort(Command):
   Options:
 
   --reverse, -r     |  Sort descending.
-  --numeric, -n     |  Sort as numeric.
-  --coerce=TYPE     |  Sort by coerced value.
 
 # Sort increasing:
 $ psv in a.tsv // seq i // sort c // md
@@ -180,6 +200,10 @@ $ psv in a.tsv // seq i // sort -r c // md
 $ psv in a.tsv // seq i // md
 $ psv in a.tsv // seq i // sort a:- c // md
 
+$ psv in us-states.csv // sort 'FIPS Code' // head 10
+
+$ psv in us-states.csv // cast 'FIPS Code':str // sort 'FIPS Code' // head 10
+
   '''
   def xform(self, inp, _env):
     imp_cols = list(inp.columns)
@@ -190,21 +214,12 @@ $ psv in a.tsv // seq i // sort a:- c // md
     for col in specified_cols:
       order = default_order
       if mtch := re.match(r'^([^:]+):([-+]?)$', col):
-        col = mtch.group(1)
-        order = mtch.group(2)
+        col = mtch[1]
+        order = mtch[2]
       col = parse_col_or_index(imp_cols, col)
       cols.append(col)
       ascending.append(order != '-')
-    key = None
-    if self.opt('numeric'):
-      key = 'numeric'
-    elif self.opt('datetime'):
-      key = 'datetime'
-    else:
-      key = self.opt('coerce')
-    if key:
-      key = Coerce().coercer(key)
-    return inp.sort_values(by=cols, ascending=ascending, key=key)
+    return inp.sort_values(by=cols, ascending=ascending)
 
 @command
 class Grep(Command):

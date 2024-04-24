@@ -6,7 +6,7 @@ psv - Pandas Separated Values
 - git@kurtstephens.com
 
 `psv` is a command-line that manipulates tabular data in multiple formats.
-It's design is influenced by the `Unix Principle` of "small tools connected by pipes".
+Its design is influenced by the `Unix Principle` of "small tools connected by pipes".
 
 # Features
 
@@ -14,6 +14,21 @@ It's design is influenced by the `Unix Principle` of "small tools connected by p
 
 The string `//` is used to link commands in a pipeline.
 
+# Configuration
+
+`psv` reads configuration from `~/.psv/config.yml` or `$PSV_CONFIG_FILE`.
+
+## Macros
+
+Macro commands are defined in `config.yml`.
+Argument substitution is similar to a Unix shell: `$1`, `$@`, etc.
+
+```
+# ~/.psv/config.yml:
+macro:
+  html-full: 'html- --row-index --render-links --style --sorting --filtering --filtering-tooltip "$@"'
+
+```
 # I/O
 
 ## `in`
@@ -116,6 +131,132 @@ Examples:
 # out: Convert TSV to CSV and save to a file:
 $ psv in a.tsv // -tsv // csv- // out a.csv
 
+```
+
+
+
+----------------------------------------------------------
+
+## `-sql`
+
+`-sql` - Read from a SQL database.
+
+```NONE
+psv -sql [--columns=COL,...] [--parse-dateslist=COL,...]
+```
+
+
+TABLE-NAME-or-SQL-STATEMENT CONNECTION-URL
+
+Options:
+
+|                              |                                         |
+| ---------------------------- | --------------------------------------- |
+|  `--columns=COL,...`         | Columns to read from table.             |
+|  `--parse-dateslist=COL,...` | List of column names to parse as dates. |
+
+Examples:
+
+```NONE
+# Convert CSV to sqlite table:
+$ psv in gebrselassie.csv // sql- gebrselassie sqlite:////tmp/geb.db
+   rows_written
+0            16
+```
+
+
+```NONE
+# Format sqlite table as Markdown:
+$ psv -sql gebrselassie sqlite:////tmp/geb.db // md
+| kind          | distance     | time        | event              |
+|:--------------|:-------------|:------------|:-------------------|
+| Personal Best | 1500 m       | 00:03:33.73 | (Stuttgart 1999)   |
+| Personal Best | 1 mile       | 00:03:52.39 | (Gateshead 1999)   |
+| Personal Best | 3000 m       | 00:07:25.09 | NR (Brussels 1998) |
+| Personal Best | 2 miles      | 00:08:01.08 | NBP (Hengelo 1997) |
+| Personal Best | 5000 m       | 00:12:39.36 | (Helsinki 1998)    |
+| Personal Best | 10000 m      | 00:26:22.75 | (Hengelo 1998)     |
+| Indoors       | 800 m        | 00:01:49.35 | (Dortmund 1997)    |
+| Indoors       | 1500 m       | 00:03:31.76 | (Stuttgart 1998)   |
+| Indoors       | 2000 m       | 00:04:52.86 | (Birmingham 1998)  |
+| Indoors       | 3000 m       | 00:07:26.15 | (Karlsruhe 1998)   |
+| Indoors       | 2 miles      | 00:08:04.69 | (Birmingham 2003)  |
+| Indoors       | 5000 m       | 00:12:50.38 | (Birmingham 1999)  |
+| Road          | 10 km        | 00:27:02    | (Doha 2002)        |
+| Road          | 10 miles     | 00:44:24    | WBP (Tilburg 2005) |
+| Road          | 0.5 marathon | 00:58:55    | (Tempe 2006)       |
+| Road          | marathon     | 02:03:59    | (Berlin 2008)      |
+```
+
+
+```NONE
+# Read specific columns:
+$ psv -sql --columns=distance,time gebrselassie sqlite:////tmp/geb.db
+        distance         time
+0         1500 m  00:03:33.73
+1         1 mile  00:03:52.39
+2         3000 m  00:07:25.09
+3        2 miles  00:08:01.08
+4         5000 m  00:12:39.36
+5        10000 m  00:26:22.75
+6          800 m  00:01:49.35
+7         1500 m  00:03:31.76
+8         2000 m  00:04:52.86
+9         3000 m  00:07:26.15
+10       2 miles  00:08:04.69
+11        5000 m  00:12:50.38
+12         10 km     00:27:02
+13      10 miles     00:44:24
+14  0.5 marathon     00:58:55
+15      marathon     02:03:59
+```
+
+
+
+----------------------------------------------------------
+
+## `sql-`
+
+`sql-` - Write to SQL database.
+
+```NONE
+psv sql- [--if-exists=ACTION]
+```
+
+
+DST-TABLE CONNECTION-URL
+
+Options:
+
+|                       |                                                              |
+| --------------------- | ------------------------------------------------------------ |
+|  `--if-exists=ACTION` | Action to take if table exists: `fail’, ‘replace’, ‘append’. |
+
+Examples:
+
+```NONE
+# Convert CSV to Sqlite table:
+$ psv in gebrselassie.csv // sql- gebrselassie 'sqlite:////tmp/geb.db'
+   rows_written
+0            16
+```
+
+
+```NONE
+# Query Sqlite:
+$ sqlite3 -header -cmd "SELECT * FROM gebrselassie WHERE time > '00:07:'" /tmp/geb.db </dev/null
+kind|distance|time|event
+Personal Best|3000 m|00:07:25.09|NR (Brussels 1998)
+Personal Best|2 miles|00:08:01.08|NBP (Hengelo 1997)
+Personal Best|5000 m|00:12:39.36|(Helsinki 1998)
+Personal Best|10000 m|00:26:22.75|(Hengelo 1998)
+Indoors|3000 m|00:07:26.15|(Karlsruhe 1998)
+Indoors|2 miles|00:08:04.69|(Birmingham 2003)
+Indoors|5000 m|00:12:50.38|(Birmingham 1999)
+Road|10 km|00:27:02|(Doha 2002)
+Road|10 miles|00:44:24|WBP (Tilburg 2005)
+Road|0.5 marathon|00:58:55|(Tempe 2006)
+Road|marathon|02:03:59|(Berlin 2008)
 ```
 
 
@@ -639,7 +780,7 @@ Aliases: `dataframe-`, `dataframe`
 `html-out` - Generate HTML.
 
 ```NONE
-psv html-out [--title=NAME] [--header] [--simple] [--filtering] [--sorting] [--row-index] [--table-only] [--styled]
+psv html-out [--simple] [--title=NAME] [--parent-link] [--header] [--filtering] [--filtering-tooltip] [--render-link] [--sorting] [--row-index] [--stats] [--table-only] [--styled]
 ```
 
 
@@ -647,16 +788,20 @@ Aliases: `html-`, `html`
 
 Options:
 
-|                       |                                              |
-| --------------------- | -------------------------------------------- |
-|  `--title=NAME`       | Set `&lt;title&gt;` and add a `&lt;div&gt;`. |
-|  `--header`, `-h`     | Add table header.                            |
-|  `--simple`, `-S`     | Minimal format.                              |
-|  `--filtering`, `-f`  | Add filtering UI.                            |
-|  `--sorting`, `-s`    | Add sorting support.                         |
-|  `--row-index`, `-i`  | Add row index to first column.               |
-|  `--table-only`, `-T` | Render only a `&lt;table&gt;`.               |
-|  `--styled`           | Add style.                                   |
+|                        |                                                         |
+| ---------------------- | ------------------------------------------------------- |
+|  `--simple`, `-S`      | Minimal format.                                         |
+|  `--title=NAME`        | Set `&lt;title&gt;` and add a `&lt;div&gt;` at the top. |
+|  `--parent-link`, `-P` | Add `..` parent link to title `&lt;div&gt;`.            |
+|  `--header`, `-h`      | Add table header.                                       |
+|  `--filtering`, `-f`   | Add filtering UI.                                       |
+|  `--filtering-tooltip` | Add filtering tooltip.                                  |
+|  `--render-link`, `-L` | Render http and ftp links.                              |
+|  `--sorting`, `-s`     | Add sorting support.                                    |
+|  `--row-index`, `-i`   | Add row index to first column.                          |
+|  `--stats`             | Add basic stats to the title `&lt;div&gt;`.             |
+|  `--table-only`, `-T`  | Render only a `&lt;table&gt;`.                          |
+|  `--styled`            | Add style.                                              |
 
 Examples:
 
@@ -690,8 +835,9 @@ $ psv in users.txt // -table --fs=":" // html --title=users.txt // o users-with-
 
 ```NONE
 $ w3m -dump users-with-title.html
-users.txt
-┌──────┬──┬─────┬─────┬──────┬──────────────┬─────────────────┐
+┌─────────────────────────────────────────────────────────────┐
+│                          users.txt                          │
+├──────┬──┬─────┬─────┬──────┬──────────────┬─────────────────┤
 │  c1  │c2│ c3  │ c4  │  c5  │      c6      │       c7        │
 ├──────┼──┼─────┼─────┼──────┼──────────────┼─────────────────┤
 │root  │x │0    │0    │root  │/root         │/bin/bash        │
@@ -788,35 +934,6 @@ $ w3m -dump users-with-fs.html
 
 ----------------------------------------------------------
 
-## `sql-`
-
-`sql-` - Write SQL.
-
-```NONE
-psv sql-
-```
-
-
-Aliases: `sql`
-
-Examples:
-
-```NONE
-# Convert TSV to SQL schema:
-$ psv in a.tsv // sql
-CREATE TABLE "__table__" (
-"index" INTEGER,
-  "a" INTEGER,
-  "b" TEXT,
-  "c" REAL,
-  "d" TEXT
-)
-```
-
-
-
-----------------------------------------------------------
-
 ## `yaml-out`
 
 `yaml-out` - Generate YAML.
@@ -867,10 +984,10 @@ Aliases: `-xls`
 
 Options:
 
-|                      |                  |
-| -------------------- | ---------------- |
-|  `--sheet-name=NAME` | Sheet name.      |
-|  `--header`, `-h`    | Generate header. |
+|                      |             |
+| -------------------- | ----------- |
+|  `--sheet-name=NAME` | Sheet name. |
+|  `--header`, `-h`    | Use header. |
 
 Examples:
 
@@ -937,14 +1054,20 @@ a.xlsx: Microsoft Excel 2007+
 
 ## `extract`
 
-`extract` - Extract fields by Regexp.
+`extract` - Extract fields by Regex.
 
 ```NONE
-psv extract
+psv extract [--unamed=TEMPLATE]
 ```
 
 
 Aliases: `rx`, `re`, `rex`
+
+Options:
+
+|                      |                                          |
+| -------------------- | ---------------------------------------- |
+|  `--unamed=TEMPLATE` | Column name template for unnamed groups. |
 
 Examples:
 
@@ -1053,7 +1176,7 @@ Options:
 Examples:
 
 ```NONE
-# range: select a range of rows:
+# Select a range of rows:
 $ psv in a.tsv // seq --start=0 // range 1 3 // md
 |   a | b   |       c | d     |   __i__ |
 |----:|:----|--------:|:------|--------:|
@@ -1063,7 +1186,7 @@ $ psv in a.tsv // seq --start=0 // range 1 3 // md
 
 
 ```NONE
-# range: every even row:
+# Every even row:
 $ psv in a.tsv // seq --start=0 // range --step=2 // md
 |   a | b   |        c | d     |   __i__ |
 |----:|:----|---------:|:------|--------:|
@@ -1192,6 +1315,40 @@ $ psv in a.tsv // shuffle --seed=5 // md
 
 ----------------------------------------------------------
 
+## `copy`
+
+`copy` - Copy columns.
+
+```NONE
+psv copy [SRC:DST ...]
+```
+
+
+Aliases: `cp`, `dup`
+
+Arguments:
+
+|                |                                 |
+| -------------- | ------------------------------- |
+|  `SRC:DST ...` | Source and Destination columns. |
+
+Examples:
+
+```NONE
+# Copy columns by name:
+$ psv in a.tsv // copy b:e d:f // md
+|   a | b   |        c | d     | e   | f     |
+|----:|:----|---------:|:------|:----|:------|
+|   1 | b1  |   23.763 | xspdf | b1  | xspdf |
+|   2 | b2  |  -98.73  | qwer  | b2  | qwer  |
+|   3 | b3  | 3451     | bixop | b3  | bixop |
+|   1 | b4  |    1.234 | zxy   | b4  | zxy   |
+```
+
+
+
+----------------------------------------------------------
+
 ## `cut`
 
 `cut` - Cut specified columns.
@@ -1260,7 +1417,7 @@ Aliases: `u`
 `sort` - Sort rows by columns.
 
 ```NONE
-psv sort [--reverse] [--numeric] [--coerce=TYPE] [COL] [COL:-] [COL:+]
+psv sort [--reverse] [COL] [COL:-] [COL:+]
 ```
 
 
@@ -1276,11 +1433,9 @@ Arguments:
 
 Options:
 
-|                    |                        |
-| ------------------ | ---------------------- |
-|  `--reverse`, `-r` | Sort descending.       |
-|  `--numeric`, `-n` | Sort as numeric.       |
-|  `--coerce=TYPE`   | Sort by coerced value. |
+|                    |                  |
+| ------------------ | ---------------- |
+|  `--reverse`, `-r` | Sort descending. |
 
 Examples:
 
@@ -1328,6 +1483,38 @@ $ psv in a.tsv // seq i // sort a:- c // md
 |   2 | b2  |  -98.73  | qwer  |   2 |
 |   1 | b4  |    1.234 | zxy   |   4 |
 |   1 | b1  |   23.763 | xspdf |   1 |
+```
+
+
+```NONE
+$ psv in us-states.csv // sort 'FIPS Code' // head 10
+    Rank                 State  FIPS Code  Population
+23    24               Alabama       1000   5,074,296
+47    48                Alaska       2000     733,583
+13    14               Arizona       4000   7,359,197
+32    33              Arkansas       5000   3,045,637
+0      1            California       6000  39,029,342
+20    21              Colorado       8000   5,839,926
+28    29           Connecticut       9000   3,626,205
+44    45              Delaware      10000   1,018,396
+48    49  District of Columbia      11000     671,803
+2      3               Florida      12000  22,244,823
+```
+
+
+```NONE
+$ psv in us-states.csv // cast 'FIPS Code':str // sort 'FIPS Code' // head 10
+    Rank                 State FIPS Code  Population
+23    24               Alabama      1000   5,074,296
+44    45              Delaware     10000   1,018,396
+48    49  District of Columbia     11000     671,803
+2      3               Florida     12000  22,244,823
+7      8               Georgia     13000  10,912,876
+39    40                Hawaii     15000   1,440,196
+37    38                 Idaho     16000   1,939,033
+5      6              Illinois     17000  12,582,032
+16    17               Indiana     18000   6,833,037
+30    31                  Iowa     19000   3,200,517
 ```
 
 
@@ -1676,35 +1863,53 @@ $ psv in a.tsv // stats // cut name,count,min,max
 
 # Types
 
-## `coerce`
+## `cast`
 
-`coerce` - Corece column types.
+`cast` - Cast column types.
 
 ```NONE
-psv coerce [COL:TYPE ...]
+psv cast [COL:TYPES:... ...] [DST=SRC:TYPES:... ...]
 ```
 
 
-Aliases: `astype`
+Aliases: `astype`, `coerce`
 
 TYPES:
 
-* `numeric`      - to `int64` or `float64`.
-* `int`          - to `int64`.
-* `float`        - to `float64`.
-* `timedelta`    - string to `timedelta64[ns]`.
-* `datetime`     - string to `datetime`.
-* `second`       - string to `timedelta64[ns]` to `float` seconds.
-* `minute`       - string to `timedelta64[ns]` to `float` minutes.
-* `hour`         - string to `timedelta64[ns]` to `float` hours.
-* `day`          - string to `timedelta64[ns]` to `float` days.
-* `ipaddr`       - string to `ipaddress`.  See python `ipaddress` module.
+* `numeric`     -  `int64` or `float64`.
+* `int`         -  `int64`.
+* `float`       -  `float64`.
+* `string`      -  `str`.
+* `timedelta64` -  `timedelta64[ns]`.
+* `datetime`    -  `datetime`.
+* `unix_epoch`  -  Seconds since 1970.
+* `ipaddress`   -  Convert to `ipaddress`.
+
+TYPE Aliases:
+
+* `str`           -  Alias for `string`.
+* `n`             -  Alias for `numeric`.
+* `i`             -  Alias for `int`.
+* `int32`         -  Alias for `int`.
+* `int64`         -  Alias for `int`.
+* `f`             -  Alias for `float`.
+* `s`             -  Alias for `seconds`.
+* `sec`           -  Alias for `seconds`.
+* `timedelta64`   -  Alias for `timedelta`.
+* `td`            -  Alias for `timedelta`.
+* `datetime64`    -  Alias for `datetime`.
+* `dt`            -  Alias for `datetime`.
+* `ip`            -  Alias for `ipaddress`.
+* `ipaddr`        -  Alias for `ipaddress`.
+* `epoch`         -  Alias for `unix_epoch`.
+* `unix`          -  Alias for `unix_epoch`.
 
 Arguments:
 
-|                 |                           |
-| --------------- | ------------------------- |
-|  `COL:TYPE ...` | Column to coerce to TYPE. |
+|                          |                                    |
+| ------------------------ | ---------------------------------- |
+|  `COL:TYPES:... ...`     | Cast COL by TYPES.                 |
+|  `DST=SRC:TYPES:... ...` | Set DST column to coersion of SRC. |
 
 Examples:
 
@@ -1731,7 +1936,7 @@ $ psv in us-states-sample.csv // sort Population
 
 
 ```NONE
-$ psv in us-states-sample.csv // coerce Population:int // sort Population
+$ psv in us-states-sample.csv // tr -d ', ' Population // cast Population:int // sort Population
            State  Population
 8        Montana     1122867
 2          Maine     1385340
@@ -1743,6 +1948,101 @@ $ psv in us-states-sample.csv // coerce Population:int // sort Population
 9   Pennsylvania    12972008
 6       New York    19677151
 4        Florida    22244823
+```
+
+
+```NONE
+# Parse date, convert to datetime, then integer Unix epoch seconds:
+$ psv in birthdays.csv // cast sec_since_1970=birthday:datetime:epoch:int
+    name      birthday  sec_since_1970
+0    Bob     5/10/1976       200534400
+1  Alice    1999-12-31       946598400
+2  Frank  Aug 28, 2012      1346112000
+3  Grace  Apr 27, 2011      1303862400
+```
+
+
+
+----------------------------------------------------------
+
+## `unit`
+
+`unit` - Convert units.
+
+```NONE
+psv unit [COL:UNITS:...] [DST=SRC:UNITS:...]
+```
+
+
+Aliases: `convert`
+
+The unit `1/` represents the reciprocal of the previous unit.
+
+Arguments:
+
+|                      |                                      |
+| -------------------- | ------------------------------------ |
+|  `COL:UNITS:...`     | Connvert column to unit.             |
+|  `DST=SRC:UNITS:...` | Set DST column to conversion of SRC. |
+
+Examples:
+
+```NONE
+# Convert column c from feet to meters:
+$ psv in a.csv // unit c_in_meters=c:ft:m // md
+|   a | b   |        c | d     | c_in_meters           |
+|----:|:----|---------:|:------|:----------------------|
+|   1 | b1  |   23.763 | xspdf | 7.242962400000001 m   |
+|   2 | b2  |  -98.73  | qwer  | -30.092904000000004 m |
+|   3 | b3  | 3451     | bixop | 1051.8648 m           |
+|   1 | b4  |    1.234 | zxy   | 0.3761232 m           |
+```
+
+
+```NONE
+# Convert Haile Gebrselassie's times to minutes per mile:
+$ psv in gebrselassie.csv // md
+| kind          | distance     | time        | event              |
+|:--------------|:-------------|:------------|:-------------------|
+| Personal Best | 1500 m       | 00:03:33.73 | (Stuttgart 1999)   |
+| Personal Best | 1 mile       | 00:03:52.39 | (Gateshead 1999)   |
+| Personal Best | 3000 m       | 00:07:25.09 | NR (Brussels 1998) |
+| Personal Best | 2 miles      | 00:08:01.08 | NBP (Hengelo 1997) |
+| Personal Best | 5000 m       | 00:12:39.36 | (Helsinki 1998)    |
+| Personal Best | 10000 m      | 00:26:22.75 | (Hengelo 1998)     |
+| Indoors       | 800 m        | 00:01:49.35 | (Dortmund 1997)    |
+| Indoors       | 1500 m       | 00:03:31.76 | (Stuttgart 1998)   |
+| Indoors       | 2000 m       | 00:04:52.86 | (Birmingham 1998)  |
+| Indoors       | 3000 m       | 00:07:26.15 | (Karlsruhe 1998)   |
+| Indoors       | 2 miles      | 00:08:04.69 | (Birmingham 2003)  |
+| Indoors       | 5000 m       | 00:12:50.38 | (Birmingham 1999)  |
+| Road          | 10 km        | 00:27:02    | (Doha 2002)        |
+| Road          | 10 miles     | 00:44:24    | WBP (Tilburg 2005) |
+| Road          | 0.5 marathon | 00:58:55    | (Tempe 2006)       |
+| Road          | marathon     | 02:03:59    | (Berlin 2008)      |
+```
+
+
+```NONE
+$ psv in gebrselassie.csv // cast seconds=time:seconds // unit seconds:s meters=distance:m // eval 'return {"m_per_s": meters / seconds}' // unit min_per_mile=m_per_s:mile/min:1/ // cut event,distance,time,min_per_mile // md
+| event              | distance     | time        | min_per_mile                  |
+|:-------------------|:-------------|:------------|:------------------------------|
+| (Stuttgart 1999)   | 1500 m       | 00:03:33.73 | 3.821834368 min / mile        |
+| (Gateshead 1999)   | 1 mile       | 00:03:52.39 | 3.873166666666667 min / mile  |
+| NR (Brussels 1998) | 3000 m       | 00:07:25.09 | 3.979460672 min / mile        |
+| NBP (Hengelo 1997) | 2 miles      | 00:08:01.08 | 4.009 min / mile              |
+| (Helsinki 1998)    | 5000 m       | 00:12:39.36 | 4.073571532800001 min / mile  |
+| (Hengelo 1998)     | 10000 m      | 00:26:22.75 | 4.245315360000001 min / mile  |
+| (Dortmund 1997)    | 800 m        | 00:01:49.35 | 3.6662868000000004 min / mile |
+| (Stuttgart 1998)   | 1500 m       | 00:03:31.76 | 3.7866076160000004 min / mile |
+| (Birmingham 1998)  | 2000 m       | 00:04:52.86 | 3.9276040320000005 min / mile |
+| (Karlsruhe 1998)   | 3000 m       | 00:07:26.15 | 3.9889379200000006 min / mile |
+| (Birmingham 2003)  | 2 miles      | 00:08:04.69 | 4.039083333333334 min / mile  |
+| (Birmingham 1999)  | 5000 m       | 00:12:50.38 | 4.1326881024 min / mile       |
+| (Doha 2002)        | 10 km        | 00:27:02    | 4.35059328 min / mile         |
+| WBP (Tilburg 2005) | 10 miles     | 00:44:24    | 4.44 min / mile               |
+| (Tempe 2006)       | 0.5 marathon | 00:58:55    | 4.497455470737914 min / mile  |
+| (Berlin 2008)      | marathon     | 02:03:59    | 4.732188295165395 min / mile  |
 ```
 
 
@@ -1904,6 +2204,7 @@ $ psv in a.tsv // cols // cols // cut name,dtype.name // md
 | name            | dtype.name   |
 |:----------------|:-------------|
 | name            | object       |
+| types           | object       |
 | dtype.name      | object       |
 | dtype.kind      | object       |
 | dtype.char      | object       |
@@ -1916,7 +2217,7 @@ $ psv in a.tsv // cols // cols // cut name,dtype.name // md
 | dtype.hasobject | bool         |
 | dtype.flags     | int64        |
 | dtype.isbuiltin | int64        |
-| dtype.isnative  | int64        |
+| dtype.isnative  | bool         |
 | dtype.descr     | object       |
 | dtype.alignment | int64        |
 | dtype.base      | object       |
@@ -1927,12 +2228,12 @@ $ psv in a.tsv // cols // cols // cut name,dtype.name // md
 ```NONE
 # Column metadata:
 $ psv in a.tsv // cols // cut name,dtype.name,dtype.kind,dtype.isnative // md
-| name   | dtype.name   | dtype.kind   |   dtype.isnative |
-|:-------|:-------------|:-------------|-----------------:|
-| a      | int64        | i            |                1 |
-| b      | object       | O            |                1 |
-| c      | float64      | f            |                1 |
-| d      | object       | O            |                1 |
+| name   | dtype.name   | dtype.kind   | dtype.isnative   |
+|:-------|:-------------|:-------------|:-----------------|
+| a      | int64        | i            | True             |
+| b      | object       | O            | True             |
+| c      | float64      | f            | True             |
+| d      | object       | O            | True             |
 ```
 
 
@@ -1954,7 +2255,12 @@ Examples:
 # Display proccessing info:
 $ psv in a.tsv // show-columns // md // env-
 {
-  "now": "2024-04-14 17:00:58.087063+0000",
+  "cwd": "...",
+  "config": {
+    "file": "/dev/null",
+    "file_loaded": "/dev/null"
+  },
+  "now": "...",
   "history": [
     [
       "<< IoIn: in a.tsv >>",
@@ -1964,14 +2270,14 @@ $ psv in a.tsv // show-columns // md // env-
     ],
     [
       "<< ShowColumns: show-columns >>",
-      "<< DataFrame: (4, 18) >>",
+      "<< DataFrame: (4, 19) >>",
       "application/x-pandas-dataframe",
       null
     ],
     [
       "<< MarkdownOut: markdown-out >>",
-      "<< str: | name   | dtype.name   | dtype.kind  ... >>",
-      null,
+      "<< str: | name   | types     | dtype.name   | ... >>",
+      "text/markdown",
       null
     ],
     [

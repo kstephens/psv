@@ -94,8 +94,8 @@ class ExampleRegistry():
       path=resources.rel_path('example.pickle'),
       generate=self.generate_all)
     if generate:
-      cache.set_data(self.generate_all())
-    examples = cache.data()
+      cache.data = self.generate_all()
+    examples = cache.data
     return examples
 
   def generate_all(self):

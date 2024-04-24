@@ -7,6 +7,7 @@ from devdriven.io import BroadcastIO
 from devdriven.asserts import assert_output_by_key, assert_log
 from devdriven.cli.application import app
 import psv.main
+from psv.test_helper import fix_line
 from psv.example import ExampleRunner
 
 ####################################
@@ -123,8 +124,3 @@ def context_line(line):
     assert_log(f'command  : {line}')
     return line
   return None
-
-def fix_line(line):
-  if m := re.match(r'^( +"now": +")([^"]+)(")(.*)', line):
-    line = m[1] + '...' + m[3] + m[4]  # re.sub(r'\d', 'X', m[2])
-  return line

@@ -1,0 +1,13 @@
+# d16e618e5008861fc8d34908bcabe9e7
+$ psv in us-states.csv // sort 'FIPS Code' // head 10
+    Rank                 State  FIPS Code  Population
+23    24               Alabama       1000   5,074,296
+47    48                Alaska       2000     733,583
+13    14               Arizona       4000   7,359,197
+32    33              Arkansas       5000   3,045,637
+0      1            California       6000  39,029,342
+20    21              Colorado       8000   5,839,926
+28    29           Connecticut       9000   3,626,205
+44    45              Delaware      10000   1,018,396
+48    49  District of Columbia      11000     671,803
+2      3               Florida      12000  22,244,823

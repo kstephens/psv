@@ -2,8 +2,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<style>
-/** generic *****************************************/
+<style>/** generic *****************************************/
 
 body {
   font-family: Arial, Helvetica, sans-serif;
@@ -34,14 +33,32 @@ a:hover {
   background-color: #b08080;
 }
 
-.cx-title {
-  text-align: center;
-}
 div.cx-content {
   display: inline-block;
 }
 
 /** cx-table *****************************************/
+
+.cx-table thead .cx-title-row {
+  position: sticky;
+  left: 0; /* needed for sticky? */
+  background-color: #000;
+}
+.cx-table .cx-title-th {
+  position: sticky;
+  left: 0;
+  background-color: #000;
+  padding-bottom: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+.cx-title {
+  position: sticky;
+  left: 2em;
+  float: left;
+  white-space: pre;
+  font-weight: bold;
+  background-color: #000;
+}
 
 table.cx-table {
   border-collapse: collapse;
@@ -78,6 +95,12 @@ table.cx-table {
 }
 .cx-center {
   text-align: center;
+}
+.cx-nowrap {
+  white-space: nowrap;
+}
+.cx-wrap {
+  white-space: normal;
 }
 
 /* https://css-tricks.com/position-sticky-and-table-headers/ */
@@ -126,6 +149,14 @@ table.cx-table {
 .cx-filter-row-count-span {
   vertical-align: middle;
   font-size: 80%;
+}
+
+.cx-column-sort-indicator {
+  visibility: hidden;
+  white-space: pre;
+  vertical-align: middle;
+  text-align: center;
+  font-size: 50%;
 }
 
 /** footer  *****************************************/
@@ -180,7 +211,6 @@ table.cx-table {
   visibility: visible;
   opacity: 1;
 }
-
 </style>
 
 
@@ -194,62 +224,43 @@ table.cx-table {
 
 <thead class="cx-thead">
 
+
 <tr class="cx-columms">
-
-<th class="cx-column" title="name: a; index: 1; type: int64">a</th>
-
-<th class="cx-column" title="name: b; index: 2; type: UNKNOWN">b</th>
-
-<th class="cx-column" title="name: c; index: 3; type: float64">c</th>
-
-<th class="cx-column" title="name: d; index: 4; type: UNKNOWN">d</th>
+<th class="cx-column" title="name: a; index: 1; type: int64"><span class="cx-column-name">a</span><span class="cx-column-sort-indicator"></span></th>
+<th class="cx-column" title="name: b; index: 2; type: str"><span class="cx-column-name">b</span><span class="cx-column-sort-indicator"></span></th>
+<th class="cx-column" title="name: c; index: 3; type: float64"><span class="cx-column-name">c</span><span class="cx-column-sort-indicator"></span></th>
+<th class="cx-column" title="name: d; index: 4; type: str"><span class="cx-column-name">d</span><span class="cx-column-sort-indicator"></span></th>
 </tr>
 </thead>
 <tbody class="cx-tbody">
 
   
 <tr title="1 / 4">
-
-<td class="cx-right" title="1 / 4 - a">1</td>
-
-<td title="1 / 4 - b">b1</td>
-
-<td class="cx-right" title="1 / 4 - c">23.763</td>
-
-<td title="1 / 4 - d">xspdf</td>
+<td class="cx-right cx-nowrap" title="1 / 4 - a">1</td>
+<td class="cx-nowrap" title="1 / 4 - b">b1</td>
+<td class="cx-right cx-nowrap" title="1 / 4 - c">23.763</td>
+<td class="cx-nowrap" title="1 / 4 - d">xspdf</td>
 </tr>
   
 <tr title="2 / 4">
-
-<td class="cx-right" title="2 / 4 - a">2</td>
-
-<td title="2 / 4 - b">b2</td>
-
-<td class="cx-right" title="2 / 4 - c">-98.73</td>
-
-<td title="2 / 4 - d">qwer</td>
+<td class="cx-right cx-nowrap" title="2 / 4 - a">2</td>
+<td class="cx-nowrap" title="2 / 4 - b">b2</td>
+<td class="cx-right cx-nowrap" title="2 / 4 - c">-98.73</td>
+<td class="cx-nowrap" title="2 / 4 - d">qwer</td>
 </tr>
   
 <tr title="3 / 4">
-
-<td class="cx-right" title="3 / 4 - a">3</td>
-
-<td title="3 / 4 - b">b3</td>
-
-<td class="cx-right" title="3 / 4 - c">3451.0</td>
-
-<td title="3 / 4 - d">bixop</td>
+<td class="cx-right cx-nowrap" title="3 / 4 - a">3</td>
+<td class="cx-nowrap" title="3 / 4 - b">b3</td>
+<td class="cx-right cx-nowrap" title="3 / 4 - c">3451.0</td>
+<td class="cx-nowrap" title="3 / 4 - d">bixop</td>
 </tr>
   
 <tr title="4 / 4">
-
-<td class="cx-right" title="4 / 4 - a">1</td>
-
-<td title="4 / 4 - b">b4</td>
-
-<td class="cx-right" title="4 / 4 - c">1.234</td>
-
-<td title="4 / 4 - d">zxy</td>
+<td class="cx-right cx-nowrap" title="4 / 4 - a">1</td>
+<td class="cx-nowrap" title="4 / 4 - b">b4</td>
+<td class="cx-right cx-nowrap" title="4 / 4 - c">1.234</td>
+<td class="cx-nowrap" title="4 / 4 - d">zxy</td>
 </tr>
 </tbody>
 

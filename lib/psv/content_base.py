@@ -63,17 +63,17 @@ class Content:
     self._as_dataframe = self._as_iterable = None
 
   def as_str(self) -> str:
-    if not self._as_str:
+    if self._as_str is None:
       self._as_str = self.impl.as_str()
     return self._as_str
 
   def as_bytes(self) -> bytes:
-    if not self._as_bytes:
+    if self._as_bytes is None:
       self._as_bytes = self.impl.as_bytes()
     return self._as_bytes
 
   def as_dataframe(self) -> pd.DataFrame:
-    if not self._as_dataframe:
+    if self._as_dataframe is None:
       self._as_dataframe = self.impl.as_dataframe()
     return self._as_dataframe
 
@@ -190,12 +190,12 @@ The decoded body, defaults to utf-8.
     '''
     if encoding and self.encoding != encoding:
       self.set_encoding(encoding)
-    if not self._content:
+    if self._content is None:
       self._content = self.body().decode(self.encoding or 'utf-8')
     return self._content
 
   def body(self):
-    if not self._body:
+    if self._body is None:
       self._body = self.response().read()
       self._response = None
     return self._body
@@ -207,7 +207,7 @@ The decoded body, defaults to utf-8.
     return tempfile_from_readable(self.response(), suffix, fun)
 
   def response(self):
-    if self._response:
+    if self._response is not None:
       return self._response
 
     def do_get(url):

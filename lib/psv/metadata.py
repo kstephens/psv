@@ -54,7 +54,7 @@ $ psv in a.tsv // seq --uuid // md
 
   def add_uuid(self, out, _env):
     col = str(self.arg_or_opt(0, 'column', '__i__'))
-    seq = [uuid() for _i in range(0, len(out))]
+    seq = [uuid() for _i in range(len(out))]
     out[col] = seq
     return out
 
@@ -120,8 +120,14 @@ def get_dataframe_info(dframe):
 
 def get_dataframe_col_info(df, col):
   dtype = df[col].dtype
+  types = set()
+
+  def each_type(val):
+    types.add(type(val).__name__)
+  df[col].apply(each_type)
   return {
     'name': col,
+    'types': list(types),
   } | {
     f'dtype.{k}': v for k, v in dtype_to_dict(dtype).items()
   }
