@@ -111,7 +111,7 @@ class Coerce(Command):
   def _convert_to_timedelta_day(self, seq, col):
     return self._convert_to_timedelta_scale(seq, col, NS_PER_SEC * 60 * 60 * 24)
 
-  def _convert_to_datetime(self, seq):
+  def _convert_to_datetime(self, seq, _col):
     return pd.to_datetime(seq,
                           errors='ignore',
                           # format='mixed',
