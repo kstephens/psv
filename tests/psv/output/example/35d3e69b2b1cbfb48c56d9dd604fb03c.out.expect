@@ -940,6 +940,10 @@ $ psv in a.tsv // cols // cut name,dtype.name,dtype.kind,dtype.isnative // md
 # Display proccessing info:
 $ psv in a.tsv // show-columns // md // env-
 {
+  "cwd": "...",  "config": {
+    "file": "/dev/null",
+    "file_loaded": "/dev/null"
+  },
   "now": "...",  "history": [
     [
       "<< IoIn: in a.tsv >>",
@@ -956,7 +960,7 @@ $ psv in a.tsv // show-columns // md // env-
     [
       "<< MarkdownOut: markdown-out >>",
       "<< str: | name   | dtype.name   | dtype.kind  ... >>",
-      "text/markdown",
+      null,
       null
     ],
     [

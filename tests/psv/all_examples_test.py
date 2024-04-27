@@ -125,6 +125,6 @@ def context_line(line):
   return None
 
 def fix_line(line):
-  if m := re.match(r'^( +"now": +")([^"]+)(")(.*)', line):
-    line = m[1] + '...' + m[3] + m[4]  # re.sub(r'\d', 'X', m[2])
+  if m := re.match(r'^( +"(now|cwd)": +")([^"]+)(")(.*)', line):
+    line = m[1] + '...' + m[4] + m[5]  # re.sub(r'\d', 'X', m[2])
   return line
