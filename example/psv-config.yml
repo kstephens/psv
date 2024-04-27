@@ -1,0 +1,2 @@
+macro:
+  html-full: 'html- --row-index --render-links --style --sorting --filtering --filtering-tooltip $@'
