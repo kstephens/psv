@@ -798,8 +798,7 @@ Examples:
 # Convert TSV to SQL schema:
 $ psv in a.tsv // sql
 CREATE TABLE "__table__" (
-"index" INTEGER,
-  "a" INTEGER,
+"a" INTEGER,
   "b" TEXT,
   "c" REAL,
   "d" TEXT

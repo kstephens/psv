@@ -315,9 +315,14 @@ $ w3m -dump users-with-fs.html
 
 sql- - Write SQL.
 
-  psv sql-
+  psv sql- [--action=ACTION,...] [--table=TABLE]
 
 Aliases: sql
+
+Options:
+
+  --action=ACTION,... | Actions to perform: create, trunc, TODO.
+  --table=TABLE       | Table name.
 
 Examples:
 
@@ -380,11 +385,15 @@ $ file a.xlsx
 
 ----------------------------------------------------------
 
-extract - Extract fields by Regexp.
+extract - Extract fields by Regex.
 
-  psv extract
+  psv extract [--unamed=TEMPLATE]
 
 Aliases: rx, re, rex
+
+Options:
+
+  --unamed=TEMPLATE | Column name template for unnamed groups.
 
 Examples:
 

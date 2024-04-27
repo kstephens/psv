@@ -779,11 +779,18 @@ $ w3m -dump users-with-fs.html
 `sql-` - Write SQL.
 
 ```NONE
-psv sql-
+psv sql- [--action=ACTION,...] [--table=TABLE]
 ```
 
 
 Aliases: `sql`
+
+Options:
+
+|                        |                                          |
+| ---------------------- | ---------------------------------------- |
+|  `--action=ACTION,...` | Actions to perform: create, trunc, TODO. |
+|  `--table=TABLE`       | Table name.                              |
 
 Examples:
 
@@ -791,8 +798,7 @@ Examples:
 # Convert TSV to SQL schema:
 $ psv in a.tsv // sql
 CREATE TABLE "__table__" (
-"index" INTEGER,
-  "a" INTEGER,
+"a" INTEGER,
   "b" TEXT,
   "c" REAL,
   "d" TEXT
@@ -923,14 +929,20 @@ a.xlsx: Microsoft Excel 2007+
 
 ## `extract`
 
-`extract` - Extract fields by Regexp.
+`extract` - Extract fields by Regex.
 
 ```NONE
-psv extract
+psv extract [--unamed=TEMPLATE]
 ```
 
 
 Aliases: `rx`, `re`, `rex`
+
+Options:
+
+|                      |                                          |
+| -------------------- | ---------------------------------------- |
+|  `--unamed=TEMPLATE` | Column name template for unnamed groups. |
 
 Examples:
 
@@ -1960,7 +1972,7 @@ $ psv in a.tsv // show-columns // md // env-
     [
       "<< MarkdownOut: markdown-out >>",
       "<< str: | name   | dtype.name   | dtype.kind  ... >>",
-      "text/markdown",
+      null,
       null
     ],
     [
