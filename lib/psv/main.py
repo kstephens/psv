@@ -7,6 +7,7 @@ import devdriven.cli
 from devdriven.cli.types import Argv
 from devdriven.to_dict import to_dict
 from devdriven.random import set_seed
+from devdriven.config import Config
 from . import pipeline, io
 
 class Main(devdriven.cli.Main):
@@ -16,6 +17,7 @@ class Main(devdriven.cli.Main):
     super().__init__()
     self.prog_name = 'psv'
     self.env = {}
+    self.config = Config(file_default='~/psv/config.yml', opts={}, env_prefix='PSV_', env=os.environ).load()
     logging.getLogger("urllib3").setLevel(logging.WARNING)
 
   def parse_argv(self, argv: Argv):
