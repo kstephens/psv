@@ -112,11 +112,17 @@ class Coerce(Command):
     return self._convert_to_timedelta_scale(seq, col, NS_PER_SEC * 60 * 60 * 24)
 
   def _convert_to_datetime(self, seq, _col):
-    return pd.to_datetime(seq,
-                          errors='ignore',
-                          # format='mixed',
-                          infer_datetime_format=True,
-                          utc=True)
+    return pd.to_datetime(
+      seq,
+      errors='ignore',
+      # format='mixed',
+      # UserWarning: The argument 'infer_datetime_format' is deprecated and will be removed in a future version.
+      # A strict version of it is now the default,
+      # see https://pandas.pydata.org/pdeps/0004-consistent-to-datetime-parsing.html.
+      # You can safely remove this argument.
+      # infer_datetime_format=True,
+      utc=self.opt('utc', True)
+    )
 
   def _convert_to_ipaddr(self, seq, _col):
     def to_ipaddr(val):
