@@ -6,7 +6,7 @@ psv - Pandas Separated Values
 - git@kurtstephens.com
 
 `psv` is a command-line that manipulates tabular data in multiple formats.
-It's design is influenced by the `Unix Principle` of "small tools connected by pipes".
+Its design is influenced by the `Unix Principle` of "small tools connected by pipes".
 
 # Features
 

@@ -779,11 +779,18 @@ $ w3m -dump users-with-fs.html
 `sql-` - Write SQL.
 
 ```NONE
-psv sql-
+psv sql- [--action=ACTION,...] [--table=TABLE]
 ```
 
 
 Aliases: `sql`
+
+Options:
+
+|                        |                                          |
+| ---------------------- | ---------------------------------------- |
+|  `--action=ACTION,...` | Actions to perform: create, trunc, TODO. |
+|  `--table=TABLE`       | Table name.                              |
 
 Examples:
 
@@ -923,14 +930,20 @@ a.xlsx: Microsoft Excel 2007+
 
 ## `extract`
 
-`extract` - Extract fields by Regexp.
+`extract` - Extract fields by Regex.
 
 ```NONE
-psv extract
+psv extract [--unamed=TEMPLATE]
 ```
 
 
 Aliases: `rx`, `re`, `rex`
+
+Options:
+
+|                      |                                          |
+| -------------------- | ---------------------------------------- |
+|  `--unamed=TEMPLATE` | Column name template for unnamed groups. |
 
 Examples:
 
@@ -1940,7 +1953,7 @@ Examples:
 # Display proccessing info:
 $ psv in a.tsv // show-columns // md // env-
 {
-  "now": "2024-04-24 18:26:26.369996+0000",
+  "now": "2024-04-14 17:00:58.087063+0000",
   "history": [
     [
       "<< IoIn: in a.tsv >>",
@@ -1957,7 +1970,7 @@ $ psv in a.tsv // show-columns // md // env-
     [
       "<< MarkdownOut: markdown-out >>",
       "<< str: | name   | dtype.name   | dtype.kind  ... >>",
-      "text/markdown",
+      null,
       null
     ],
     [
