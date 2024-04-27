@@ -64,6 +64,6 @@ def read_table_with_header(readable, first_row_is_header, **kwargs):
   df = pd.read_table(readable, **kwargs)
   if header is None:
     width = df.shape[1]
-    cols = [f'c{i + 1}' for i in range(0, width)]
+    cols = [f'c{i + 1}' for i in range(width)]
     df = df.set_axis(cols, axis=1)
   return df

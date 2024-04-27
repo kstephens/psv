@@ -35,7 +35,7 @@ $ psv in a.md // -md // csv
         record = re.split(r'\s+\|\s+', line)
         records.append(record)
     if not cols and records:
-      cols = [f'c{i + 1}' for i in range(0, len(records[0]))]
+      cols = [f'c{i + 1}' for i in range(len(records[0]))]
     return pd.DataFrame(data=records, columns=cols)
 
 

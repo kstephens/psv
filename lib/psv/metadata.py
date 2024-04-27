@@ -54,7 +54,7 @@ $ psv in a.tsv // seq --uuid // md
 
   def add_uuid(self, out, _env):
     col = str(self.arg_or_opt(0, 'column', '__i__'))
-    seq = [uuid() for _i in range(0, len(out))]
+    seq = [uuid() for _i in range(len(out))]
     out[col] = seq
     return out
 

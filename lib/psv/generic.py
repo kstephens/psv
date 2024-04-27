@@ -154,7 +154,7 @@ def parse_rows(
     rows[i] = fields[:]
     i += 1
   # Pad all rows to max row width:
-  pads = [[''] * n for n in range(0, max_width + 1)]
+  pads = [[''] * n for n in range(max_width + 1)]
   for row in rows:
     row.extend(pads[max_width - len(row)])
   # Take header off the top,
@@ -168,4 +168,4 @@ def parse_rows(
 def generate_columns(columns, column_format, width):
   if width > len(columns):
     columns = columns + [None] * (width - len(columns))
-  return map(lambda i: columns[i] or column_format % (i + 1), range(0, width))
+  return map(lambda i: columns[i] or column_format % (i + 1), range(width))
