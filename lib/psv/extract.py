@@ -9,8 +9,10 @@ section('Format', 20)
 @command
 class Extract(Command):
   '''
-  extract - Extract fields by Regexp.
+  extract - Extract fields by Regex.
   aliases: rx, re, rex
+
+  --unamed=TEMPLATE  |  Column name template for unnamed groups.
 
   Examples:
 
@@ -28,7 +30,7 @@ class Extract(Command):
     rx = self.args[0]
     rx = re.compile(rx)
     unnamed = self.opt('unnamed', False)
-    if unnamed is True:
+    if unnamed is True or unnamed == '':
       unnamed = 'c%d'
     cols, inds = columns_for_rx(rx, unnamed)
     if isinstance(inp, Content):
