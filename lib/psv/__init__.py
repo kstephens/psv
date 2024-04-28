@@ -16,6 +16,7 @@ from . import spreadsheet
 from . import process
 from . import summary
 from . import coerce
+# from . import convert
 from . import metadata
 from . import extract
 from . import expr
