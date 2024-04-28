@@ -1,3 +1,4 @@
+from typing import List  # Any,
 import re
 import ipaddress
 from devdriven.util import split_flat
@@ -6,32 +7,55 @@ import pandas as pd
 from .command import Command, section, command
 from .util import parse_column_and_opt
 
-NS_PER_SEC = 1000 * 1000 * 1000
-
 section('Types', 50)
+
+NS_PER_SEC = 1000 * 1000 * 1000
+TYPE_ALIASES = {
+  'n': 'numeric',
+  'i': 'int',
+  'int32': 'int',
+  'int64': 'int',
+  'f': 'float',
+  'timedelta': 'timedelta64',
+  'td': 'timedelta64',
+  'datetime': 'datetime64',
+  'dt': 'datetime64',
+  'ip': 'ipaddress',
+  'ipaddr': 'ipaddress',
+  'epoch': 'unix_epoch',
+  'unix': 'unix_epoch',
+}
+
+ALIAS_DOCS = '\n'.join([
+  f'* {f"`{k}`":12s}  -  Alias for `{v}`.'
+  for k, v in TYPE_ALIASES.items()
+])
 
 @command
 class Coerce(Command):
-  '''
-  coerce - Corece column types.
+  __doc__ = f'''
+  coerce - Coerce column types.
   Aliases: astype
 
   Arguments:
 
-  COL:TYPE ...  |  Column to coerce to TYPE.
+  COL:TYPES:... ...      |  Coerce COL by TYPES.
+  DST=SRC:TYPES:... ...  |  Set DST column to coersion of SRC.
 
   TYPES:
 
-* `numeric`      - to `int64` or `float64`.
-* `int`          - to `int64`.
-* `float`        - to `float64`.
-* `timedelta`    - string to `timedelta64[ns]`.
-* `datetime`     - string to `datetime`.
-* `second`       - string to `timedelta64[ns]` to `float` seconds.
-* `minute`       - string to `timedelta64[ns]` to `float` minutes.
-* `hour`         - string to `timedelta64[ns]` to `float` hours.
-* `day`          - string to `timedelta64[ns]` to `float` days.
-* `ipaddr`       - string to `ipaddress`.  See python `ipaddress` module.
+* `numeric`     -  `int64` or `float64`.
+* `int`         -  `int64`.
+* `float`       -  `float64`.
+* `timedelta`   -  `timedelta64[ns]`.
+* `datetime`    -  `datetime`.
+* `timedelta`   -  `timedelta64`.
+* `unix_epoch`  -  Seconds since 1970.
+* `ipaddress`   -  Convert to `ipaddress`.
+
+  TYPE Aliases:
+
+{ALIAS_DOCS}
 
   Examples:
 
@@ -39,83 +63,76 @@ class Coerce(Command):
   $ psv in us-states-sample.csv // sort Population
   $ psv in us-states-sample.csv // coerce Population:int // sort Population
 
+  # Parse date, convert to datetime, then integer Unix epoch seconds:
+  $ psv in birthdays.csv // coerce sec_since_1970=birthday:datetime:epoch:int
+
   '''
   def xform(self, inp, _env):
     inp_cols = list(inp.columns)
-    col_types = [parse_column_and_opt(inp_cols, arg) for arg in split_flat(self.args, ',')]
-    return self.coerce(inp, col_types)
-
-  def coerce(self, inp, col_types):
+    out_types = [parse_column_and_opt(inp_cols, arg) for arg in split_flat(self.args, ',')]
     out = inp.copy()
-    for col, typ_list in col_types:
-      for typ in typ_list.split(':'):
-        typ = re.sub(r'-', '_', typ)
-        typ = self.coercer_aliases.get(typ, typ)
-        out[col] = self.coercer(typ)(out[col], col)
+    for col, out_types in out_types:
+      col = col.split('=', 1)
+      out_col, inp_col = col[0], col[-1]
+      out[out_col] = self.coerce_col(out, inp_col, out_types.split(':'))
     return out
 
-  def coercer(self, typ):
-    return getattr(self, f'_convert_to_{typ}')
-
-  coercer_aliases = {
-    'n': 'numeric',
-    'i': 'int',
-    'f': 'f',
-    'timedelta_s': 'timedelta_second',
-    'timedelta_sec': 'timedelta_second',
-    'sec': 'timedelta_second',
-    'timedelta_m': 'timedelta_minute',
-    'timedelta_min': 'timedelta_minute',
-    'min': 'timedelta_minute',
-    'timedelta_h': 'timedelta_hour',
-    'hr': 'timedelta_hour',
-    'hour': 'timedelta_hour',
-    'timedelta_hr': 'timedelta_hour',
-    'timedelta_d': 'timedelta_day',
-    'day': 'timedelta_day',
-  }
-
-  def _convert_to_numeric(self, seq, _col):
-    seq = remove_commas(seq)
-    return pd.to_numeric(seq, errors='coerce')
-
-  def _convert_to_int(self, seq, _col):
-    seq = remove_commas(seq)
-    return pd.to_numeric(seq, downcast='integer', errors='coerce')
-
-  def _convert_to_float(self, seq, _col):
-    seq = remove_commas(seq)
-    return pd.to_numeric(seq, downcast='float', errors='coerce')
-
-  def _convert_to_str(self, seq, _col):
-    return map(str, seq.tolist())
-
-  def _convert_to_timedelta(self, seq, _col):
-    return pd.to_timedelta(seq, errors='ignore')
-
-  def _convert_to_timedelta_scale(self, seq, col, scale):
-    seq = pd.to_timedelta(seq, errors='ignore')
-    seq = self._convert_to_float(seq, col)
-    seq = seq.apply(lambda x: x / scale)
+  def coerce_col(self, out, inp_col: str, out_types: List[str]):
+    seq = out[inp_col]
+    inp_type = seq.dtype.name
+    for out_type in out_types:
+      out_type = re.sub(r'-', '_', out_type)
+      seq = self.coerce_seq_type(seq, inp_type, out_type)
+      # ic((inp_col, inp_type, out_type, seq.to_list()))
+      inp_type = seq.dtype.name
     return seq
 
-  def _convert_to_timedelta_second(self, seq, col):
-    return self._convert_to_timedelta_scale(seq, col, NS_PER_SEC)
+  def coerce_seq(self, seq, out_type: str):
+    return self.coerce_seq_type(seq, seq.dtype.name, out_type)
 
-  def _convert_to_timedelta_minute(self, seq, col):
-    return self._convert_to_timedelta_scale(seq, col, NS_PER_SEC * 60)
+  def coerce_seq_type(self, seq, inp_type: str, out_type: str):
+    out_type = TYPE_ALIASES.get(out_type, out_type)
+    coercer = self.coercer(out_type)
+    return coercer(seq, inp_type)
 
-  def _convert_to_timedelta_hour(self, seq, col):
-    return self._convert_to_timedelta_scale(seq, col, NS_PER_SEC * 60 * 60)
+  def coercer(self, out_type: str):
+    return getattr(self, f'_coerce_to_{out_type}')
 
-  def _convert_to_timedelta_day(self, seq, col):
-    return self._convert_to_timedelta_scale(seq, col, NS_PER_SEC * 60 * 60 * 24)
+  def _coerce_to_numeric(self, seq, inp_type: str):
+    seq = remove_commas(seq, inp_type)
+    return pd.to_numeric(seq, errors='coerce')
 
-  def _convert_to_datetime(self, seq, _col):
+  def _coerce_to_int(self, seq, inp_type: str):
+    seq = remove_commas(seq, inp_type)
+    return pd.to_numeric(seq, downcast='integer', errors='coerce')
+
+  def _coerce_to_float(self, seq, inp_type: str):
+    seq = remove_commas(seq, inp_type)
+    return pd.to_numeric(seq, downcast='float', errors='coerce')
+
+  def _coerce_to_str(self, seq, _inp_type: str):
+    return map(str, seq.tolist())
+
+  def _coerce_to_unix_epoch(self, seq, inp_type: str):
+    if inp_type in ('float', 'int'):
+      return seq
+    seq = self.coerce_seq(seq, 'datetime')
+    # ic(seq.dtype.name)
+    if seq.dtype.name.startswith('datetime64[ns'):
+      seq = seq.astype('int64').astype('float64') / NS_PER_SEC
+    return seq
+
+  def _coerce_to_datetime64(self, seq, inp_type: str):
+    # ic(inp_type)
+    if inp_type in ('float', 'float8', 'float64', 'int', 'int32', 'int64'):
+      return pd.to_datetime(seq, unit='s', origin='unix', errors='ignore', cache=True)
+    if inp_type.startswith('datetime'):
+      return seq
     return pd.to_datetime(
       seq,
       errors='ignore',
-      # format='mixed',
+      cache=True,
+      format='mixed',
       # UserWarning: The argument 'infer_datetime_format' is deprecated and will be removed in a future version.
       # A strict version of it is now the default,
       # see https://pandas.pydata.org/pdeps/0004-consistent-to-datetime-parsing.html.
@@ -124,13 +141,36 @@ class Coerce(Command):
       utc=self.opt('utc', True)
     )
 
-  def _convert_to_ipaddr(self, seq, _col):
+  def _coerce_to_timedelta64(self, seq, inp_type: str):
+    # ic(inp_type)
+    if inp_type in ('timedelta64'):
+      return seq
+    if inp_type in ('float', 'int', 'int32', 'int64'):
+      return pd.to_timedelta(seq, unit='s', errors='ignore')
+    return pd.to_timedelta(seq, errors='ignore')
+
+  def _coerce_to_timedelta(self, seq, _inp_type: str):
+    seq = pd.to_timedelta(seq, errors='ignore')
+    seq = self.coerce_seq(seq, 'float')
+    seq = seq.apply(lambda x: x / NS_PER_SEC)
+    return seq
+
+  def _coerce_to_ipaddress(self, seq, inp_type: str):
+    cache = {}
     def to_ipaddr(val):
       try:
-        return ipaddress.ip_address(val)
+        if inp_type in ('str'):
+          if val in cache:
+            return cache[val]
+          cache[val] = ipaddr = ipaddress.ip_address(val)
+          # ic(type(ipaddr))
+          return ipaddr
+        return None
       except ValueError:
         return None
     return seq.apply(to_ipaddr)
 
-def remove_commas(seq):
-  return seq.apply(lambda x: str(x).replace(',', ''))
+def remove_commas(seq, inp_type):
+  if inp_type in ('object', 'str'):
+    return seq.apply(lambda x: str(x).replace(',', ''))
+  return seq

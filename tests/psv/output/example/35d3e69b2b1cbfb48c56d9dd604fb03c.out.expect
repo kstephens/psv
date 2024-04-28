@@ -393,8 +393,7 @@ $ w3m -dump users-with-fs.html
 # Convert TSV to SQL schema:
 $ psv in a.tsv // sql
 CREATE TABLE "__table__" (
-"index" INTEGER,
-  "a" INTEGER,
+"a" INTEGER,
   "b" TEXT,
   "c" REAL,
   "d" TEXT
@@ -572,6 +571,18 @@ $ psv in a.tsv // shuffle --seed=5 // md
 |   1 | b4  |    1.234 | zxy   |
 |   2 | b2  |  -98.73  | qwer  |
 |   1 | b1  |   23.763 | xspdf |
+
+
+    copy    
+------------
+# Copy columns by name:
+$ psv in a.tsv // copy b:e d:f // md
+|   a | b   |        c | d     | e   | f     |
+|----:|:----|---------:|:------|:----|:------|
+|   1 | b1  |   23.763 | xspdf | b1  | xspdf |
+|   2 | b2  |  -98.73  | qwer  | b2  | qwer  |
+|   3 | b3  | 3451     | bixop | b3  | bixop |
+|   1 | b4  |    1.234 | zxy   | b4  | zxy   |
 
 
     cut    
@@ -836,6 +847,14 @@ $ psv in us-states-sample.csv // coerce Population:int // sort Population
 6       New York    19677151
 4        Florida    22244823
 
+# Parse date, convert to datetime, then integer Unix epoch seconds:
+$ psv in birthdays.csv // coerce sec_since_1970=birthday:datetime:epoch:int
+    name      birthday  sec_since_1970
+0    Bob     5/10/1976       200534400
+1  Alice    1999-12-31       946598400
+2  Frank  Aug 28, 2012      1346112000
+3  Grace  Apr 27, 2011      1303862400
+
 
  Metadata  
 ===========
@@ -919,7 +938,7 @@ $ psv in a.tsv // cols // cols // cut name,dtype.name // md
 | dtype.hasobject | bool         |
 | dtype.flags     | int64        |
 | dtype.isbuiltin | int64        |
-| dtype.isnative  | int64        |
+| dtype.isnative  | bool         |
 | dtype.descr     | object       |
 | dtype.alignment | int64        |
 | dtype.base      | object       |
@@ -927,12 +946,12 @@ $ psv in a.tsv // cols // cols // cut name,dtype.name // md
 
 # Column metadata:
 $ psv in a.tsv // cols // cut name,dtype.name,dtype.kind,dtype.isnative // md
-| name   | dtype.name   | dtype.kind   |   dtype.isnative |
-|:-------|:-------------|:-------------|-----------------:|
-| a      | int64        | i            |                1 |
-| b      | object       | O            |                1 |
-| c      | float64      | f            |                1 |
-| d      | object       | O            |                1 |
+| name   | dtype.name   | dtype.kind   | dtype.isnative   |
+|:-------|:-------------|:-------------|:-----------------|
+| a      | int64        | i            | True             |
+| b      | object       | O            | True             |
+| c      | float64      | f            | True             |
+| d      | object       | O            | True             |
 
 
     env-    
@@ -956,7 +975,7 @@ $ psv in a.tsv // show-columns // md // env-
     [
       "<< MarkdownOut: markdown-out >>",
       "<< str: | name   | dtype.name   | dtype.kind  ... >>",
-      "text/markdown",
+      null,
       null
     ],
     [
