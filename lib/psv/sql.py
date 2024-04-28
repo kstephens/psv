@@ -1,12 +1,12 @@
 import pandas as pd
 # from icecream import ic
-from .command import section, command
-from .formats import FormatOut
-from sqlalchemy import Table
+from sqlalchemy import Table, Column, MetaData
 from sqlalchemy.sql import table, column, select
 from sqlalchemy.sql.expression import Select, TextClause
 from sqlalchemy.dialects import postgresql
 from pandas.io.sql import SQLTable
+from .command import section, command
+from .formats import FormatOut
 
 # See:
 # * https://github.com/pandas-dev/pandas/blob/main/pandas/io/sql.py
@@ -44,28 +44,27 @@ $ psv in a.tsv // sql
   def table_name(self):
     return self.opt('table', '__table__')
 
-  def table(self, inp):
+  def table_object(self, inp):
     columns = []
     for col in inp.columns:
       columns.append(Column(col))
-    table = Table(self.table_name(),
+    tab = Table(self.table_name(),
                   MetaData(),
                   *columns
                   )
-    return table
+    return tab
 
-  def action_create(self, inp, env):
+  def action_create(self, inp, _env):
     if not self.opt('index', False):
       inp = inp.reset_index(drop=True)
     # inp.drop(labels=['index'], axis=1, errors='ignore', inplace=True)
     # inp.drop(labels=['index'], axis=0, errors='ignore', inplace=True)
     return pd.io.sql.get_schema(inp, name=self.table_name())
 
-
-  def action_insert(self, inp, env):
+  def action_insert(self, inp, _env):
     return '-- INSERT'
 
-  def action_trunc(self, inp, env):
+  def action_trunc(self, inp, _env):
     return '-- TRUNC'
 
 '''
