@@ -5,6 +5,7 @@ import devdriven.cli.command as cmd
 from devdriven.cli.descriptor import Descriptor
 from devdriven.cli.types import Argv
 from devdriven.cli.application import app
+from devdriven.cli.macro import MacroExpander
 from devdriven.mime import short_and_long_suffix
 
 Input = Any
@@ -24,6 +25,9 @@ class Command(cmd.Command):
 
 def main_make_xform(main, klass_or_name: Union[str, Type], argv: Argv) -> Optional[Command]:
   assert main
+  if isinstance(klass_or_name, str):
+    macros = main.config.opt('macro', {})
+    klass_or_name, *argv = MacroExpander(macros=macros).expand([klass_or_name, *argv])
   if desc := app.descriptor(klass_or_name):
     xform = desc.klass()
     xform.main = main

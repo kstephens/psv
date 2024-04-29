@@ -798,8 +798,7 @@ Examples:
 # Convert TSV to SQL schema:
 $ psv in a.tsv // sql
 CREATE TABLE "__table__" (
-"index" INTEGER,
-  "a" INTEGER,
+"a" INTEGER,
   "b" TEXT,
   "c" REAL,
   "d" TEXT
@@ -1953,7 +1952,12 @@ Examples:
 # Display proccessing info:
 $ psv in a.tsv // show-columns // md // env-
 {
-  "now": "2024-04-14 17:00:58.087063+0000",
+  "cwd": "/Users/stephens/local/src/psv/example",
+  "config": {
+    "file": "/dev/null",
+    "file_loaded": "/dev/null"
+  },
+  "now": "2024-04-26 21:19:17.230945+0000",
   "history": [
     [
       "<< IoIn: in a.tsv >>",

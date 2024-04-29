@@ -17,7 +17,14 @@ class Main(devdriven.cli.Main):
     super().__init__()
     self.prog_name = 'psv'
     self.env = {}
-    self.config = Config(file_default='~/psv/config.yml', opts={}, env_prefix='PSV_', env=os.environ).load()
+    self.config = Config(file_default='~/.psv/config.yml', opts={}, env_prefix='PSV_', env=os.environ).load()
+    self.env.update({
+      "cwd": os.getcwd(),
+      "config": {
+        "file": self.config.config_file(),
+        "file_loaded": self.config.file_loaded,
+      }
+    })
     logging.getLogger("urllib3").setLevel(logging.WARNING)
 
   def parse_argv(self, argv: Argv):

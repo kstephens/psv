@@ -1,6 +1,10 @@
 # d113928ec5594f895eb946c34ec1fa34
 $ psv in a.tsv // show-columns // md // env-
 {
+  "cwd": "...",  "config": {
+    "file": "/dev/null",
+    "file_loaded": "/dev/null"
+  },
   "now": "...",  "history": [
     [
       "<< IoIn: in a.tsv >>",

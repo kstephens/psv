@@ -2,6 +2,7 @@ PYTHON=python3.11
 PYTHONPATH_OTHER:=../devdriven-python/lib
 DIRS_OTHER:=../devdriven-python
 TEST_DIRS+=tests
+export PSV_CONFIG_FILE=/dev/null
 include ../devdriven-python/Makefile.common
 
 README.md: doc/README-*.md
