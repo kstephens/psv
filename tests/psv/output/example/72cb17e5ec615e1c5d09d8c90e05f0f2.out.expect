@@ -311,6 +311,12 @@ $ psv in us-states-sample.csv // coerce Population:int // sort Population
 $ psv in birthdays.csv // coerce sec_since_1970=birthday:datetime:epoch:int
 
 
+    unit    
+------------
+# Convert column c from feet to meters:
+$ psv in a.csv // unit c_in_meters=c:ft:m // md
+
+
  Metadata  
 ===========
 

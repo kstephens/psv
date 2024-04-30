@@ -798,6 +798,25 @@
 |                 |                                                                                                                                                             |
 |                 | ----------------------------------------------------------                                                                                                  |
 |                 |                                                                                                                                                             |
+| unit            | Convert units.                                                                                                                                              |
+|                 |                                                                                                                                                             |
+|                 |   psv unit [COL:UNITS:...] [DST=SRC:UNITS:...]                                                                                                              |
+|                 |                                                                                                                                                             |
+|                 | Aliases: convert                                                                                                                                            |
+|                 |                                                                                                                                                             |
+|                 | Arguments:                                                                                                                                                  |
+|                 |                                                                                                                                                             |
+|                 |    COL:UNITS:...     | Connvert column to unit.                                                                                                             |
+|                 |    DST=SRC:UNITS:... | Set DST column to conversion of SRC.                                                                                                 |
+|                 |                                                                                                                                                             |
+|                 | Examples:                                                                                                                                                   |
+|                 |                                                                                                                                                             |
+|                 | # Convert column c from feet to meters:                                                                                                                     |
+|                 | $ psv in a.csv // unit c_in_meters=c:ft:m // md                                                                                                             |
+|                 |                                                                                                                                                             |
+|                 |                                                                                                                                                             |
+|                 | ----------------------------------------------------------                                                                                                  |
+|                 |                                                                                                                                                             |
 |   ===========   |   ==========================                                                                                                                                |
 |     Section     |            Metadata                                                                                                                                         |
 |   ===========   |   ==========================                                                                                                                                |

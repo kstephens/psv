@@ -36,6 +36,7 @@
 |                       | summary        | Summary of column values.                                 |
 |                       | stats          | Table of column names and basic statistics.               |
 | Types                 | coerce         | Coerce column types.                                      |
+|                       | unit           | Convert units.                                            |
 | Metadata              | add-sequence   | Add a column with a sequence of numbers or random values. |
 |                       | rename-columns | Rename columns.                                           |
 |                       | infer-objects  | Infer column types.                                       |

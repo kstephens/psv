@@ -1,6 +1,6 @@
 from typing import Union, List
 import re
-from devdriven.util import get_safe, glob_to_rx
+from devdriven.util import split_flat, get_safe, glob_to_rx
 import pandas as pd  # type: ignore
 
 HasCols = Union[List[str], pd.DataFrame]
@@ -57,3 +57,14 @@ def parse_col_or_index(cols: HasCols, arg: str, check=False) -> str:
   if check and not col:
     raise Exception(f"unknown column: {col!r} : available {cols!r}")
   return col
+
+def parse_conversions(inp, args):
+  inp_cols = list(inp.columns)
+  cols_and_types = [parse_column_and_opt(inp_cols, arg) for arg in split_flat(args, ',')]
+  conversions = []
+  for col, out_types in cols_and_types:
+    col = col.split('=', 1)
+    out_col, inp_col = col[0], col[-1]
+    out_types = out_types.split(':')
+    conversions.append((out_col, inp_col, out_types))
+  return conversions

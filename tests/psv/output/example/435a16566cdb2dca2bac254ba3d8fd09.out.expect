@@ -1807,6 +1807,41 @@ $ psv in birthdays.csv // coerce sec_since_1970=birthday:datetime:epoch:int
 
 ----------------------------------------------------------
 
+## `unit`
+
+`unit` - Convert units.
+
+```NONE
+psv unit [COL:UNITS:...] [DST=SRC:UNITS:...]
+```
+
+
+Aliases: `convert`
+
+Arguments:
+
+|                      |                                      |
+| -------------------- | ------------------------------------ |
+|  `COL:UNITS:...`     | Connvert column to unit.             |
+|  `DST=SRC:UNITS:...` | Set DST column to conversion of SRC. |
+
+Examples:
+
+```NONE
+# Convert column c from feet to meters:
+$ psv in a.csv // unit c_in_meters=c:ft:m // md
+|   a | b   |        c | d     | c_in_meters           |
+|----:|:----|---------:|:------|:----------------------|
+|   1 | b1  |   23.763 | xspdf | 7.242962400000001 m   |
+|   2 | b2  |  -98.73  | qwer  | -30.092904000000004 m |
+|   3 | b3  | 3451     | bixop | 1051.8648 m           |
+|   1 | b4  |    1.234 | zxy   | 0.3761232 m           |
+```
+
+
+
+----------------------------------------------------------
+
 # Metadata
 
 ## `add-sequence`

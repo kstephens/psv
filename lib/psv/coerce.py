@@ -1,11 +1,10 @@
 from typing import List  # Any,
 import re
 import ipaddress
-from devdriven.util import split_flat
 import pandas as pd
 # from icecream import ic
 from .command import Command, section, command
-from .util import parse_column_and_opt
+from .util import parse_conversions
 
 section('Types', 50)
 
@@ -68,13 +67,10 @@ class Coerce(Command):
 
   '''
   def xform(self, inp, _env):
-    inp_cols = list(inp.columns)
-    out_types = [parse_column_and_opt(inp_cols, arg) for arg in split_flat(self.args, ',')]
+    conversions = parse_conversions(inp, self.args)
     out = inp.copy()
-    for col, out_types in out_types:
-      col = col.split('=', 1)
-      out_col, inp_col = col[0], col[-1]
-      out[out_col] = self.coerce_col(out, inp_col, out_types.split(':'))
+    for out_col, inp_col, out_types in conversions:
+      out[out_col] = self.coerce_col(out, inp_col, out_types)
     return out
 
   def coerce_col(self, out, inp_col: str, out_types: List[str]):
