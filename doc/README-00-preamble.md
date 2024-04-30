@@ -26,6 +26,6 @@ Argument substitution is similar to a Unix shell: `$1`, `$@`, etc.
 ```
 # ~/.psv/config.yml:
 macro:
-  html-full: 'html- --row-index --render-links --style --sorting --filtering --filtering-tooltip ${@}'
+  html-full: 'html- --row-index --render-links --style --sorting --filtering --filtering-tooltip "$@"'
 
 ```
