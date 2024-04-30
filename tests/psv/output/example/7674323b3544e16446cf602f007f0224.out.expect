@@ -354,7 +354,7 @@ Aliases: -xls
 Options:
 
   --sheet-name=NAME | Sheet name.
-  --header, -h      | Generate header.
+  --header, -h      | Use header.
 
 Examples:
 
