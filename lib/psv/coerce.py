@@ -1,4 +1,4 @@
-from typing import List  # Any,
+from typing import List, Dict  # Any,
 import re
 import ipaddress
 import pandas as pd
@@ -152,7 +152,7 @@ class Coerce(Command):
     return seq
 
   def _coerce_to_ipaddress(self, seq, inp_type: str):
-    cache = {}
+    cache: Dict[str, ipaddress.IPv4Address] = {}
     def to_ipaddr(val):
       try:
         if inp_type in ('str'):

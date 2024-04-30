@@ -859,10 +859,10 @@ Aliases: `-xls`
 
 Options:
 
-|                      |                  |
-| -------------------- | ---------------- |
-|  `--sheet-name=NAME` | Sheet name.      |
-|  `--header`, `-h`    | Generate header. |
+|                      |             |
+| -------------------- | ----------- |
+|  `--sheet-name=NAME` | Sheet name. |
+|  `--header`, `-h`    | Use header. |
 
 Examples:
 
@@ -1184,6 +1184,40 @@ $ psv in a.tsv // shuffle --seed=5 // md
 |   1 | b4  |    1.234 | zxy   |
 |   2 | b2  |  -98.73  | qwer  |
 |   1 | b1  |   23.763 | xspdf |
+```
+
+
+
+----------------------------------------------------------
+
+## `copy`
+
+`copy` - Copy columns.
+
+```NONE
+psv copy [SRC:DST ...]
+```
+
+
+Aliases: `cp`, `dup`
+
+Arguments:
+
+|                |                                 |
+| -------------- | ------------------------------- |
+|  `SRC:DST ...` | Source and Destination columns. |
+
+Examples:
+
+```NONE
+# Copy columns by name:
+$ psv in a.tsv // copy b:e d:f // md
+|   a | b   |        c | d     | e   | f     |
+|----:|:----|---------:|:------|:----|:------|
+|   1 | b1  |   23.763 | xspdf | b1  | xspdf |
+|   2 | b2  |  -98.73  | qwer  | b2  | qwer  |
+|   3 | b3  | 3451     | bixop | b3  | bixop |
+|   1 | b4  |    1.234 | zxy   | b4  | zxy   |
 ```
 
 
@@ -1676,10 +1710,10 @@ $ psv in a.tsv // stats // cut name,count,min,max
 
 ## `coerce`
 
-`coerce` - Corece column types.
+`coerce` - Coerce column types.
 
 ```NONE
-psv coerce [COL:TYPE ...]
+psv coerce [COL:TYPES:... ...] [DST=SRC:TYPES:... ...]
 ```
 
 
@@ -1687,22 +1721,37 @@ Aliases: `astype`
 
 TYPES:
 
-* `numeric`      - to `int64` or `float64`.
-* `int`          - to `int64`.
-* `float`        - to `float64`.
-* `timedelta`    - string to `timedelta64[ns]`.
-* `datetime`     - string to `datetime`.
-* `second`       - string to `timedelta64[ns]` to `float` seconds.
-* `minute`       - string to `timedelta64[ns]` to `float` minutes.
-* `hour`         - string to `timedelta64[ns]` to `float` hours.
-* `day`          - string to `timedelta64[ns]` to `float` days.
-* `ipaddr`       - string to `ipaddress`.  See python `ipaddress` module.
+* `numeric`     -  `int64` or `float64`.
+* `int`         -  `int64`.
+* `float`       -  `float64`.
+* `timedelta`   -  `timedelta64[ns]`.
+* `datetime`    -  `datetime`.
+* `timedelta`   -  `timedelta64`.
+* `unix_epoch`  -  Seconds since 1970.
+* `ipaddress`   -  Convert to `ipaddress`.
+
+TYPE Aliases:
+
+* `n`           -  Alias for `numeric`.
+* `i`           -  Alias for `int`.
+* `int32`       -  Alias for `int`.
+* `int64`       -  Alias for `int`.
+* `f`           -  Alias for `float`.
+* `timedelta`   -  Alias for `timedelta64`.
+* `td`          -  Alias for `timedelta64`.
+* `datetime`    -  Alias for `datetime64`.
+* `dt`          -  Alias for `datetime64`.
+* `ip`          -  Alias for `ipaddress`.
+* `ipaddr`      -  Alias for `ipaddress`.
+* `epoch`       -  Alias for `unix_epoch`.
+* `unix`        -  Alias for `unix_epoch`.
 
 Arguments:
 
-|                 |                           |
-| --------------- | ------------------------- |
-|  `COL:TYPE ...` | Column to coerce to TYPE. |
+|                          |                                    |
+| ------------------------ | ---------------------------------- |
+|  `COL:TYPES:... ...`     | Coerce COL by TYPES.               |
+|  `DST=SRC:TYPES:... ...` | Set DST column to coersion of SRC. |
 
 Examples:
 
@@ -1741,6 +1790,52 @@ $ psv in us-states-sample.csv // coerce Population:int // sort Population
 9   Pennsylvania    12972008
 6       New York    19677151
 4        Florida    22244823
+```
+
+
+```NONE
+# Parse date, convert to datetime, then integer Unix epoch seconds:
+$ psv in birthdays.csv // coerce sec_since_1970=birthday:datetime:epoch:int
+    name      birthday  sec_since_1970
+0    Bob     5/10/1976       200534400
+1  Alice    1999-12-31       946598400
+2  Frank  Aug 28, 2012      1346112000
+3  Grace  Apr 27, 2011      1303862400
+```
+
+
+
+----------------------------------------------------------
+
+## `unit`
+
+`unit` - Convert units.
+
+```NONE
+psv unit [COL:UNITS:...] [DST=SRC:UNITS:...]
+```
+
+
+Aliases: `convert`
+
+Arguments:
+
+|                      |                                      |
+| -------------------- | ------------------------------------ |
+|  `COL:UNITS:...`     | Connvert column to unit.             |
+|  `DST=SRC:UNITS:...` | Set DST column to conversion of SRC. |
+
+Examples:
+
+```NONE
+# Convert column c from feet to meters:
+$ psv in a.csv // unit c_in_meters=c:ft:m // md
+|   a | b   |        c | d     | c_in_meters           |
+|----:|:----|---------:|:------|:----------------------|
+|   1 | b1  |   23.763 | xspdf | 7.242962400000001 m   |
+|   2 | b2  |  -98.73  | qwer  | -30.092904000000004 m |
+|   3 | b3  | 3451     | bixop | 1051.8648 m           |
+|   1 | b4  |    1.234 | zxy   | 0.3761232 m           |
 ```
 
 
@@ -1957,7 +2052,7 @@ $ psv in a.tsv // show-columns // md // env-
     "file": "/dev/null",
     "file_loaded": "/dev/null"
   },
-  "now": "2024-04-29 20:19:13.113162+0000",
+  "now": "2024-04-30 16:56:35.021856+0000",
   "history": [
     [
       "<< IoIn: in a.tsv >>",

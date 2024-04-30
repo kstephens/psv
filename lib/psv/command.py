@@ -27,7 +27,9 @@ def main_make_xform(main, klass_or_name: Union[str, Type], argv: Argv) -> Option
   assert main
   if isinstance(klass_or_name, str):
     macros = main.config.opt('macro', {})
-    klass_or_name, *argv = MacroExpander(macros=macros).expand([klass_or_name, *argv])
+    command = [klass_or_name, *argv]
+    expansion = MacroExpander(macros=macros).expand(command)
+    klass_or_name, *argv = expansion
   if desc := app.descriptor(klass_or_name):
     xform = desc.klass()
     xform.main = main

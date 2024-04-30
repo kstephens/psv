@@ -1,6 +1,6 @@
 from typing import List
 import re
-import astropy.units as u
+import astropy.units as u  # type: ignore
 import pandas as pd
 # from icecream import ic
 from .command import Command, section, command
@@ -89,10 +89,6 @@ class Unit(Command):
       out_unit = re.sub(r'-', ' ', out_unit)
       seq = self.convert_seq_unit(seq, out_unit)
     return seq
-
-  def convert_seq(self, seq, out_unit: str):
-    inp_type = seq.dtype
-    return self.convert_seq_type(seq, inp_type, out_unit)
 
   def convert_seq_unit(self, seq, out_unit: str):
     def convert(val):
