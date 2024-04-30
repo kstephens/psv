@@ -13,7 +13,7 @@ class XlsIn(FormatIn):
   alias: -xls
 
   --sheet-name=NAME  |  Sheet name
-  --header, -h       |  Generate header.  Default: True.
+  --header, -h       |  Use header.  Default: True.
 
   :suffixes: .xlsx
 

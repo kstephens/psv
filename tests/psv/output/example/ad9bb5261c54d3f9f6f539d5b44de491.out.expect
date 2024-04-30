@@ -25,6 +25,7 @@
 | tail           | Last N rows                                               |
 | reverse        | Reverse rows.  Same as "range --step=-1"                  |
 | shuffle        | shuffle rows.                                             |
+| copy           | Copy columns.                                             |
 | cut            | Cut specified columns.                                    |
 | uniq           | Return unique rows.                                       |
 | sort           | Sort rows by columns.                                     |
@@ -34,7 +35,7 @@
 | count          | Count of unique column values.                            |
 | summary        | Summary of column values.                                 |
 | stats          | Table of column names and basic statistics.               |
-| coerce         | Corece column types.                                      |
+| coerce         | Coerce column types.                                      |
 | add-sequence   | Add a column with a sequence of numbers or random values. |
 | rename-columns | Rename columns.                                           |
 | infer-objects  | Infer column types.                                       |

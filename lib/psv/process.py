@@ -118,6 +118,29 @@ $ psv in a.tsv // shuffle --seed=5 // md
     return inp.sample(frac=1, random_state=seed)
 
 @command
+class Copy(Command):
+  '''
+  copy - Copy columns.
+
+  Aliases: cp, dup
+
+  Arguments:
+
+  SRC:DST ...   |  Source and Destination columns.
+
+# Copy columns by name:
+$ psv in a.tsv // copy b:e d:f // md
+
+  '''
+  def xform(self, inp, _env):
+    out = inp.copy()
+    # ???: handle numeric columns: `copy 2:e d:f`:
+    for src_dst in split_flat(self.args, ','):
+      src, dst = src_dst.split(':', 2)
+      out[dst] = out[src]
+    return out
+
+@command
 class Cut(Command):
   '''
   cut - Cut specified columns.

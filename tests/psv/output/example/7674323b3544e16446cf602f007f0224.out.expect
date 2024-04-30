@@ -354,7 +354,7 @@ Aliases: -xls
 Options:
 
   --sheet-name=NAME | Sheet name.
-  --header, -h      | Generate header.
+  --header, -h      | Use header.
 
 Examples:
 
@@ -500,6 +500,24 @@ Options:
 Examples:
 
 $ psv in a.tsv // shuffle --seed=5 // md
+
+
+----------------------------------------------------------
+
+copy - Copy columns.
+
+  psv copy [SRC:DST ...]
+
+Aliases: cp, dup
+
+Arguments:
+
+  SRC:DST ... | Source and Destination columns.
+
+Examples:
+
+# Copy columns by name:
+$ psv in a.tsv // copy b:e d:f // md
 
 
 ----------------------------------------------------------
@@ -716,28 +734,43 @@ $ psv in a.tsv // stats // cut name,count,min,max
 
   Section Types
 
-coerce - Corece column types.
+coerce - Coerce column types.
 
-  psv coerce [COL:TYPE ...]
+  psv coerce [COL:TYPES:... ...] [DST=SRC:TYPES:... ...]
 
 Aliases: astype
 
 TYPES:
 
-* `numeric`      - to `int64` or `float64`.
-* `int`          - to `int64`.
-* `float`        - to `float64`.
-* `timedelta`    - string to `timedelta64[ns]`.
-* `datetime`     - string to `datetime`.
-* `second`       - string to `timedelta64[ns]` to `float` seconds.
-* `minute`       - string to `timedelta64[ns]` to `float` minutes.
-* `hour`         - string to `timedelta64[ns]` to `float` hours.
-* `day`          - string to `timedelta64[ns]` to `float` days.
-* `ipaddr`       - string to `ipaddress`.  See python `ipaddress` module.
+* `numeric`     -  `int64` or `float64`.
+* `int`         -  `int64`.
+* `float`       -  `float64`.
+* `timedelta`   -  `timedelta64[ns]`.
+* `datetime`    -  `datetime`.
+* `timedelta`   -  `timedelta64`.
+* `unix_epoch`  -  Seconds since 1970.
+* `ipaddress`   -  Convert to `ipaddress`.
+
+TYPE Aliases:
+
+* `n`           -  Alias for `numeric`.
+* `i`           -  Alias for `int`.
+* `int32`       -  Alias for `int`.
+* `int64`       -  Alias for `int`.
+* `f`           -  Alias for `float`.
+* `timedelta`   -  Alias for `timedelta64`.
+* `td`          -  Alias for `timedelta64`.
+* `datetime`    -  Alias for `datetime64`.
+* `dt`          -  Alias for `datetime64`.
+* `ip`          -  Alias for `ipaddress`.
+* `ipaddr`      -  Alias for `ipaddress`.
+* `epoch`       -  Alias for `unix_epoch`.
+* `unix`        -  Alias for `unix_epoch`.
 
 Arguments:
 
-  COL:TYPE ... | Column to coerce to TYPE.
+  COL:TYPES:... ...     | Coerce COL by TYPES.
+  DST=SRC:TYPES:... ... | Set DST column to coersion of SRC.
 
 Examples:
 
@@ -746,6 +779,9 @@ $ psv in us-states.csv // shuffle // head 10 // cut State,Population // csv- // 
 $ psv in us-states-sample.csv // sort Population
 
 $ psv in us-states-sample.csv // coerce Population:int // sort Population
+
+# Parse date, convert to datetime, then integer Unix epoch seconds:
+$ psv in birthdays.csv // coerce sec_since_1970=birthday:datetime:epoch:int
 
 
 ----------------------------------------------------------
