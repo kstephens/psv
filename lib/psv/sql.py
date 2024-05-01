@@ -61,10 +61,10 @@ $ psv in a.tsv // sql
     # inp.drop(labels=['index'], axis=0, errors='ignore', inplace=True)
     return pd.io.sql.get_schema(inp, name=self.table_name())
 
-  def action_insert(self, inp, _env):
+  def action_insert(self, _inp, _env):
     return '-- INSERT'
 
-  def action_trunc(self, inp, _env):
+  def action_trunc(self, _inp, _env):
     return '-- TRUNC'
 
 '''
