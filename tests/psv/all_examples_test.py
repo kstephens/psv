@@ -125,6 +125,7 @@ def context_line(line):
   return None
 
 def fix_line(line):
-  if m := re.match(r'^( +"(now|cwd)": +")([^"]+)(")(.*)', line):
-    line = m[1] + '...' + m[4] + m[5]  # re.sub(r'\d', 'X', m[2])
-  return line
+  def replace(m):
+    f'{m[1]}...{m[2]}'
+  out = re.sub(r'^( *"(?:now|cwd)": *")(:?[^."]*)(")', replace, line)
+  return out

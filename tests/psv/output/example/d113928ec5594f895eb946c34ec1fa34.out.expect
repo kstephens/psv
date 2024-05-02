@@ -1,11 +1,13 @@
 # d113928ec5594f895eb946c34ec1fa34
 $ psv in a.tsv // show-columns // md // env-
 {
-  "cwd": "...",  "config": {
+,
+  "config": {
     "file": "/dev/null",
     "file_loaded": "/dev/null"
   },
-  "now": "...",  "history": [
+  "now": "2024-05-02 15:04:43.137558+0000",
+  "history": [
     [
       "<< IoIn: in a.tsv >>",
       "<< DataFrame: (4, 4) >>",
