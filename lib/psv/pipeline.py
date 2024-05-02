@@ -1,3 +1,4 @@
+from typing import List
 import shlex
 import pandas as pd
 from devdriven.util import shorten_string, get_safe
@@ -8,17 +9,20 @@ class Pipeline(command.Command):
   def __init__(self, *args):
     super().__init__(*args)
     self.xforms = []
+    self.commands = []
 
-  def parse_argv(self, argv):
-    self.xforms = []
+  def parse_argv(self, argv: List[str]):
+    self.commands = self.parse_commands(argv)
+    self.xforms = list(map(self.make_xform, self.commands))
+    return self
+
+  def parse_commands(self, argv: List[str]) -> List[List[str]]:
+    commands = []
     xform_argv = []
 
     def parse_xform(argv):
       if argv:
-        xform = self.make_xform(argv)
-        self.xforms.append(xform)
-        return xform
-      return None
+        commands.append(argv)
 
     depth = 0
     for arg in argv:
@@ -36,7 +40,7 @@ class Pipeline(command.Command):
       else:
         xform_argv.append(arg)
     parse_xform(xform_argv)
-    return self
+    return commands
 
   def xform(self, inp, env):
     history = env['history']
