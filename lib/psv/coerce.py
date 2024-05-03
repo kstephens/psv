@@ -15,6 +15,8 @@ TYPE_ALIASES = {
   'int32': 'int',
   'int64': 'int',
   'f': 'float',
+  's': 'seconds',
+  'sec': 'seconds',
   'timedelta': 'timedelta64',
   'td': 'timedelta64',
   'datetime': 'datetime64',
@@ -46,9 +48,8 @@ class Coerce(Command):
 * `numeric`     -  `int64` or `float64`.
 * `int`         -  `int64`.
 * `float`       -  `float64`.
-* `timedelta`   -  `timedelta64[ns]`.
+* `timedelta64` -  `timedelta64[ns]`.
 * `datetime`    -  `datetime`.
-* `timedelta`   -  `timedelta64`.
 * `unix_epoch`  -  Seconds since 1970.
 * `ipaddress`   -  Convert to `ipaddress`.
 
@@ -60,7 +61,7 @@ class Coerce(Command):
 
   $ psv in us-states.csv // shuffle // head 10 // cut State,Population // csv- // o us-states-sample.csv
   $ psv in us-states-sample.csv // sort Population
-  $ psv in us-states-sample.csv // coerce Population:int // sort Population
+  $ psv in us-states-sample.csv // tr -d ', ' Population // coerce Population:int // sort Population
 
   # Parse date, convert to datetime, then integer Unix epoch seconds:
   $ psv in birthdays.csv // coerce sec_since_1970=birthday:datetime:epoch:int
@@ -95,15 +96,12 @@ class Coerce(Command):
     return getattr(self, f'_coerce_to_{out_type}')
 
   def _coerce_to_numeric(self, seq, inp_type: str):
-    seq = remove_commas(seq, inp_type)
     return pd.to_numeric(seq, errors='coerce')
 
   def _coerce_to_int(self, seq, inp_type: str):
-    seq = remove_commas(seq, inp_type)
     return pd.to_numeric(seq, downcast='integer', errors='coerce')
 
   def _coerce_to_float(self, seq, inp_type: str):
-    seq = remove_commas(seq, inp_type)
     return pd.to_numeric(seq, downcast='float', errors='coerce')
 
   def _coerce_to_str(self, seq, _inp_type: str):
@@ -145,10 +143,10 @@ class Coerce(Command):
       return pd.to_timedelta(seq, unit='s', errors='ignore')
     return pd.to_timedelta(seq, errors='ignore')
 
-  def _coerce_to_timedelta(self, seq, _inp_type: str):
-    seq = pd.to_timedelta(seq, errors='ignore')
-    seq = self.coerce_seq(seq, 'float')
-    seq = seq.apply(lambda x: x / NS_PER_SEC)
+  def _coerce_to_seconds(self, seq, _inp_type: str):
+    if not seq.dtype.name.startswith('datetime'):
+      seq = pd.to_timedelta(seq) # , errors='ignore'
+    seq = seq.dt.total_seconds()
     return seq
 
   def _coerce_to_ipaddress(self, seq, inp_type: str):
@@ -165,8 +163,3 @@ class Coerce(Command):
       except ValueError:
         return None
     return seq.apply(to_ipaddr)
-
-def remove_commas(seq, inp_type):
-  if inp_type in ('object', 'str'):
-    return seq.apply(lambda x: str(x).replace(',', ''))
-  return seq

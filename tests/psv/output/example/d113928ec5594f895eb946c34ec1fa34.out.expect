@@ -6,7 +6,7 @@ $ psv in a.tsv // show-columns // md // env-
     "file": "/dev/null",
     "file_loaded": "/dev/null"
   },
-  "now": "2024-05-02 15:04:43.137558+0000",
+  "now": "2024-05-03 02:03:47.966324+0000",
   "history": [
     [
       "<< IoIn: in a.tsv >>",
@@ -16,13 +16,13 @@ $ psv in a.tsv // show-columns // md // env-
     ],
     [
       "<< ShowColumns: show-columns >>",
-      "<< DataFrame: (4, 18) >>",
+      "<< DataFrame: (4, 19) >>",
       "application/x-pandas-dataframe",
       null
     ],
     [
       "<< MarkdownOut: markdown-out >>",
-      "<< str: | name   | dtype.name   | dtype.kind  ... >>",
+      "<< str: | name   | types     | dtype.name   | ... >>",
       null,
       null
     ],

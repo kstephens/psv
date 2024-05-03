@@ -6,6 +6,7 @@ from math import *
 from dataclasses import dataclass
 import pandas as pd
 from devdriven.pandas import new_empty_df_like, normalize_column_name
+from devdriven import lazy_import
 from .command import Command, section, command
 # pylint: enable=unused-import,wildcard-import,redefined-builtin,unused-wildcard-import
 
@@ -114,7 +115,9 @@ def make_expr_fun(expr: str, ident_to_column: dict):
   name = f'_psv_Eval_eval_{os.getpid()}_{COUNTER[0]}'
   expr = f'def {name}(inp, env, out, ind, row, offset):\n  {expr}\n'
   expr = rewrite(expr, ident_to_column)
-  bindings = globals()
+  bindings = globals() | {
+    'u': lazy_import.load('astropy.units'),
+  }
   # pylint: disable-next=exec-used
   exec(expr, bindings)
   return bindings[name]

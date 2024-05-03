@@ -25,10 +25,10 @@ class Range(Command):
   --end=END           |  Non-inclusive.  Default: last row.
   --step=STEP         |  Default: 1.
 
-  # range: select a range of rows:
+  # Select a range of rows:
   $ psv in a.tsv // seq --start=0 // range 1 3 // md
 
-  # range: every even row:
+  # Every even row:
   $ psv in a.tsv // seq --start=0 // range --step=2 // md
 
   '''

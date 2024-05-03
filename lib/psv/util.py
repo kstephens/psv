@@ -65,6 +65,6 @@ def parse_conversions(inp, args):
   for col, out_types in cols_and_types:
     col = col.split('=', 1)
     out_col, inp_col = col[0], col[-1]
-    out_types = out_types.split(':')
+    out_types = out_types and out_types.split(':')
     conversions.append((out_col, inp_col, out_types))
   return conversions

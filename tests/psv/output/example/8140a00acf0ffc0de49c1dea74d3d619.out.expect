@@ -3,6 +3,7 @@ $ psv in a.tsv // cols // cols // cut name,dtype.name // md
 | name            | dtype.name   |
 |:----------------|:-------------|
 | name            | object       |
+| types           | object       |
 | dtype.name      | object       |
 | dtype.kind      | object       |
 | dtype.char      | object       |

@@ -1,5 +1,5 @@
-# b4f67923bfa51d2f05f8982f916c80a1
-$ psv in us-states-sample.csv // coerce Population:int // sort Population
+# 2a2828c4828725b6ea1e33c01d57fb8a
+$ psv in us-states-sample.csv // tr -d ', ' Population // coerce Population:int // sort Population
            State  Population
 8        Montana     1122867
 2          Maine     1385340

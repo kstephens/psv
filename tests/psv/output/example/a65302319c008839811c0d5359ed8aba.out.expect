@@ -1,0 +1,20 @@
+# a65302319c008839811c0d5359ed8aba
+$ psv in gebrselassie.csv // coerce seconds=time:seconds // unit seconds:s meters=distance:m // eval 'return {"m_per_s": meters / seconds}' // unit min_per_mile=m_per_s:mile/min:1/ // cut event,distance,time,min_per_mile // md
+| event              | distance     | time        | min_per_mile                  |
+|:-------------------|:-------------|:------------|:------------------------------|
+| (Stuttgart 1999)   | 1500 m       | 00:03:33.73 | 3.821834368 min / mile        |
+| (Gateshead 1999)   | 1 mile       | 00:03:52.39 | 3.873166666666667 min / mile  |
+| NR (Brussels 1998) | 3000 m       | 00:07:25.09 | 3.979460672 min / mile        |
+| NBP (Hengelo 1997) | 2 miles      | 00:08:01.08 | 4.009 min / mile              |
+| (Helsinki 1998)    | 5000 m       | 00:12:39.36 | 4.073571532800001 min / mile  |
+| (Hengelo 1998)     | 10000 m      | 00:26:22.75 | 4.245315360000001 min / mile  |
+| (Dortmund 1997)    | 800 m        | 00:01:49.35 | 3.6662868000000004 min / mile |
+| (Stuttgart 1998)   | 1500 m       | 00:03:31.76 | 3.7866076160000004 min / mile |
+| (Birmingham 1998)  | 2000 m       | 00:04:52.86 | 3.9276040320000005 min / mile |
+| (Karlsruhe 1998)   | 3000 m       | 00:07:26.15 | 3.9889379200000006 min / mile |
+| (Birmingham 2003)  | 2 miles      | 00:08:04.69 | 4.039083333333334 min / mile  |
+| (Birmingham 1999)  | 5000 m       | 00:12:50.38 | 4.1326881024 min / mile       |
+| (Doha 2002)        | 10 km        | 00:27:02    | 4.35059328 min / mile         |
+| WBP (Tilburg 2005) | 10 miles     | 00:44:24    | 4.44 min / mile               |
+| (Tempe 2006)       | 0.5 marathon | 00:58:55    | 4.497455470737914 min / mile  |
+| (Berlin 2008)      | marathon     | 02:03:59    | 4.732188295165395 min / mile  |

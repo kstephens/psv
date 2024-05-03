@@ -1,10 +1,5 @@
 import pandas as pd
 # from icecream import ic
-from sqlalchemy import Table, Column, MetaData
-from sqlalchemy.sql import table, column, select
-from sqlalchemy.sql.expression import Select, TextClause
-from sqlalchemy.dialects import postgresql
-from pandas.io.sql import SQLTable
 from .command import section, command
 from .formats import FormatOut
 
@@ -13,6 +8,12 @@ from .formats import FormatOut
 # * https://stackoverflow.com/a/23835766/1141958
 # * https://stackoverflow.com/a/75679464/1141958
 
+
+# from sqlalchemy import Table, Column, MetaData
+from sqlalchemy.sql import table, column, select
+# from sqlalchemy.sql.expression import Select, TextClause
+# from sqlalchemy.dialects import postgresql
+# from pandas.io.sql import SQLTable
 
 section('Format', 20)
 
@@ -45,6 +46,7 @@ $ psv in a.tsv // sql
     return self.opt('table', '__table__')
 
   def table_object(self, inp):
+    from sqlalchemy import Table, Column, MetaData
     columns = []
     for col in inp.columns:
       columns.append(Column(col))
@@ -55,6 +57,7 @@ $ psv in a.tsv // sql
     return tab
 
   def action_create(self, inp, _env):
+    from pandas.io.sql import SQLTable
     if not self.opt('index', False):
       inp = inp.reset_index(drop=True)
     # inp.drop(labels=['index'], axis=1, errors='ignore', inplace=True)
