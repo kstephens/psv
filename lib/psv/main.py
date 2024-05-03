@@ -67,15 +67,7 @@ class Main(devdriven.cli.Main):
     def parse_argv(self, argv: Argv) -> Self:
       # pylint: disable-next=no-member
       pipe = self.main.parse_pipeline('main', argv)
-      if pipe.xforms:
-        if not isinstance(pipe.xforms[0], io.IoIn):
-          in_cmd = io.IoIn()
-          in_cmd.main = self.main
-          pipe.xforms.insert(0, in_cmd)
-        if not isinstance(pipe.xforms[-1], io.IoOut):
-          out_cmd = io.IoOut()
-          out_cmd.main = self.main
-          pipe.xforms.append(out_cmd)
+      pipe.prepare_io()
       self.pipeline = pipe
       return self
 

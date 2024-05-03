@@ -3,7 +3,7 @@ import shlex
 import pandas as pd
 from devdriven.util import shorten_string, get_safe
 from .content import Content
-from . import command
+from . import command, io
 
 CommandLine = List[Union[str, List]]
 
@@ -63,11 +63,23 @@ class Pipeline(command.Command):
     self.xforms = list(map(self.make_xform, self.commands))
     return self
 
+  def prepare_io(self):
+    if self.xforms:
+      if not isinstance(self.xforms[0], io.IoIn):
+        in_cmd = io.IoIn()
+        self.xforms.insert(0, in_cmd)
+      if not isinstance(self.xforms[-1], io.IoOut):
+        out_cmd = io.IoOut()
+        self.xforms.append(out_cmd)
+    return self
+
   def xform(self, inp, env):
+    assert self.main
     history = env['history']
     xform_output = xform_input = inp
     i = 0
     for xform in self.xforms:
+      xform.main = self.main
       current = [describe_datum(xform), None, None, None]
       history.append(current)
       xform_input = xform_output
