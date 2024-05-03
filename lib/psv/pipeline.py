@@ -1,9 +1,56 @@
-from typing import List
+from typing import Any, Union, List, Callable
 import shlex
 import pandas as pd
 from devdriven.util import shorten_string, get_safe
 from .content import Content
 from . import command
+
+CommandLine = List[Union[str, List]]
+
+class Parser():
+  def parse(self, argv: List[str], recur: bool = False) -> List[List]:
+    cmds: List[Any] = []
+    cmd: List[Any] = []
+    stack = [cmds]
+    depth = 0
+
+    def flush():
+      nonlocal cmd
+      if cmd:
+        stack[-1].append(cmd)
+        cmd = []
+
+    for arg in argv:
+      if arg == '{{':
+        depth += 1
+        if recur:
+          stack.append(cmd)
+          cmd = []
+        else:
+          cmd.append(arg)
+      elif arg == '}}':
+        depth -= 1
+        if depth < 0:
+          break
+        if recur:
+          stack[-1].append(cmd)
+          cmd = stack.pop()
+        else:
+          cmd.append(arg)
+      elif arg == '//':
+        if recur:
+          flush()
+        elif depth > 0:
+          cmd.append(arg)
+        else:
+          flush()
+      else:
+        cmd.append(arg)
+    if depth != 0:
+      raise Exception("unbalanced {{ }} in {argv!r}")
+    flush()
+    return cmds
+
 
 class Pipeline(command.Command):
   def __init__(self, *args):
@@ -12,35 +59,9 @@ class Pipeline(command.Command):
     self.commands = []
 
   def parse_argv(self, argv: List[str]):
-    self.commands = self.parse_commands(argv)
+    self.commands = Parser().parse(argv)
     self.xforms = list(map(self.make_xform, self.commands))
     return self
-
-  def parse_commands(self, argv: List[str]) -> List[List[str]]:
-    commands = []
-    xform_argv = []
-
-    def parse_xform(argv):
-      if argv:
-        commands.append(argv)
-
-    depth = 0
-    for arg in argv:
-      if arg == '{{':
-        depth += 1
-        xform_argv.append(arg)
-      elif arg == '}}':
-        depth -= 1
-        xform_argv.append(arg)
-      elif depth > 0:
-        xform_argv.append(arg)
-      elif arg == '//':
-        parse_xform(xform_argv)
-        xform_argv = []
-      else:
-        xform_argv.append(arg)
-    parse_xform(xform_argv)
-    return commands
 
   def xform(self, inp, env):
     history = env['history']
