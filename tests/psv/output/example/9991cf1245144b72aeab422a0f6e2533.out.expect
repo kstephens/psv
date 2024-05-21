@@ -1,4 +1,4 @@
-# a65302319c008839811c0d5359ed8aba
+# 9991cf1245144b72aeab422a0f6e2533
 $ psv in gebrselassie.csv // cast seconds=time:seconds // unit seconds:s meters=distance:m // eval 'return {"m_per_s": meters / seconds}' // unit min_per_mile=m_per_s:mile/min:1/ // cut event,distance,time,min_per_mile // md
 | event              | distance     | time        | min_per_mile                  |
 |:-------------------|:-------------|:------------|:------------------------------|
