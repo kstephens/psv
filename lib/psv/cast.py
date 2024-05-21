@@ -1,15 +1,12 @@
-from typing import List, Dict  # Any,
-import re
-import ipaddress
-import pandas as pd
 # from icecream import ic
+from .caster import Caster
 from .command import Command, section, command
 from .util import parse_conversions
 
 section('Types', 50)
 
-NS_PER_SEC = 1000 * 1000 * 1000
 TYPE_ALIASES = {
+  'str': 'string',
   'n': 'numeric',
   'i': 'int',
   'int32': 'int',
@@ -48,6 +45,7 @@ class Cast(Command):
 * `numeric`     -  `int64` or `float64`.
 * `int`         -  `int64`.
 * `float`       -  `float64`.
+* `string`      -  `str`.
 * `timedelta64` -  `timedelta64[ns]`.
 * `datetime`    -  `datetime`.
 * `unix_epoch`  -  Seconds since 1970.
@@ -70,96 +68,11 @@ class Cast(Command):
   def xform(self, inp, _env):
     conversions = parse_conversions(inp, self.args)
     out = inp.copy()
+    caster = self.make_caster()
     for out_col, inp_col, out_types in conversions:
-      out[out_col] = self.cast_col(out, inp_col, out_types)
+      out[out_col] = caster.cast_col(out, inp_col, out_types)
     return out
 
-  def cast_col(self, out, inp_col: str, out_types: List[str]):
-    seq = out[inp_col]
-    inp_type = seq.dtype.name
-    for out_type in out_types:
-      out_type = re.sub(r'-', '_', out_type)
-      seq = self.cast_seq_type(seq, inp_type, out_type)
-      # ic((inp_col, inp_type, out_type, seq.to_list()))
-      inp_type = seq.dtype.name
-    return seq
-
-  def cast_seq(self, seq, out_type: str):
-    return self.cast_seq_type(seq, seq.dtype.name, out_type)
-
-  def cast_seq_type(self, seq, inp_type: str, out_type: str):
-    out_type = TYPE_ALIASES.get(out_type, out_type)
-    caster = self.caster(out_type)
-    return caster(seq, inp_type)
-
-  def caster(self, out_type: str):
-    return getattr(self, f'_cast_to_{out_type}')
-
-  def _cast_to_numeric(self, seq, _inp_type: str):
-    return pd.to_numeric(seq, errors='coerce')
-
-  def _cast_to_int(self, seq, _inp_type: str):
-    return pd.to_numeric(seq, downcast='integer', errors='coerce')
-
-  def _cast_to_float(self, seq, _inp_type: str):
-    return pd.to_numeric(seq, downcast='float', errors='coerce')
-
-  def _cast_to_str(self, seq, _inp_type: str):
-    return map(str, seq.tolist())
-
-  def _cast_to_unix_epoch(self, seq, inp_type: str):
-    if inp_type in ('float', 'int'):
-      return seq
-    seq = self.cast_seq(seq, 'datetime')
-    # ic(seq.dtype.name)
-    if seq.dtype.name.startswith('datetime64[ns'):
-      seq = seq.astype('int64').astype('float64') / NS_PER_SEC
-    return seq
-
-  def _cast_to_datetime64(self, seq, inp_type: str):
-    # ic(inp_type)
-    if inp_type in ('float', 'float8', 'float64', 'int', 'int32', 'int64'):
-      return pd.to_datetime(seq, unit='s', origin='unix', errors='ignore', cache=True)
-    if inp_type.startswith('datetime'):
-      return seq
-    return pd.to_datetime(
-      seq,
-      errors='ignore',
-      cache=True,
-      format='mixed',
-      # UserWarning: The argument 'infer_datetime_format' is deprecated and will be removed in a future version.
-      # A strict version of it is now the default,
-      # see https://pandas.pydata.org/pdeps/0004-consistent-to-datetime-parsing.html.
-      # You can safely remove this argument.
-      # infer_datetime_format=True,
-      utc=self.opt('utc', True)
-    )
-
-  def _cast_to_timedelta64(self, seq, inp_type: str):
-    # ic(inp_type)
-    if inp_type in ('timedelta64'):
-      return seq
-    if inp_type in ('float', 'int', 'int32', 'int64'):
-      return pd.to_timedelta(seq, unit='s', errors='ignore')
-    return pd.to_timedelta(seq, errors='ignore')
-
-  def _cast_to_seconds(self, seq, _inp_type: str):
-    if not seq.dtype.name.startswith('datetime'):
-      seq = pd.to_timedelta(seq) # , errors='ignore'
-    seq = seq.dt.total_seconds()
-    return seq
-
-  def _cast_to_ipaddress(self, seq, inp_type: str):
-    cache: Dict[str, ipaddress.IPv4Address] = {}
-    def to_ipaddr(val):
-      try:
-        if inp_type in ('str'):
-          if val in cache:
-            return cache[val]
-          cache[val] = ipaddr = ipaddress.ip_address(val)
-          # ic(type(ipaddr))
-          return ipaddr
-        return None
-      except ValueError:
-        return None
-    return seq.apply(to_ipaddr)
+  def make_caster(self):
+    opts = {'utc': self.opt('utc', True)}
+    return Caster(TYPE_ALIASES, opts)

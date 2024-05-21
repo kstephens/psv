@@ -2,7 +2,6 @@ import re
 from devdriven.util import get_safe, chunks, split_flat, parse_range, make_range
 from devdriven.random import get_seed
 from .command import Command, section, command
-from .cast import Cast
 from .util import select_columns, parse_col_or_index
 
 section('Manipulation', 30)
@@ -190,8 +189,6 @@ class Sort(Command):
   Options:
 
   --reverse, -r     |  Sort descending.
-  --numeric, -n     |  Sort as numeric.
-  --cast=TYPE       |  Sort by casted value.
 
 # Sort increasing:
 $ psv in a.tsv // seq i // sort c // md
@@ -203,6 +200,10 @@ $ psv in a.tsv // seq i // sort -r c // md
 $ psv in a.tsv // seq i // md
 $ psv in a.tsv // seq i // sort a:- c // md
 
+$ psv in us-states.csv // sort 'FIPS Code' // head 10
+
+$ psv in us-states.csv // cast 'FIPS Code':str // sort 'FIPS Code' // head 10
+
   '''
   def xform(self, inp, _env):
     imp_cols = list(inp.columns)
@@ -213,21 +214,12 @@ $ psv in a.tsv // seq i // sort a:- c // md
     for col in specified_cols:
       order = default_order
       if mtch := re.match(r'^([^:]+):([-+]?)$', col):
-        col = mtch.group(1)
-        order = mtch.group(2)
+        col = mtch[1]
+        order = mtch[2]
       col = parse_col_or_index(imp_cols, col)
       cols.append(col)
       ascending.append(order != '-')
-    key = None
-    if self.opt('numeric'):
-      key = 'numeric'
-    elif self.opt('datetime'):
-      key = 'datetime'
-    else:
-      key = self.opt('cast')
-    if key:
-      key = Cast().caster(key)
-    return inp.sort_values(by=cols, ascending=ascending, key=key)
+    return inp.sort_values(by=cols, ascending=ascending)
 
 @command
 class Grep(Command):

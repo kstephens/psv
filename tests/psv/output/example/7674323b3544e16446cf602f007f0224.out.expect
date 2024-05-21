@@ -557,7 +557,7 @@ Aliases: u
 
 sort - Sort rows by columns.
 
-  psv sort [--reverse] [--numeric] [--cast=TYPE] [COL] [COL:-] [COL:+]
+  psv sort [--reverse] [COL] [COL:-] [COL:+]
 
 Aliases: s
 
@@ -570,8 +570,6 @@ Arguments:
 Options:
 
   --reverse, -r | Sort descending.
-  --numeric, -n | Sort as numeric.
-  --cast=TYPE   | Sort by casted value.
 
 Examples:
 
@@ -585,6 +583,10 @@ $ psv in a.tsv // seq i // sort -r c // md
 $ psv in a.tsv // seq i // md
 
 $ psv in a.tsv // seq i // sort a:- c // md
+
+$ psv in us-states.csv // sort 'FIPS Code' // head 10
+
+$ psv in us-states.csv // cast 'FIPS Code':str // sort 'FIPS Code' // head 10
 
 
 ----------------------------------------------------------
@@ -745,6 +747,7 @@ TYPES:
 * `numeric`     -  `int64` or `float64`.
 * `int`         -  `int64`.
 * `float`       -  `float64`.
+* `string`      -  `str`.
 * `timedelta64` -  `timedelta64[ns]`.
 * `datetime`    -  `datetime`.
 * `unix_epoch`  -  Seconds since 1970.
@@ -752,6 +755,7 @@ TYPES:
 
 TYPE Aliases:
 
+* `str`         -  Alias for `string`.
 * `n`           -  Alias for `numeric`.
 * `i`           -  Alias for `int`.
 * `int32`       -  Alias for `int`.

@@ -1,0 +1,54 @@
+# 622bcca4cb8453f21bfe1658e8ccc523
+$ psv in us-states.csv // sort 'FIPS Code'
+    Rank                 State  FIPS Code  Population
+23    24               Alabama       1000   5,074,296
+47    48                Alaska       2000     733,583
+13    14               Arizona       4000   7,359,197
+32    33              Arkansas       5000   3,045,637
+0      1            California       6000  39,029,342
+20    21              Colorado       8000   5,839,926
+28    29           Connecticut       9000   3,626,205
+44    45              Delaware      10000   1,018,396
+48    49  District of Columbia      11000     671,803
+2      3               Florida      12000  22,244,823
+7      8               Georgia      13000  10,912,876
+39    40                Hawaii      15000   1,440,196
+37    38                 Idaho      16000   1,939,033
+5      6              Illinois      17000  12,582,032
+16    17               Indiana      18000   6,833,037
+30    31                  Iowa      19000   3,200,517
+34    35                Kansas      20000   2,937,150
+25    26              Kentucky      21000   4,512,310
+24    25             Louisiana      22000   4,590,241
+41    42                 Maine      23000   1,385,340
+18    19              Maryland      24000   6,164,660
+15    16         Massachusetts      25000   6,981,974
+9     10              Michigan      26000  10,034,113
+21    22             Minnesota      27000   5,717,184
+33    34           Mississippi      28000   2,940,057
+17    18              Missouri      29000   6,177,957
+42    43               Montana      30000   1,122,867
+36    37              Nebraska      31000   1,967,923
+31    32                Nevada      32000   3,177,772
+40    41         New Hampshire      33000   1,395,231
+10    11            New Jersey      34000   9,261,699
+35    36            New Mexico      35000   2,113,344
+3      4              New York      36000  19,677,151
+8      9        North Carolina      37000  10,698,973
+46    47          North Dakota      38000     779,261
+6      7                  Ohio      39000  11,756,058
+27    28              Oklahoma      40000   4,019,800
+26    27                Oregon      41000   4,240,137
+4      5          Pennsylvania      42000  12,972,008
+43    44          Rhode Island      44000   1,093,734
+22    23        South Carolina      45000   5,282,634
+45    46          South Dakota      46000     909,824
+14    15             Tennessee      47000   7,051,339
+1      2                 Texas      48000  30,029,572
+29    30                  Utah      49000   3,380,800
+49    50               Vermont      50000     647,064
+11    12              Virginia      51000   8,683,619
+12    13            Washington      53000   7,785,786
+38    39         West Virginia      54000   1,775,156
+19    20             Wisconsin      55000   5,892,539
+50    51               Wyoming      56000     581,381

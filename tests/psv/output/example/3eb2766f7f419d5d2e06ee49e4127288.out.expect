@@ -230,6 +230,10 @@ $ psv in a.tsv // seq i // md
 
 $ psv in a.tsv // seq i // sort a:- c // md
 
+$ psv in us-states.csv // sort 'FIPS Code' // head 10
+
+$ psv in us-states.csv // cast 'FIPS Code':str // sort 'FIPS Code' // head 10
+
 
     grep    
 ------------

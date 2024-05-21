@@ -5,7 +5,7 @@
       "klass": "<< <class 'psv.process.Sort'> >>",
       "name": "sort",
       "brief": "Sort rows by columns.",
-      "synopsis": "psv sort [--reverse] [--numeric] [--cast=TYPE] [COL] [COL:-] [COL:+]",
+      "synopsis": "psv sort [--reverse] [COL] [COL:-] [COL:+]",
       "aliases": [
         "s"
       ],
@@ -47,43 +47,6 @@
               }
             ],
             "alias_of": null
-          },
-          {
-            "style": "doc",
-            "kind": "flag",
-            "arg": "--numeric",
-            "full": "--numeric",
-            "name": "numeric",
-            "value": true,
-            "description": "Sort as numeric.",
-            "default": null,
-            "aliases": [
-              {
-                "style": "doc",
-                "kind": "flag",
-                "arg": "-n",
-                "full": "-n",
-                "name": "n",
-                "value": true,
-                "description": "Sort as numeric.",
-                "default": null,
-                "aliases": [],
-                "alias_of": "numeric"
-              }
-            ],
-            "alias_of": null
-          },
-          {
-            "style": "doc",
-            "kind": "option",
-            "arg": "--cast=TYPE",
-            "full": "--cast",
-            "name": "cast",
-            "value": "TYPE",
-            "description": "Sort by casted value.",
-            "default": null,
-            "aliases": [],
-            "alias_of": null
           }
         ],
         "opt_by_name": {
@@ -111,43 +74,6 @@
               }
             ],
             "alias_of": null
-          },
-          "numeric": {
-            "style": "doc",
-            "kind": "flag",
-            "arg": "--numeric",
-            "full": "--numeric",
-            "name": "numeric",
-            "value": true,
-            "description": "Sort as numeric.",
-            "default": null,
-            "aliases": [
-              {
-                "style": "doc",
-                "kind": "flag",
-                "arg": "-n",
-                "full": "-n",
-                "name": "n",
-                "value": true,
-                "description": "Sort as numeric.",
-                "default": null,
-                "aliases": [],
-                "alias_of": "numeric"
-              }
-            ],
-            "alias_of": null
-          },
-          "cast": {
-            "style": "doc",
-            "kind": "option",
-            "arg": "--cast=TYPE",
-            "full": "--cast",
-            "name": "cast",
-            "value": "TYPE",
-            "description": "Sort by casted value.",
-            "default": null,
-            "aliases": [],
-            "alias_of": null
           }
         },
         "opts_defaults": {},
@@ -164,18 +90,6 @@
             "default": null,
             "aliases": [],
             "alias_of": "reverse"
-          },
-          "n": {
-            "style": "doc",
-            "kind": "flag",
-            "arg": "-n",
-            "full": "-n",
-            "name": "n",
-            "value": true,
-            "description": "Sort as numeric.",
-            "default": null,
-            "aliases": [],
-            "alias_of": "numeric"
           }
         },
         "delegate": null
@@ -206,6 +120,16 @@
           "command": "psv in a.tsv // seq i // sort a:- c // md",
           "comments": [],
           "output": "|   a | b   |        c | d     |   i |\n|----:|:----|---------:|:------|----:|\n|   3 | b3  | 3451     | bixop |   3 |\n|   2 | b2  |  -98.73  | qwer  |   2 |\n|   1 | b4  |    1.234 | zxy   |   4 |\n|   1 | b1  |   23.763 | xspdf |   1 |\n"
+        },
+        {
+          "command": "psv in us-states.csv // sort 'FIPS Code' // head 10",
+          "comments": [],
+          "output": "    Rank                 State  FIPS Code  Population\n23    24               Alabama       1000   5,074,296\n47    48                Alaska       2000     733,583\n13    14               Arizona       4000   7,359,197\n32    33              Arkansas       5000   3,045,637\n0      1            California       6000  39,029,342\n20    21              Colorado       8000   5,839,926\n28    29           Connecticut       9000   3,626,205\n44    45              Delaware      10000   1,018,396\n48    49  District of Columbia      11000     671,803\n2      3               Florida      12000  22,244,823\n"
+        },
+        {
+          "command": "psv in us-states.csv // cast 'FIPS Code':str // sort 'FIPS Code' // head 10",
+          "comments": [],
+          "output": "    Rank                 State FIPS Code  Population\n23    24               Alabama      1000   5,074,296\n44    45              Delaware     10000   1,018,396\n48    49  District of Columbia     11000     671,803\n2      3               Florida     12000  22,244,823\n7      8               Georgia     13000  10,912,876\n39    40                Hawaii     15000   1,440,196\n37    38                 Idaho     16000   1,939,033\n5      6              Illinois     17000  12,582,032\n16    17               Indiana     18000   6,833,037\n30    31                  Iowa     19000   3,200,517\n"
         }
       ],
       "section": "Manipulation",

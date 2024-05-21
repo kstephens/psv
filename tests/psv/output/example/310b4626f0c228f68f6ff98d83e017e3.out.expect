@@ -2,7 +2,7 @@
 
 sort - Sort rows by columns.
 
-  psv sort [--reverse] [--numeric] [--cast=TYPE] [COL] [COL:-] [COL:+]
+  psv sort [--reverse] [COL] [COL:-] [COL:+]
 
 Aliases: s
 
@@ -15,8 +15,6 @@ Arguments:
 Options:
 
   --reverse, -r | Sort descending.
-  --numeric, -n | Sort as numeric.
-  --cast=TYPE   | Sort by casted value.
 
 Examples:
 
@@ -54,5 +52,31 @@ $ psv in a.tsv // seq i // sort a:- c // md
 |   2 | b2  |  -98.73  | qwer  |   2 |
 |   1 | b4  |    1.234 | zxy   |   4 |
 |   1 | b1  |   23.763 | xspdf |   1 |
+
+$ psv in us-states.csv // sort 'FIPS Code' // head 10
+    Rank                 State  FIPS Code  Population
+23    24               Alabama       1000   5,074,296
+47    48                Alaska       2000     733,583
+13    14               Arizona       4000   7,359,197
+32    33              Arkansas       5000   3,045,637
+0      1            California       6000  39,029,342
+20    21              Colorado       8000   5,839,926
+28    29           Connecticut       9000   3,626,205
+44    45              Delaware      10000   1,018,396
+48    49  District of Columbia      11000     671,803
+2      3               Florida      12000  22,244,823
+
+$ psv in us-states.csv // cast 'FIPS Code':str // sort 'FIPS Code' // head 10
+    Rank                 State FIPS Code  Population
+23    24               Alabama      1000   5,074,296
+44    45              Delaware     10000   1,018,396
+48    49  District of Columbia     11000     671,803
+2      3               Florida     12000  22,244,823
+7      8               Georgia     13000  10,912,876
+39    40                Hawaii     15000   1,440,196
+37    38                 Idaho     16000   1,939,033
+5      6              Illinois     17000  12,582,032
+16    17               Indiana     18000   6,833,037
+30    31                  Iowa     19000   3,200,517
 
 
