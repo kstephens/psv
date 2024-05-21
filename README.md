@@ -2106,12 +2106,12 @@ Examples:
 # Display proccessing info:
 $ psv in a.tsv // show-columns // md // env-
 {
-  "cwd": "/Users/stephens/local/src/psv/example",
+  "cwd": "...",
   "config": {
     "file": "/dev/null",
     "file_loaded": "/dev/null"
   },
-  "now": "2024-05-21 12:51:47.449864+0000",
+  "now": "...",
   "history": [
     [
       "<< IoIn: in a.tsv >>",
