@@ -1323,7 +1323,7 @@ Aliases: `u`
 `sort` - Sort rows by columns.
 
 ```NONE
-psv sort [--reverse] [--numeric] [--coerce=TYPE] [COL] [COL:-] [COL:+]
+psv sort [--reverse] [--numeric] [--cast=TYPE] [COL] [COL:-] [COL:+]
 ```
 
 
@@ -1339,11 +1339,11 @@ Arguments:
 
 Options:
 
-|                    |                        |
-| ------------------ | ---------------------- |
-|  `--reverse`, `-r` | Sort descending.       |
-|  `--numeric`, `-n` | Sort as numeric.       |
-|  `--coerce=TYPE`   | Sort by coerced value. |
+|                    |                       |
+| ------------------ | --------------------- |
+|  `--reverse`, `-r` | Sort descending.      |
+|  `--numeric`, `-n` | Sort as numeric.      |
+|  `--cast=TYPE`     | Sort by casted value. |
 
 Examples:
 
@@ -1739,16 +1739,16 @@ $ psv in a.tsv // stats // cut name,count,min,max
 
 # Types
 
-## `coerce`
+## `cast`
 
-`coerce` - Coerce column types.
+`cast` - Cast column types.
 
 ```NONE
-psv coerce [COL:TYPES:... ...] [DST=SRC:TYPES:... ...]
+psv cast [COL:TYPES:... ...] [DST=SRC:TYPES:... ...]
 ```
 
 
-Aliases: `astype`
+Aliases: `astype`, `coerce`
 
 TYPES:
 
@@ -1782,7 +1782,7 @@ Arguments:
 
 |                          |                                    |
 | ------------------------ | ---------------------------------- |
-|  `COL:TYPES:... ...`     | Coerce COL by TYPES.               |
+|  `COL:TYPES:... ...`     | Cast COL by TYPES.                 |
 |  `DST=SRC:TYPES:... ...` | Set DST column to coersion of SRC. |
 
 Examples:
@@ -1810,7 +1810,7 @@ $ psv in us-states-sample.csv // sort Population
 
 
 ```NONE
-$ psv in us-states-sample.csv // tr -d ', ' Population // coerce Population:int // sort Population
+$ psv in us-states-sample.csv // tr -d ', ' Population // cast Population:int // sort Population
            State  Population
 8        Montana     1122867
 2          Maine     1385340
@@ -1827,7 +1827,7 @@ $ psv in us-states-sample.csv // tr -d ', ' Population // coerce Population:int 
 
 ```NONE
 # Parse date, convert to datetime, then integer Unix epoch seconds:
-$ psv in birthdays.csv // coerce sec_since_1970=birthday:datetime:epoch:int
+$ psv in birthdays.csv // cast sec_since_1970=birthday:datetime:epoch:int
     name      birthday  sec_since_1970
 0    Bob     5/10/1976       200534400
 1  Alice    1999-12-31       946598400
@@ -1875,7 +1875,7 @@ $ psv in a.csv // unit c_in_meters=c:ft:m // md
 
 ```NONE
 # Convert Haile Gebrselassie's times to minutes per mile:
-$ psv in gebrselassie.csv // coerce seconds=time:seconds // unit seconds:s meters=distance:m // eval 'return {"m_per_s": meters / seconds}' // unit min_per_mile=m_per_s:mile/min:1/ // cut event,distance,time,min_per_mile // md
+$ psv in gebrselassie.csv // cast seconds=time:seconds // unit seconds:s meters=distance:m // eval 'return {"m_per_s": meters / seconds}' // unit min_per_mile=m_per_s:mile/min:1/ // cut event,distance,time,min_per_mile // md
 | event              | distance     | time        | min_per_mile                  |
 |:-------------------|:-------------|:------------|:------------------------------|
 | (Stuttgart 1999)   | 1500 m       | 00:03:33.73 | 3.821834368 min / mile        |
@@ -2111,7 +2111,7 @@ $ psv in a.tsv // show-columns // md // env-
     "file": "/dev/null",
     "file_loaded": "/dev/null"
   },
-  "now": "2024-05-03 02:11:53.971789+0000",
+  "now": "2024-05-21 12:51:47.449864+0000",
   "history": [
     [
       "<< IoIn: in a.tsv >>",

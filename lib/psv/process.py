@@ -2,7 +2,7 @@ import re
 from devdriven.util import get_safe, chunks, split_flat, parse_range, make_range
 from devdriven.random import get_seed
 from .command import Command, section, command
-from .coerce import Coerce
+from .cast import Cast
 from .util import select_columns, parse_col_or_index
 
 section('Manipulation', 30)
@@ -191,7 +191,7 @@ class Sort(Command):
 
   --reverse, -r     |  Sort descending.
   --numeric, -n     |  Sort as numeric.
-  --coerce=TYPE     |  Sort by coerced value.
+  --cast=TYPE       |  Sort by casted value.
 
 # Sort increasing:
 $ psv in a.tsv // seq i // sort c // md
@@ -224,9 +224,9 @@ $ psv in a.tsv // seq i // sort a:- c // md
     elif self.opt('datetime'):
       key = 'datetime'
     else:
-      key = self.opt('coerce')
+      key = self.opt('cast')
     if key:
-      key = Coerce().coercer(key)
+      key = Cast().caster(key)
     return inp.sort_values(by=cols, ascending=ascending, key=key)
 
 @command

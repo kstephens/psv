@@ -83,7 +83,7 @@ The unit `1/` represents the reciprocal of the previous unit.
   $ psv in a.csv // unit c_in_meters=c:ft:m // md
 
   # Convert Haile Gebrselassie's times to minutes per mile:
-  $ psv in gebrselassie.csv // coerce seconds=time:seconds // unit seconds:s meters=distance:m // eval 'return {"m_per_s": meters / seconds}' // unit min_per_mile=m_per_s:mile/min:1/ // cut event,distance,time,min_per_mile // md
+  $ psv in gebrselassie.csv // cast seconds=time:seconds // unit seconds:s meters=distance:m // eval 'return {"m_per_s": meters / seconds}' // unit min_per_mile=m_per_s:mile/min:1/ // cut event,distance,time,min_per_mile // md
 
   '''
   def xform(self, inp, _env):

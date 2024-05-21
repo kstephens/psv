@@ -5,7 +5,7 @@
       "klass": "<< <class 'psv.process.Sort'> >>",
       "name": "sort",
       "brief": "Sort rows by columns.",
-      "synopsis": "psv sort [--reverse] [--numeric] [--coerce=TYPE] [COL] [COL:-] [COL:+]",
+      "synopsis": "psv sort [--reverse] [--numeric] [--cast=TYPE] [COL] [COL:-] [COL:+]",
       "aliases": [
         "s"
       ],
@@ -76,11 +76,11 @@
           {
             "style": "doc",
             "kind": "option",
-            "arg": "--coerce=TYPE",
-            "full": "--coerce",
-            "name": "coerce",
+            "arg": "--cast=TYPE",
+            "full": "--cast",
+            "name": "cast",
             "value": "TYPE",
-            "description": "Sort by coerced value.",
+            "description": "Sort by casted value.",
             "default": null,
             "aliases": [],
             "alias_of": null
@@ -137,14 +137,14 @@
             ],
             "alias_of": null
           },
-          "coerce": {
+          "cast": {
             "style": "doc",
             "kind": "option",
-            "arg": "--coerce=TYPE",
-            "full": "--coerce",
-            "name": "coerce",
+            "arg": "--cast=TYPE",
+            "full": "--cast",
+            "name": "cast",
             "value": "TYPE",
-            "description": "Sort by coerced value.",
+            "description": "Sort by casted value.",
             "default": null,
             "aliases": [],
             "alias_of": null

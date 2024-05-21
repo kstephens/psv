@@ -557,7 +557,7 @@ Aliases: u
 
 sort - Sort rows by columns.
 
-  psv sort [--reverse] [--numeric] [--coerce=TYPE] [COL] [COL:-] [COL:+]
+  psv sort [--reverse] [--numeric] [--cast=TYPE] [COL] [COL:-] [COL:+]
 
 Aliases: s
 
@@ -571,7 +571,7 @@ Options:
 
   --reverse, -r | Sort descending.
   --numeric, -n | Sort as numeric.
-  --coerce=TYPE | Sort by coerced value.
+  --cast=TYPE   | Sort by casted value.
 
 Examples:
 
@@ -734,11 +734,11 @@ $ psv in a.tsv // stats // cut name,count,min,max
 
   Section Types
 
-coerce - Coerce column types.
+cast - Cast column types.
 
-  psv coerce [COL:TYPES:... ...] [DST=SRC:TYPES:... ...]
+  psv cast [COL:TYPES:... ...] [DST=SRC:TYPES:... ...]
 
-Aliases: astype
+Aliases: astype, coerce
 
 TYPES:
 
@@ -770,7 +770,7 @@ TYPE Aliases:
 
 Arguments:
 
-  COL:TYPES:... ...     | Coerce COL by TYPES.
+  COL:TYPES:... ...     | Cast COL by TYPES.
   DST=SRC:TYPES:... ... | Set DST column to coersion of SRC.
 
 Examples:
@@ -779,10 +779,10 @@ $ psv in us-states.csv // shuffle // head 10 // cut State,Population // csv- // 
 
 $ psv in us-states-sample.csv // sort Population
 
-$ psv in us-states-sample.csv // tr -d ', ' Population // coerce Population:int // sort Population
+$ psv in us-states-sample.csv // tr -d ', ' Population // cast Population:int // sort Population
 
 # Parse date, convert to datetime, then integer Unix epoch seconds:
-$ psv in birthdays.csv // coerce sec_since_1970=birthday:datetime:epoch:int
+$ psv in birthdays.csv // cast sec_since_1970=birthday:datetime:epoch:int
 
 
 ----------------------------------------------------------
@@ -806,7 +806,7 @@ Examples:
 $ psv in a.csv // unit c_in_meters=c:ft:m // md
 
 # Convert Haile Gebrselassie's times to minutes per mile:
-$ psv in gebrselassie.csv // coerce seconds=time:seconds // unit seconds:s meters=distance:m // eval 'return {"m_per_s": meters / seconds}' // unit min_per_mile=m_per_s:mile/min:1/ // cut event,distance,time,min_per_mile // md
+$ psv in gebrselassie.csv // cast seconds=time:seconds // unit seconds:s meters=distance:m // eval 'return {"m_per_s": meters / seconds}' // unit min_per_mile=m_per_s:mile/min:1/ // cut event,distance,time,min_per_mile // md
 
 
 ----------------------------------------------------------
