@@ -3,11 +3,11 @@ import re
 import pandas as pd
 # from icecream import ic
 from devdriven import lazy_import
-u = lazy_import.load('astropy.units')
 from .command import Command, section, command
 from .util import parse_conversions
+u = lazy_import.load('astropy.units')
 
-def define_units(units: Dict[str, str], aliases: Dict[str, str] = {}):
+def define_units(units: Dict[str, str], aliases: Dict[str, str]):
   new_units = {}
   for name, quantity in units.items():
     base_quantity = u.Unit(quantity)
@@ -83,9 +83,11 @@ The unit `1/` represents the reciprocal of the previous unit.
   $ psv in a.csv // unit c_in_meters=c:ft:m // md
 
   # Convert Haile Gebrselassie's times to minutes per mile:
-  $ psv in gebrselassie.csv // cast seconds=time:seconds // unit seconds:s meters=distance:m // eval 'return {"m_per_s": meters / seconds}' // unit min_per_mile=m_per_s:mile/min:1/ // cut event,distance,time,min_per_mile // md
+  $ psv in gebrselassie.csv // cast seconds=time:seconds // unit seconds:s meters=distance:m // \
+eval 'return {"m_per_s": meters / seconds}' // unit min_per_mile=m_per_s:mile/min:1/ // \
+cut event,distance,time,min_per_mile // md
 
-  '''
+'''
   def xform(self, inp, _env):
     define_units(UNITS, UNIT_ALIASES) # ??? DO THIS ONCE!
     conversions = parse_conversions(inp, self.args)

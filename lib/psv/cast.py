@@ -95,13 +95,13 @@ class Cast(Command):
   def caster(self, out_type: str):
     return getattr(self, f'_cast_to_{out_type}')
 
-  def _cast_to_numeric(self, seq, inp_type: str):
+  def _cast_to_numeric(self, seq, _inp_type: str):
     return pd.to_numeric(seq, errors='coerce')
 
-  def _cast_to_int(self, seq, inp_type: str):
+  def _cast_to_int(self, seq, _inp_type: str):
     return pd.to_numeric(seq, downcast='integer', errors='coerce')
 
-  def _cast_to_float(self, seq, inp_type: str):
+  def _cast_to_float(self, seq, _inp_type: str):
     return pd.to_numeric(seq, downcast='float', errors='coerce')
 
   def _cast_to_str(self, seq, _inp_type: str):

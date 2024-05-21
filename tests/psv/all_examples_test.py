@@ -126,6 +126,6 @@ def context_line(line):
 
 def fix_line(line):
   def replace(m):
-    f'{m[1]}...{m[2]}'
+    return f'{m[1]}...{m[2]}'
   out = re.sub(r'^( *"(?:now|cwd)": *")(:?[^."]*)(")', replace, line)
   return out
