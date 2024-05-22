@@ -1,6 +1,9 @@
-from typing import List
+from typing import List, Optional
 import re
 import ipaddress
+import socket
+import sys
+from datetime import datetime, timedelta
 import pandas as pd
 
 NS_PER_SEC = 1000 * 1000 * 1000
@@ -12,6 +15,73 @@ class Caster:
   def __init__(self, type_aliases=None, opts=None):
     self.type_aliases = (type_aliases or {})
     self.opts = (opts or {})
+    self.to_ipaddress = ipaddress_caster()
+    self.to_hostname = hostname_caster()
+
+  def cast_to(self, val, out_type: str, inp_type: Optional[str] = None):
+    return self.caster(out_type)(val, inp_type or type(val).__name__)
+
+  def caster(self, out_type: str):
+    cast_type = self.type_aliases.get(out_type, out_type)
+    if fun := getattr(self, f'_cast_to_{cast_type}', None):
+      return fun
+    raise Exception(f"unknown cast for type {out_type!r}")
+
+  def _cast_to_numeric(self, val, _inp_type: str):
+    return cast_float(val) or cast_int(val)
+
+  def _cast_to_int(self, val, _inp_type: str):
+    return cast_int(val)
+
+  def _cast_seq_to_float(self, val, _inp_type: str):
+    return cast_float(val)
+
+  def _cast_to_string(self, val, _inp_type: str):
+    return str(val)
+
+  def _cast_to_unix_epoch(self, val, inp_type: str):
+    if inp_type in ('float', 'int'):
+      return val
+    if inp_type in ('datetime', 'datetime64'):
+      return val.timestamp()
+    if inp_type in ('timedelta', 'timedelta64'):
+      return val.total_seconds()
+    return val
+
+  def _cast_to_datetime(self, val, inp_type: str):
+    if inp_type in ('float', 'float8', 'float64', 'int', 'int32', 'int64'):
+      return datetime.fromtimestamp(val)
+    if inp_type in ('datetime', 'datetime64'):
+      return val
+    if inp_type in ('str', 'string'):
+      return None  # FIXME
+    return val
+
+  def _cast_to_timedelta(self, val, inp_type: str):
+    if inp_type in ('timedelta', 'timedelta64'):
+      return val
+    if inp_type in ('float', 'int', 'int32', 'int64'):
+      return timedelta(seconds=val)
+    if inp_type in ('datetime', 'datetime64'):
+      return val.timestamp()
+    return val
+
+  def _cast_to_seconds(self, val, inp_type: str):
+    if inp_type in ('float', 'int', 'int32', 'int64'):
+      return val
+    if inp_type in ('datetime', 'datetime64'):
+      return val.timestamp()
+    if inp_type in ('timedelta', 'timedelta64'):
+      return val.total_seconds()
+    return val
+
+  def _cast_to_ipaddress(self, val, _inp_type: str):
+    return self.to_ipaddress(val)
+
+  def _cast_to_hostname(self, val, _inp_type: str):
+    return self.to_hostname(val)
+
+  ###########################################################
 
   def cast_col(self, out, inp_col: str, out_types: List[str]):
     seq = out[inp_col]
@@ -55,7 +125,7 @@ class Caster:
       seq = seq.astype('int64').astype('float64') / NS_PER_SEC
     return seq
 
-  def _cast_seq_to_datetime64(self, seq, inp_type: str):
+  def _cast_seq_to_datetime(self, seq, inp_type: str):
     if inp_type in ('float', 'float8', 'float64', 'int', 'int32', 'int64'):
       return pd.to_datetime(seq, unit='s', origin='unix', errors='ignore', cache=True)
     if inp_type.startswith('datetime'):
@@ -73,7 +143,7 @@ class Caster:
       utc=self.opts.get('utc', True)
     )
 
-  def _cast_seq_to_timedelta64(self, seq, inp_type: str):
+  def _cast_seq_to_timedelta(self, seq, inp_type: str):
     if inp_type in ('timedelta64'):
       return seq
     if inp_type in ('float', 'int', 'int32', 'int64'):
@@ -87,8 +157,25 @@ class Caster:
     return seq
 
   def _cast_seq_to_ipaddress(self, seq, _inp_type: str):
-    to_ipaddr = ipaddress_caster()
-    return pd.Series(seq.apply(to_ipaddr))
+    return pd.Series(seq.apply(self.to_ipaddress))
+
+  def _cast_seq_to_hostname(self, seq, _inp_type: str):
+    return pd.Series(seq.apply(self.to_hostname))
+
+
+###########################################################
+
+def cast_int(val):
+  try:
+    return int(val)
+  except ValueError:
+    return None
+
+def cast_float(val):
+  try:
+    return float(val)
+  except ValueError:
+    return None
 
 def ipaddress_caster():
   cache = {}
@@ -104,3 +191,24 @@ def ipaddress_caster():
     except ValueError:
       return None
   return to_ipaddr
+
+def hostname_caster():
+  cache = {}
+  def to_hostname(val):
+    try:
+      record = socket.gethostbyaddr(str(val))
+      result = cache[val] = record[0]
+      return result
+    except:
+      return None
+  return to_hostname
+
+
+if __name__ == '__main__':
+  caster = Caster()
+  out_type = sys.argv[1]
+  lines = sys.stdin.readlines()
+  def parse_input(val):
+    return caster.cast_to(val, 'numeric') or val
+  values = [caster.cast_to(parse_input(line.strip()), out_type) for line in lines]
+  sys.stdout.write('\n'.join(map(lambda x: f'{type(x).__name__}\t{x}', values)))
