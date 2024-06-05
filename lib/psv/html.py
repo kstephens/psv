@@ -9,16 +9,19 @@ section('Format', 20)
 class HtmlOut(FormatOut):
   '''
   html-out - Generate HTML.
-  alias: html-, html
 
-  --title=NAME         |  Set `<title>` and add a `<div>`.
-  --header, -h         |  Add table header.  Default: True.
+  Aliases: html-, html
+
   --simple, -S         |  Minimal format.
+  --title=NAME         |  Set `<title>` and add a `<div>` at the top.
+  --parent-link, -P    |  Add `..` parent link to title `<div>`.  Default: False.
+  --header, -h         |  Add table header.  Default: True.
   --filtering, -f      |  Add filtering UI.
   --filtering-tooltip  |  Add filtering tooltip.
   --render-link, -L    |  Render http and ftp links.
   --sorting, -s        |  Add sorting support.
   --row-index, -i      |  Add row index to first column.  Default: False.
+  --stats              |  Add basic stats to the title `<div>`.
   --table-only, -T     |  Render only a `<table>`.
   --styled             |  Add style.  Default: True.
 

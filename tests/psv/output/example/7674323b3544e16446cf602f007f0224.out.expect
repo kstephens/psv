@@ -275,20 +275,22 @@ Aliases: dataframe-, dataframe
 
 html-out - Generate HTML.
 
-  psv html-out [--title=NAME] [--header] [--simple] [--filtering] [--filtering-tooltip] [--render-link] [--sorting] [--row-index] [--table-only] [--styled]
+  psv html-out [--simple] [--title=NAME] [--parent-link] [--header] [--filtering] [--filtering-tooltip] [--render-link] [--sorting] [--row-index] [--stats] [--table-only] [--styled]
 
 Aliases: html-, html
 
 Options:
 
-  --title=NAME        | Set `<title>` and add a `<div>`.
-  --header, -h        | Add table header.
   --simple, -S        | Minimal format.
+  --title=NAME        | Set `<title>` and add a `<div>` at the top.
+  --parent-link, -P   | Add `..` parent link to title `<div>`.
+  --header, -h        | Add table header.
   --filtering, -f     | Add filtering UI.
   --filtering-tooltip | Add filtering tooltip.
   --render-link, -L   | Render http and ftp links.
   --sorting, -s       | Add sorting support.
   --row-index, -i     | Add row index to first column.
+  --stats             | Add basic stats to the title `<div>`.
   --table-only, -T    | Render only a `<table>`.
   --styled            | Add style.
 
