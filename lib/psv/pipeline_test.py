@@ -8,11 +8,13 @@ def test_parse():
   assert parse(['a', 'b']) == [['a', 'b']]
   assert parse(['a', 'b', '//', 'c']) == [['a', 'b'], ['c']]
   assert parse(['//', 'c']) == [['c']]
-  assert parse(['a', '{{', 'b', '//', 'c', '}}', 'd', '//', 'e', 'f']) == [['a', '{{', 'b', '//', 'c', '}}', 'd'], ['e', 'f']]
+  assert parse(
+    ['a', '{{', 'b', '//', 'c', '}}', 'd', '//', 'e', 'f']) == \
+    [['a', '{{', 'b', '//', 'c', '}}', 'd'], ['e', 'f']]
 
 def test_parse_recur():
-  def parse(input):
-      return Parser().parse(input, recur=True)
+  def parse(argv):
+    return Parser().parse(argv, recur=True)
   assert parse([]) == []
   assert parse(['a']) == [['a']]
   assert parse(['a', '//', 'b', 'c', '//']) == \

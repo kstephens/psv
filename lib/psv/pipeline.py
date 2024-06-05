@@ -1,4 +1,4 @@
-from typing import Any, Union, List, Callable
+from typing import Any, Union, List
 import shlex
 import pandas as pd
 from devdriven.util import shorten_string, get_safe

@@ -8,7 +8,7 @@ from devdriven.cli.types import Argv
 from devdriven.to_dict import to_dict
 from devdriven.random import set_seed
 from devdriven.config import Config
-from . import pipeline, io
+from . import pipeline
 
 class Main(devdriven.cli.Main):
   def __init__(self):

@@ -308,8 +308,9 @@ $ w3m -dump a.html
 $ psv in users.txt // -table --fs=":" // html --title=users.txt // o users-with-title.html
 
 $ w3m -dump users-with-title.html
-users.txt
-┌──────┬──┬─────┬─────┬──────┬──────────────┬─────────────────┐
+┌─────────────────────────────────────────────────────────────┐
+│                          users.txt                          │
+├──────┬──┬─────┬─────┬──────┬──────────────┬─────────────────┤
 │  c1  │c2│ c3  │ c4  │  c5  │      c6      │       c7        │
 ├──────┼──┼─────┼─────┼──────┼──────────────┼─────────────────┤
 │root  │x │0    │0    │root  │/root         │/bin/bash        │
@@ -643,6 +644,32 @@ $ psv in a.tsv // seq i // sort a:- c // md
 |   1 | b4  |    1.234 | zxy   |   4 |
 |   1 | b1  |   23.763 | xspdf |   1 |
 
+$ psv in us-states.csv // sort 'FIPS Code' // head 10
+    Rank                 State  FIPS Code  Population
+23    24               Alabama       1000   5,074,296
+47    48                Alaska       2000     733,583
+13    14               Arizona       4000   7,359,197
+32    33              Arkansas       5000   3,045,637
+0      1            California       6000  39,029,342
+20    21              Colorado       8000   5,839,926
+28    29           Connecticut       9000   3,626,205
+44    45              Delaware      10000   1,018,396
+48    49  District of Columbia      11000     671,803
+2      3               Florida      12000  22,244,823
+
+$ psv in us-states.csv // cast 'FIPS Code':str // sort 'FIPS Code' // head 10
+    Rank                 State FIPS Code  Population
+23    24               Alabama      1000   5,074,296
+44    45              Delaware     10000   1,018,396
+48    49  District of Columbia     11000     671,803
+2      3               Florida     12000  22,244,823
+7      8               Georgia     13000  10,912,876
+39    40                Hawaii     15000   1,440,196
+37    38                 Idaho     16000   1,939,033
+5      6              Illinois     17000  12,582,032
+16    17               Indiana     18000   6,833,037
+30    31                  Iowa     19000   3,200,517
+
 
     grep    
 ------------
@@ -817,8 +844,8 @@ $ psv in a.tsv // stats // cut name,count,min,max
  Types  
 ========
 
-    coerce    
---------------
+    cast    
+------------
 $ psv in us-states.csv // shuffle // head 10 // cut State,Population // csv- // o us-states-sample.csv
 
 $ psv in us-states-sample.csv // sort Population
@@ -834,7 +861,7 @@ $ psv in us-states-sample.csv // sort Population
 7       Oklahoma   4,019,800
 1      Louisiana   4,590,241
 
-$ psv in us-states-sample.csv // tr -d ', ' Population // coerce Population:int // sort Population
+$ psv in us-states-sample.csv // tr -d ', ' Population // cast Population:int // sort Population
            State  Population
 8        Montana     1122867
 2          Maine     1385340
@@ -848,7 +875,7 @@ $ psv in us-states-sample.csv // tr -d ', ' Population // coerce Population:int 
 4        Florida    22244823
 
 # Parse date, convert to datetime, then integer Unix epoch seconds:
-$ psv in birthdays.csv // coerce sec_since_1970=birthday:datetime:epoch:int
+$ psv in birthdays.csv // cast sec_since_1970=birthday:datetime:epoch:int
     name      birthday  sec_since_1970
 0    Bob     5/10/1976       200534400
 1  Alice    1999-12-31       946598400
@@ -867,8 +894,28 @@ $ psv in a.csv // unit c_in_meters=c:ft:m // md
 |   3 | b3  | 3451     | bixop | 1051.8648 m           |
 |   1 | b4  |    1.234 | zxy   | 0.3761232 m           |
 
-# Convert Haile Gebrselassie's times to minutes per mile:
-$ psv in gebrselassie.csv // coerce seconds=time:seconds // unit seconds:s meters=distance:m // eval 'return {"m_per_s": meters / seconds}' // unit min_per_mile=m_per_s:mile/min:1/ // cut event,distance,time,min_per_mile // md
+# Convert Haile Gebrselassie's best times to minutes per mile:
+$ psv in gebrselassie.csv // md
+| kind          | distance     | time        | event              |
+|:--------------|:-------------|:------------|:-------------------|
+| Personal Best | 1500 m       | 00:03:33.73 | (Stuttgart 1999)   |
+| Personal Best | 1 mile       | 00:03:52.39 | (Gateshead 1999)   |
+| Personal Best | 3000 m       | 00:07:25.09 | NR (Brussels 1998) |
+| Personal Best | 2 miles      | 00:08:01.08 | NBP (Hengelo 1997) |
+| Personal Best | 5000 m       | 00:12:39.36 | (Helsinki 1998)    |
+| Personal Best | 10000 m      | 00:26:22.75 | (Hengelo 1998)     |
+| Indoors       | 800 m        | 00:01:49.35 | (Dortmund 1997)    |
+| Indoors       | 1500 m       | 00:03:31.76 | (Stuttgart 1998)   |
+| Indoors       | 2000 m       | 00:04:52.86 | (Birmingham 1998)  |
+| Indoors       | 3000 m       | 00:07:26.15 | (Karlsruhe 1998)   |
+| Indoors       | 2 miles      | 00:08:04.69 | (Birmingham 2003)  |
+| Indoors       | 5000 m       | 00:12:50.38 | (Birmingham 1999)  |
+| Road          | 10 km        | 00:27:02    | (Doha 2002)        |
+| Road          | 10 miles     | 00:44:24    | WBP (Tilburg 2005) |
+| Road          | 0.5 marathon | 00:58:55    | (Tempe 2006)       |
+| Road          | marathon     | 02:03:59    | (Berlin 2008)      |
+
+$ psv in gebrselassie.csv // cast seconds=time:seconds // unit seconds:s meters=distance:m // eval 'return {"m_per_s": meters / seconds}' // unit min_per_mile=m_per_s:mile/min:1/ // cut event,distance,time,min_per_mile // md
 | event              | distance     | time        | min_per_mile                  |
 |:-------------------|:-------------|:------------|:------------------------------|
 | (Stuttgart 1999)   | 1500 m       | 00:03:33.73 | 3.821834368 min / mile        |
@@ -993,12 +1040,12 @@ $ psv in a.tsv // cols // cut name,dtype.name,dtype.kind,dtype.isnative // md
 # Display proccessing info:
 $ psv in a.tsv // show-columns // md // env-
 {
-,
+  "cwd": "...",
   "config": {
     "file": "/dev/null",
     "file_loaded": "/dev/null"
   },
-  "now": "2024-06-05 17:40:50.707934+0000",
+  "now": "...",
   "history": [
     [
       "<< IoIn: in a.tsv >>",
