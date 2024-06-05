@@ -747,30 +747,34 @@ TYPES:
 * `numeric`     -  `int64` or `float64`.
 * `int`         -  `int64`.
 * `float`       -  `float64`.
-* `string`      -  `str`.
+* `str`         -  `str`.
 * `timedelta64` -  `timedelta64[ns]`.
 * `datetime`    -  `datetime`.
 * `unix_epoch`  -  Seconds since 1970.
 * `ipaddress`   -  Convert to `ipaddress`.
+* `hostname`    -  Convert to hostname by DNS lookup.
 
 TYPE Aliases:
 
-* `str`         -  Alias for `string`.
-* `n`           -  Alias for `numeric`.
-* `i`           -  Alias for `int`.
-* `int32`       -  Alias for `int`.
-* `int64`       -  Alias for `int`.
-* `f`           -  Alias for `float`.
-* `s`           -  Alias for `seconds`.
-* `sec`         -  Alias for `seconds`.
-* `timedelta`   -  Alias for `timedelta64`.
-* `td`          -  Alias for `timedelta64`.
-* `datetime`    -  Alias for `datetime64`.
-* `dt`          -  Alias for `datetime64`.
-* `ip`          -  Alias for `ipaddress`.
-* `ipaddr`      -  Alias for `ipaddress`.
-* `epoch`       -  Alias for `unix_epoch`.
-* `unix`        -  Alias for `unix_epoch`.
+* `string`        -  Alias for `str`.
+* `n`             -  Alias for `numeric`.
+* `integer`       -  Alias for `int`.
+* `i`             -  Alias for `int`.
+* `f`             -  Alias for `float`.
+* `s`             -  Alias for `seconds`.
+* `sec`           -  Alias for `seconds`.
+* `td`            -  Alias for `timedelta`.
+* `dt`            -  Alias for `datetime`.
+* `ip`            -  Alias for `ipaddress`.
+* `ipaddr`        -  Alias for `ipaddress`.
+* `epoch`         -  Alias for `unix_epoch`.
+* `unix`          -  Alias for `unix_epoch`.
+* `int32`         -  Alias for `int`.
+* `int64`         -  Alias for `int`.
+* `float8`        -  Alias for `float`.
+* `float64`       -  Alias for `float`.
+* `timedelta64`   -  Alias for `timedelta`.
+* `datetime64`    -  Alias for `datetime`.
 
 Arguments:
 
@@ -809,7 +813,9 @@ Examples:
 # Convert column c from feet to meters:
 $ psv in a.csv // unit c_in_meters=c:ft:m // md
 
-# Convert Haile Gebrselassie's times to minutes per mile:
+# Convert Haile Gebrselassie's best times to minutes per mile:
+$ psv in gebrselassie.csv // md
+
 $ psv in gebrselassie.csv // cast seconds=time:seconds // unit seconds:s meters=distance:m // eval 'return {"m_per_s": meters / seconds}' // unit min_per_mile=m_per_s:mile/min:1/ // cut event,distance,time,min_per_mile // md
 
 

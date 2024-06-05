@@ -8,6 +8,42 @@ import pandas as pd
 
 NS_PER_SEC = 1000 * 1000 * 1000
 
+TYPES = [
+  'str',
+  'numeric',
+  'int',
+  'float',
+  'unix_epoch',
+  'datetime',
+  'timedelta',
+  'seconds',
+  'ipaddress',
+  'hostname',
+]
+
+TYPE_ALIASES = {
+  'string': 'str',
+  'n': 'numeric',
+  'integer': 'int',
+  'i': 'int',
+  'f': 'float',
+  's': 'seconds',
+  'sec': 'seconds',
+  'td': 'timedelta',
+  'dt': 'datetime',
+  'ip': 'ipaddress',
+  'ipaddr': 'ipaddress',
+  'epoch': 'unix_epoch',
+  'unix': 'unix_epoch',
+  # pandas seq.dtype.name:
+  'int32': 'int',
+  'int64': 'int',
+  'float8': 'float',
+  'float64': 'float',
+  'timedelta64': 'timedelta',
+  'datetime64': 'datetime',
+}
+
 class Caster:
   type_aliases: dict = {}
   opts: dict = {}
@@ -27,6 +63,9 @@ class Caster:
       return fun
     raise Exception(f"unknown cast for type {out_type!r}")
 
+  def _cast_to_str(self, val, _inp_type: str):
+    return str(val)
+
   def _cast_to_numeric(self, val, _inp_type: str):
     return cast_float(val) or cast_int(val)
 
@@ -36,42 +75,39 @@ class Caster:
   def _cast_seq_to_float(self, val, _inp_type: str):
     return cast_float(val)
 
-  def _cast_to_string(self, val, _inp_type: str):
-    return str(val)
-
   def _cast_to_unix_epoch(self, val, inp_type: str):
     if inp_type in ('float', 'int'):
       return val
-    if inp_type in ('datetime', 'datetime64'):
+    if inp_type in ('datetime'):
       return val.timestamp()
-    if inp_type in ('timedelta', 'timedelta64'):
+    if inp_type in ('timedelta'):
       return val.total_seconds()
     return val
 
   def _cast_to_datetime(self, val, inp_type: str):
-    if inp_type in ('float', 'float8', 'float64', 'int', 'int32', 'int64'):
+    if inp_type in ('float', 'int'):
       return datetime.fromtimestamp(val)
-    if inp_type in ('datetime', 'datetime64'):
+    if inp_type in ('datetime'):
       return val
-    if inp_type in ('str', 'string'):
+    if inp_type in ('str'):
       return None  # FIXME
     return val
 
   def _cast_to_timedelta(self, val, inp_type: str):
-    if inp_type in ('timedelta', 'timedelta64'):
+    if inp_type in ('timedelta'):
       return val
-    if inp_type in ('float', 'int', 'int32', 'int64'):
+    if inp_type in ('float', 'int'):
       return timedelta(seconds=val)
-    if inp_type in ('datetime', 'datetime64'):
+    if inp_type in ('datetime'):
       return val.timestamp()
     return val
 
   def _cast_to_seconds(self, val, inp_type: str):
-    if inp_type in ('float', 'int', 'int32', 'int64'):
+    if inp_type in ('float', 'int'):
       return val
-    if inp_type in ('datetime', 'datetime64'):
+    if inp_type in ('datetime'):
       return val.timestamp()
-    if inp_type in ('timedelta', 'timedelta64'):
+    if inp_type in ('timedelta'):
       return val.total_seconds()
     return val
 
@@ -104,6 +140,9 @@ class Caster:
       return fun
     raise Exception("unknown cast for type {out_type!r}")
 
+  def _cast_seq_to_str(self, seq, _inp_type: str):
+    return pd.Series(seq.astype(str))
+
   def _cast_seq_to_numeric(self, seq, _inp_type: str):
     return pd.to_numeric(seq, errors='coerce')
 
@@ -112,9 +151,6 @@ class Caster:
 
   def _cast_seq_to_float(self, seq, _inp_type: str):
     return pd.to_numeric(seq, downcast='float', errors='coerce')
-
-  def _cast_seq_to_string(self, seq, _inp_type: str):
-    return pd.Series(seq.astype(str))
 
   def _cast_seq_to_unix_epoch(self, seq, inp_type: str):
     if inp_type in ('float', 'int'):
@@ -126,7 +162,7 @@ class Caster:
     return seq
 
   def _cast_seq_to_datetime(self, seq, inp_type: str):
-    if inp_type in ('float', 'float8', 'float64', 'int', 'int32', 'int64'):
+    if inp_type in ('float', 'int'):
       return pd.to_datetime(seq, unit='s', origin='unix', errors='ignore', cache=True)
     if inp_type.startswith('datetime'):
       return seq
@@ -144,9 +180,9 @@ class Caster:
     )
 
   def _cast_seq_to_timedelta(self, seq, inp_type: str):
-    if inp_type in ('timedelta64'):
+    if inp_type in ('timedelta'):
       return seq
-    if inp_type in ('float', 'int', 'int32', 'int64'):
+    if inp_type in ('float', 'int'):
       return pd.to_timedelta(seq, unit='s', errors='ignore')
     return pd.to_timedelta(seq, errors='ignore')
 
@@ -207,8 +243,8 @@ def hostname_caster():
 if __name__ == '__main__':
   caster = Caster()
   out_type = sys.argv[1]
-  lines = sys.stdin.readlines()
   def parse_input(val):
     return caster.cast_to(val, 'numeric') or val
-  values = [caster.cast_to(parse_input(line.strip()), out_type) for line in lines]
-  sys.stdout.write('\n'.join(map(lambda x: f'{type(x).__name__}\t{x}', values)))
+  while line := sys.stdin.readline():
+    x = caster.cast_to(parse_input(line.strip()), out_type)
+    sys.stdout.write(f'{type(x).__name__}\t{x!r}\t{str(x)!r}\n')
