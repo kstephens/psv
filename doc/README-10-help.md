@@ -1292,7 +1292,7 @@ Aliases: `u`
 `sort` - Sort rows by columns.
 
 ```NONE
-psv sort [--reverse] [--numeric] [--cast=TYPE] [COL] [COL:-] [COL:+]
+psv sort [--reverse] [COL] [COL:-] [COL:+]
 ```
 
 
@@ -1308,11 +1308,9 @@ Arguments:
 
 Options:
 
-|                    |                       |
-| ------------------ | --------------------- |
-|  `--reverse`, `-r` | Sort descending.      |
-|  `--numeric`, `-n` | Sort as numeric.      |
-|  `--cast=TYPE`     | Sort by casted value. |
+|                    |                  |
+| ------------------ | ---------------- |
+|  `--reverse`, `-r` | Sort descending. |
 
 Examples:
 
@@ -1360,6 +1358,38 @@ $ psv in a.tsv // seq i // sort a:- c // md
 |   2 | b2  |  -98.73  | qwer  |   2 |
 |   1 | b4  |    1.234 | zxy   |   4 |
 |   1 | b1  |   23.763 | xspdf |   1 |
+```
+
+
+```NONE
+$ psv in us-states.csv // sort 'FIPS Code' // head 10
+    Rank                 State  FIPS Code  Population
+23    24               Alabama       1000   5,074,296
+47    48                Alaska       2000     733,583
+13    14               Arizona       4000   7,359,197
+32    33              Arkansas       5000   3,045,637
+0      1            California       6000  39,029,342
+20    21              Colorado       8000   5,839,926
+28    29           Connecticut       9000   3,626,205
+44    45              Delaware      10000   1,018,396
+48    49  District of Columbia      11000     671,803
+2      3               Florida      12000  22,244,823
+```
+
+
+```NONE
+$ psv in us-states.csv // cast 'FIPS Code':str // sort 'FIPS Code' // head 10
+    Rank                 State FIPS Code  Population
+23    24               Alabama      1000   5,074,296
+44    45              Delaware     10000   1,018,396
+48    49  District of Columbia     11000     671,803
+2      3               Florida     12000  22,244,823
+7      8               Georgia     13000  10,912,876
+39    40                Hawaii     15000   1,440,196
+37    38                 Idaho     16000   1,939,033
+5      6              Illinois     17000  12,582,032
+16    17               Indiana     18000   6,833,037
+30    31                  Iowa     19000   3,200,517
 ```
 
 
@@ -1724,28 +1754,34 @@ TYPES:
 * `numeric`     -  `int64` or `float64`.
 * `int`         -  `int64`.
 * `float`       -  `float64`.
+* `str`         -  `str`.
 * `timedelta64` -  `timedelta64[ns]`.
 * `datetime`    -  `datetime`.
 * `unix_epoch`  -  Seconds since 1970.
 * `ipaddress`   -  Convert to `ipaddress`.
+* `hostname`    -  Convert to hostname by DNS lookup.
 
 TYPE Aliases:
 
-* `n`           -  Alias for `numeric`.
-* `i`           -  Alias for `int`.
-* `int32`       -  Alias for `int`.
-* `int64`       -  Alias for `int`.
-* `f`           -  Alias for `float`.
-* `s`           -  Alias for `seconds`.
-* `sec`         -  Alias for `seconds`.
-* `timedelta`   -  Alias for `timedelta64`.
-* `td`          -  Alias for `timedelta64`.
-* `datetime`    -  Alias for `datetime64`.
-* `dt`          -  Alias for `datetime64`.
-* `ip`          -  Alias for `ipaddress`.
-* `ipaddr`      -  Alias for `ipaddress`.
-* `epoch`       -  Alias for `unix_epoch`.
-* `unix`        -  Alias for `unix_epoch`.
+* `string`        -  Alias for `str`.
+* `n`             -  Alias for `numeric`.
+* `integer`       -  Alias for `int`.
+* `i`             -  Alias for `int`.
+* `f`             -  Alias for `float`.
+* `s`             -  Alias for `seconds`.
+* `sec`           -  Alias for `seconds`.
+* `td`            -  Alias for `timedelta`.
+* `dt`            -  Alias for `datetime`.
+* `ip`            -  Alias for `ipaddress`.
+* `ipaddr`        -  Alias for `ipaddress`.
+* `epoch`         -  Alias for `unix_epoch`.
+* `unix`          -  Alias for `unix_epoch`.
+* `int32`         -  Alias for `int`.
+* `int64`         -  Alias for `int`.
+* `float8`        -  Alias for `float`.
+* `float64`       -  Alias for `float`.
+* `timedelta64`   -  Alias for `timedelta`.
+* `datetime64`    -  Alias for `datetime`.
 
 Arguments:
 
@@ -1843,7 +1879,30 @@ $ psv in a.csv // unit c_in_meters=c:ft:m // md
 
 
 ```NONE
-# Convert Haile Gebrselassie's times to minutes per mile:
+# Convert Haile Gebrselassie's best times to minutes per mile:
+$ psv in gebrselassie.csv // md
+| kind          | distance     | time        | event              |
+|:--------------|:-------------|:------------|:-------------------|
+| Personal Best | 1500 m       | 00:03:33.73 | (Stuttgart 1999)   |
+| Personal Best | 1 mile       | 00:03:52.39 | (Gateshead 1999)   |
+| Personal Best | 3000 m       | 00:07:25.09 | NR (Brussels 1998) |
+| Personal Best | 2 miles      | 00:08:01.08 | NBP (Hengelo 1997) |
+| Personal Best | 5000 m       | 00:12:39.36 | (Helsinki 1998)    |
+| Personal Best | 10000 m      | 00:26:22.75 | (Hengelo 1998)     |
+| Indoors       | 800 m        | 00:01:49.35 | (Dortmund 1997)    |
+| Indoors       | 1500 m       | 00:03:31.76 | (Stuttgart 1998)   |
+| Indoors       | 2000 m       | 00:04:52.86 | (Birmingham 1998)  |
+| Indoors       | 3000 m       | 00:07:26.15 | (Karlsruhe 1998)   |
+| Indoors       | 2 miles      | 00:08:04.69 | (Birmingham 2003)  |
+| Indoors       | 5000 m       | 00:12:50.38 | (Birmingham 1999)  |
+| Road          | 10 km        | 00:27:02    | (Doha 2002)        |
+| Road          | 10 miles     | 00:44:24    | WBP (Tilburg 2005) |
+| Road          | 0.5 marathon | 00:58:55    | (Tempe 2006)       |
+| Road          | marathon     | 02:03:59    | (Berlin 2008)      |
+```
+
+
+```NONE
 $ psv in gebrselassie.csv // cast seconds=time:seconds // unit seconds:s meters=distance:m // eval 'return {"m_per_s": meters / seconds}' // unit min_per_mile=m_per_s:mile/min:1/ // cut event,distance,time,min_per_mile // md
 | event              | distance     | time        | min_per_mile                  |
 |:-------------------|:-------------|:------------|:------------------------------|
