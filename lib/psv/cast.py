@@ -1,28 +1,9 @@
 # from icecream import ic
-from .caster import Caster
+from .caster import Caster, TYPE_ALIASES
 from .command import Command, section, command
 from .util import parse_conversions
 
 section('Types', 50)
-
-TYPE_ALIASES = {
-  'str': 'string',
-  'n': 'numeric',
-  'i': 'int',
-  'int32': 'int',
-  'int64': 'int',
-  'f': 'float',
-  's': 'seconds',
-  'sec': 'seconds',
-  'timedelta64': 'timedelta',
-  'td': 'timedelta',
-  'datetime64': 'datetime',
-  'dt': 'datetime',
-  'ip': 'ipaddress',
-  'ipaddr': 'ipaddress',
-  'epoch': 'unix_epoch',
-  'unix': 'unix_epoch',
-}
 
 ALIAS_DOCS = '\n'.join([
   f'* {f"`{k}`":14s}  -  Alias for `{v}`.'
@@ -45,11 +26,12 @@ class Cast(Command):
 * `numeric`     -  `int64` or `float64`.
 * `int`         -  `int64`.
 * `float`       -  `float64`.
-* `string`      -  `str`.
+* `str`         -  `str`.
 * `timedelta64` -  `timedelta64[ns]`.
 * `datetime`    -  `datetime`.
 * `unix_epoch`  -  Seconds since 1970.
 * `ipaddress`   -  Convert to `ipaddress`.
+* `hostname`    -  Convert to hostname by DNS lookup.
 
   TYPE Aliases:
 
