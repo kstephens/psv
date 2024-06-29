@@ -197,11 +197,13 @@ class ExampleRunner:
     self.run_in_context(ex, root_dir, bin_dir, proc)
 
   def run_in_context(self, ex, root_dir, bin_dir, proc):
-    set_seed('12345678')
-    os.environ['PSV_RAND_SEED'] = '12345678'
     root_dir = Path(root_dir).absolute()
     bin_dir = Path(bin_dir).absolute()
-    with cwd(f'{root_dir}/example'):
+    example_dir = f'{root_dir}/example'
+    set_seed('12345678')
+    os.environ['PSV_RAND_SEED'] = '12345678'
+    os.environ['PSV_CONFIG'] = f'{example_dir}/psv-config.yml'
+    with cwd(example_dir):
       proc(ex, root_dir, bin_dir)
 
   def fix_command_line(self, cmd):

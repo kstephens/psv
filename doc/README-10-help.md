@@ -111,11 +111,16 @@ $ psv in a.tsv // -tsv // csv- // out a.csv
 `-sql` - Read from a SQL database.
 
 ```NONE
-psv -sql [--columns=COL,...] [--parse-dateslist=COL,...]
+psv -sql [--columns=COL,...] [--parse-dateslist=COL,...] [TABLE-NAME-or-SQL-QUERY] [CONNECTION-URL]
 ```
 
 
-TABLE-NAME-or-SQL-STATEMENT CONNECTION-URL
+Arguments:
+
+|                            |                                                   |
+| -------------------------- | ------------------------------------------------- |
+|  `TABLE-NAME-or-SQL-QUERY` | The name of a table or a SQL query.               |
+|  `CONNECTION-URL`          | The database connection URL in sqlachmemy format. |
 
 Options:
 
@@ -189,11 +194,16 @@ $ psv -sql --columns=distance,time gebrselassie sqlite:////tmp/geb.db
 `sql-` - Write to SQL database.
 
 ```NONE
-psv sql- [--if-exists=ACTION]
+psv sql- [--if-exists=ACTION] [DST-TABLE] [CONNECTION-URL]
 ```
 
 
-DST-TABLE CONNECTION-URL
+Arguments:
+
+|                   |                                                   |
+| ----------------- | ------------------------------------------------- |
+|  `DST-TABLE`      | Destination table name.                           |
+|  `CONNECTION-URL` | The database connection URL in sqlachmemy format. |
 
 Options:
 

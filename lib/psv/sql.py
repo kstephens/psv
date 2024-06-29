@@ -21,10 +21,8 @@ class SQLIn(SQLCommand):
 
 Arguments:
 
-  TABLE-NAME-or-SQL-STATEMENT CONNECTION-URL
-
-Options:
-
+  TABLE-NAME-or-SQL-QUERY    |  The name of a table or a SQL query.
+  CONNECTION-URL             |  The database connection URL in sqlachmemy format.
   --columns=COL,...          |  Columns to read from table.  Default: all columns.
   --parse-dateslist=COL,...  |  List of column names to parse as dates.
 
@@ -62,12 +60,8 @@ class SQLOut(SQLCommand):
   '''
   sql- - Write to SQL database.
 
-Arguments:
-
-  DST-TABLE CONNECTION-URL
-
-Options:
-
+  DST-TABLE           |  Destination table name.
+  CONNECTION-URL      |  The database connection URL in sqlachmemy format.
   --if-exists=ACTION  |  Action to take if table exists: `fail’, ‘replace’, ‘append’.  Default: `replace`.
 
 Examples:
