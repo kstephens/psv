@@ -80,36 +80,36 @@ class Caster:
   def _cast_to_unix_epoch(self, val, inp_type: str):
     if inp_type in NUMERIC:
       return val
-    if inp_type in ('datetime', 'datetime64'):
+    if inp_type.startswith('datetime'):
       return val.timestamp()
-    if inp_type in ('timedelta', 'timedelta64'):
+    if inp_type.startswith('timedelta'):
       return val.total_seconds()
     return val
 
   def _cast_to_datetime(self, val, inp_type: str):
-    if inp_type in ('datetime', 'datetime64'):
+    if inp_type.startswith('datetime'):
       return val
     if inp_type in NUMERIC:
       return datetime.fromtimestamp(val)
-    if inp_type in ('str', 'string', 'object'):
+    if inp_type in OTHER:
       return parse_datetime64(val)
     return val
 
   def _cast_to_timedelta(self, val, inp_type: str):
-    if inp_type in ('timedelta', 'timedelta64'):
+    if inp_type.startswith('timedelta'):
       return val
     if inp_type in NUMERIC:
       return timedelta(seconds=val)
-    if inp_type in ('datetime', 'datetime64'):
+    if inp_type.startswith('datetime'):
       return val.timestamp()
     return val
 
   def _cast_to_seconds(self, val, inp_type: str):
     if inp_type in NUMERIC:
       return val
-    if inp_type in ('datetime', 'datetime64'):
+    if inp_type.startswith('datetime'):
       return val.timestamp()
-    if inp_type in ('timedelta', 'timedelta64'):
+    if inp_type.startswith('timedelta'):
       return val.total_seconds()
     return val
 
@@ -168,7 +168,7 @@ class Caster:
       return seq
     if inp_type in NUMERIC:
       return pd.to_datetime(seq, unit='s', origin='unix', errors='ignore', cache=True)
-    if inp_type in ('str', 'string', 'object'):
+    if inp_type in OTHER:
       return pd.Series(seq.apply(parse_datetime64))
     return pd.to_datetime(
       seq,
@@ -184,7 +184,7 @@ class Caster:
     )
 
   def _cast_seq_to_timedelta(self, seq, inp_type: str):
-    if inp_type in ('timedelta64'):
+    if inp_type.startswith('timedelta'):
       return seq
     if inp_type in NUMERIC:
       return pd.to_timedelta(seq, unit='s', errors='ignore')
@@ -206,6 +206,7 @@ class Caster:
 ###########################################################
 
 
+OTHER = ('str', 'string', 'object')
 NUMERIC = ('float', 'float8', 'float64', 'int', 'int16', 'int32', 'int64')
 
 def cast_int(val):

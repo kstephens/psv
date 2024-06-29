@@ -1879,30 +1879,34 @@ TYPES:
 * `numeric`     -  `int64` or `float64`.
 * `int`         -  `int64`.
 * `float`       -  `float64`.
-* `string`      -  `str`.
+* `str`         -  `str`.
 * `timedelta64` -  `timedelta64[ns]`.
 * `datetime`    -  `datetime`.
 * `unix_epoch`  -  Seconds since 1970.
 * `ipaddress`   -  Convert to `ipaddress`.
+* `hostname`    -  Convert to hostname by DNS lookup.
 
 TYPE Aliases:
 
-* `str`           -  Alias for `string`.
+* `string`        -  Alias for `str`.
 * `n`             -  Alias for `numeric`.
+* `integer`       -  Alias for `int`.
 * `i`             -  Alias for `int`.
-* `int32`         -  Alias for `int`.
-* `int64`         -  Alias for `int`.
 * `f`             -  Alias for `float`.
 * `s`             -  Alias for `seconds`.
 * `sec`           -  Alias for `seconds`.
-* `timedelta64`   -  Alias for `timedelta`.
 * `td`            -  Alias for `timedelta`.
-* `datetime64`    -  Alias for `datetime`.
 * `dt`            -  Alias for `datetime`.
 * `ip`            -  Alias for `ipaddress`.
 * `ipaddr`        -  Alias for `ipaddress`.
 * `epoch`         -  Alias for `unix_epoch`.
 * `unix`          -  Alias for `unix_epoch`.
+* `int32`         -  Alias for `int`.
+* `int64`         -  Alias for `int`.
+* `float8`        -  Alias for `float`.
+* `float64`       -  Alias for `float`.
+* `timedelta64`   -  Alias for `timedelta`.
+* `datetime64`    -  Alias for `datetime`.
 
 Arguments:
 
