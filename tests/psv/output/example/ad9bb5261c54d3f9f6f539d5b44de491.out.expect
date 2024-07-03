@@ -33,6 +33,7 @@
 | grep           | Search for rows where columns match a regex.              |
 | translate      | Translate characters.                                     |
 | null           | Does nothing.                                             |
+| sed            | Search and replace text.                                  |
 | count          | Count of unique column values.                            |
 | summary        | Summary of column values.                                 |
 | stats          | Table of column names and basic statistics.               |

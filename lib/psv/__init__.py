@@ -14,6 +14,7 @@ from . import sql
 from . import yaml
 from . import spreadsheet
 from . import process
+from . import sed
 from . import summary
 from . import cast
 from . import unit

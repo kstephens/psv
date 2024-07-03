@@ -1694,6 +1694,47 @@ $ psv in a.tsv // null IGNORED --OPTION=VALUE // md
 
 ----------------------------------------------------------
 
+## `sed`
+
+`sed` - Search and replace text.
+
+```NONE
+psv sed [--fixed-strings] [--ignore-case] [--convert-to-string] [COL SEARCH REPLACE ...]
+```
+
+
+Arguments:
+
+|                           |                            |
+| ------------------------- | -------------------------- |
+|  `COL SEARCH REPLACE ...` | Search and Replace in COL. |
+
+Options:
+
+|                              |                                   |
+| ---------------------------- | --------------------------------- |
+|  `--fixed-strings`, `-F`     | Match fixed string.               |
+|  `--ignore-case`, `-i`       | Ignore case distinctions.         |
+|  `--convert-to-string`, `-S` | Convert all data to string first. |
+
+Examples:
+
+```NONE
+# Replace Population "," with "_":
+$ psv in us-states.csv // sed -F --convert-to-string @4 , _ // head 5 // md
+|   Rank | State        |   FIPS Code |   Population |
+|-------:|:-------------|------------:|-------------:|
+|      1 | California   |        6000 |   39_029_342 |
+|      2 | Texas        |       48000 |   30_029_572 |
+|      3 | Florida      |       12000 |   22_244_823 |
+|      4 | New York     |       36000 |   19_677_151 |
+|      5 | Pennsylvania |       42000 |   12_972_008 |
+```
+
+
+
+----------------------------------------------------------
+
 # Summaries
 
 ## `count`
