@@ -25,20 +25,20 @@ def select_columns(inp: HasCols,
   if not args and default_all:
     return inp_cols
   selected: Cols = []
-  for col in args:
+  for arg in args:
     action = '+'
-    if mtch := re.match(r'^([^:]+):([-+]?)$', col):
-      col = mtch.group(1)
-      action = mtch.group(2)
-    col = parse_col_or_index(inp_cols, col)
+    col, opts = parse_column_and_opt(inp_cols, arg)
+    if mtch := opts and re.match(r'^([-+]?)(?::(.*))?$', opts):
+      action = mtch[1]
+      opts = mtch[2]
     col_rx = glob_to_rx(col)
-    cols = [col for col in inp_cols if re.match(col_rx, col)]
-    if not check and not cols:
-      cols = [col]
+    matched_cols = [col for col in inp_cols if re.match(col_rx, col)]
+    if not check and not matched_cols:
+      matched_cols = [col]
     if action == '-':
-      selected = [x for x in selected if x not in cols]
+      selected = [x for x in selected if x not in matched_cols]
     else:
-      selected = selected + [x for x in cols if x not in selected]
+      selected = selected + [x for x in matched_cols if x not in selected]
   if check:
     if unknown := [col for col in selected if col not in inp_cols]:
       raise Exception(f"unknown columns: {unknown!r} : available {inp_cols!r}")
@@ -58,9 +58,9 @@ def parse_col_or_index(cols: HasCols, arg: str, check=False) -> str:
     raise Exception(f"unknown column: {col!r} : available {cols!r}")
   return col
 
-def parse_conversions(inp, args):
-  inp_cols = list(inp.columns)
-  cols_and_types = [parse_column_and_opt(inp_cols, arg) for arg in split_flat(args, ',')]
+def parse_conversions(cols, args):
+  cols = get_columns(cols)
+  cols_and_types = [parse_column_and_opt(cols, arg) for arg in split_flat(args, ',')]
   conversions = []
   for col, out_types in cols_and_types:
     col = col.split('=', 1)
