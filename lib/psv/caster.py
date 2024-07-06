@@ -6,7 +6,10 @@ import sys
 from datetime import datetime, timedelta
 import pandas as pd
 import numpy
-import dateparser  # type: ignore
+# from devdriven import lazy_import
+# import dateparser  # type: ignore
+
+# dateparser = None
 
 NS_PER_SEC = 1000 * 1000 * 1000
 
@@ -55,6 +58,7 @@ class Caster:
     self.opts = (opts or {})
     self.to_ipaddress = ipaddress_caster()
     self.to_hostname = hostname_caster()
+    # dateparser = lazy_import.load('dateparser')
 
   def cast_to(self, val, out_type: str, inp_type: Optional[str] = None):
     return self.caster(out_type)(val, inp_type or type(val).__name__)
@@ -229,6 +233,8 @@ def parse_datetime64(val):
   except ValueError:
     pass
   try:
+    # pylint: disable-next=import-outside-toplevel
+    import dateparser
     return numpy.datetime64(dateparser.parse(str(val)))
   # pylint: disable-next=broad-except
   except Exception:

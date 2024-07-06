@@ -1,18 +1,18 @@
 import re
 import pandas as pd
-# from icecream import ic
-from sqlalchemy import create_engine
 from .command import section, command, Command
 
 section('I/O', 10)
 
 class SQLCommand(Command):
   def make_engine(self, url: str):
+    # pylint: disable-next=import-outside-toplevel
+    import sqlalchemy
     if config_vars := self.main.config.opt('variable'):
       def fetch(match):
         return str(config_vars.get(match[1], ''))
       url = re.sub(r'\{\{(\S+)\}\}', fetch, url)
-    return create_engine(url)
+    return sqlalchemy.create_engine(url)
 
 @command
 class SQLIn(SQLCommand):
