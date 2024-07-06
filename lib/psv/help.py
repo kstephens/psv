@@ -4,7 +4,6 @@ import html
 from dataclasses import dataclass, field
 import pandas as pd  # type: ignore
 import tabulate  # type: ignore
-# from icecream import ic
 from devdriven.to_dict import to_dict
 from devdriven.cli.application import app
 from devdriven.cli.descriptor import Descriptor

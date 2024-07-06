@@ -1,5 +1,4 @@
 import pandas as pd
-# from icecream import ic
 from devdriven.tempfile import tempfile_to_writeable, tempfile_from_readable
 from .command import section, command
 from .formats import FormatIn, FormatOut

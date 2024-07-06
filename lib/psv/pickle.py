@@ -1,5 +1,4 @@
 import pandas as pd
-# from icecream import ic
 from .command import section, command
 from .formats import FormatIn, FormatOut
 

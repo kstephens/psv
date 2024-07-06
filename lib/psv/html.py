@@ -1,5 +1,4 @@
 from devdriven.html import Table
-# from icecream import ic
 from .command import section, command
 from .formats import FormatOut
 

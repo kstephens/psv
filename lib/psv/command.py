@@ -1,6 +1,5 @@
 from typing import Any, Optional, Union, List, Type
 import re
-# from icecream import ic
 import devdriven.cli.command as cmd
 from devdriven.cli.descriptor import Descriptor
 from devdriven.cli.application import app
