@@ -2301,7 +2301,7 @@ $ psv in a.tsv // show-columns // md // env-
     [
       "<< MarkdownOut: markdown-out >>",
       "<< str: | name   | types     | dtype.name   | ... >>",
-      null,
+      "text/markdown",
       null
     ],
     [
