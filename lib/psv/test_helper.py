@@ -3,10 +3,8 @@ import sys
 
 def fix_line(line):
   def replace(m):
-    return f'{m[1]}...{m[3]}'
-  return re.sub(r'( *"(?:now|cwd)": *")(:?[^"]*)(")\s*', replace, line)
-  # line = re.sub(r'\s+$', '\n', line)
-  # return line
+    return f'{m[1]}...{m[3]}\n'
+  return re.sub(r'( *"(?:now|cwd)": *")(:?[^"]*)("\S*)\s*', replace, line)
 
 
 if __name__ == '__main__':
