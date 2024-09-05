@@ -2418,7 +2418,7 @@ Options:
 Examples:
 
 ```NONE
-$ psv in a.tsv // eval "c *= 2"
+$ psv in a.tsv // eval 'c *= 2'
    a   b       c      d
 0  1  b1  47.526  xspdf
 1  2  b2 -197.46   qwer
@@ -2428,7 +2428,7 @@ $ psv in a.tsv // eval "c *= 2"
 
 
 ```NONE
-$ psv in a.tsv // eval "return c > 0"
+$ psv in a.tsv // eval 'return c > 0'
    a   b       c      d
 0  1  b1  23.763  xspdf
 1  3  b3  3451.0  bixop
@@ -2437,7 +2437,7 @@ $ psv in a.tsv // eval "return c > 0"
 
 
 ```NONE
-$ psv in a.tsv // eval "return {'i': offset, 'd_length': 2}"
+$ psv in a.tsv // eval 'return {"i": offset, "d_length": 2}'
    a   b         c      d  i  d_length
 0  1  b1    23.763  xspdf  0         2
 1  2  b2   -98.730   qwer  1         2
@@ -2447,7 +2447,7 @@ $ psv in a.tsv // eval "return {'i': offset, 'd_length': 2}"
 
 
 ```NONE
-$ psv in a.tsv // eval "return {'c': c * 2, 'f': len(d)}"
+$ psv in a.tsv // eval 'return {"c": c * 2, "f": len(d)}'
    a   b         c      d  f
 0  1  b1    47.526  xspdf  5
 1  2  b2  -197.460   qwer  4

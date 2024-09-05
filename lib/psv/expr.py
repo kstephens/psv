@@ -38,10 +38,10 @@ class Eval(Command):
   --columns=COL,...    |  Columns bound within STATEMENT.  Default: input columns.
   --normalize, -n      |  Column bound within STATEMENT are normalized to r'^[a-z0-9_]+$'.  Default: False.
 
-  $ psv in a.tsv // eval "c *= 2"
-  $ psv in a.tsv // eval "return c > 0"
-  $ psv in a.tsv // eval "return {'i': offset, 'd_length': 2}"
-  $ psv in a.tsv // eval "return {'c': c * 2, 'f': len(d)}"
+  $ psv in a.tsv // eval 'c *= 2'
+  $ psv in a.tsv // eval 'return c > 0'
+  $ psv in a.tsv // eval 'return {"i": offset, "d_length": 2}'
+  $ psv in a.tsv // eval 'return {"c": c * 2, "f": len(d)}'
   $ psv in a.tsv // rename d:dCamelCase // eval +n 'dCamelCase *= 2'
   $ psv in a.tsv // rename d:dCamelCase // eval -n 'd_camel_case *= 2'
 
