@@ -1,0 +1,23 @@
+name: run test
+on:
+  push:
+    branches: [ main ]
+jobs:
+  build:
+    strategy:
+      matrix:
+        os:
+          - ubuntu-latest
+          - macos-latest
+    runs-on: ${{ matrix.os }}
+    steps:
+    - name: checkout repo
+      uses: actions/checkout@main
+    - name: setup python-version
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+    - name: setup venv
+      run: make venv
+    - name: run make
+      run: make venv-force && . venv/bin/activate && make
