@@ -17,6 +17,6 @@ DEPENDENCIES=w3m sqlite3
 uname_o:=$(shell uname -o)
 install-dependencies: install-dependencies-$(uname_o)
 install-dependencies-GNU/Linux:
-	apt-get update && apt-get install -y $(DEPENDENCIES)
+	sudo apt-get update && sudo apt-get install -y $(DEPENDENCIES)
 install-dependencies-Darwin:
 	brew install $(DEPENDENCIES) || brew reinstall $(DEPENDENCIES)
