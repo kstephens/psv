@@ -23,6 +23,8 @@ jobs:
       uses: Homebrew/actions/setup-homebrew@master
     - name: install brew packages
       run: brew install w3m
+    - name: apt install
+      run: apt-get update && apt-get install w3m -y
     - name: setup venv
       run: make venv
     - name: run make
