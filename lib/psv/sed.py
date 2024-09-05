@@ -4,6 +4,7 @@ import pandas as pd
 from devdriven.util import chunks
 from .command import Command, section, command
 from .util import select_columns, get_columns
+
 section('Manipulation', 30)
 
 @command

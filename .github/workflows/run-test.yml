@@ -15,15 +15,15 @@ jobs:
       uses: actions/checkout@main
       with:
         submodules: 'true'
-    - name: setup python-version
-      uses: actions/setup-python@v5
-      with:
-        python-version: '3.11'
     - name: Set up Homebrew
       if: ${{ startsWith(matrix.os, 'macos') }}
       uses: Homebrew/actions/setup-homebrew@master
     - name: make install-dependencies
       run: make install-dependencies
+    - name: setup python-version
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
     - name: setup venv
       run: make venv-force
     - name: run make
