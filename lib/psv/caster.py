@@ -191,8 +191,8 @@ class Caster:
     if inp_type.startswith('timedelta'):
       return seq
     if inp_type in NUMERIC:
-      return pd.to_timedelta(seq, unit='s', errors='ignore')
-    return pd.to_timedelta(seq, errors='ignore')
+      return pd.to_timedelta(seq, unit='s', errors='ignore')  # type: ignore[call-overload]
+    return pd.to_timedelta(seq, errors='ignore')  # type: ignore[call-overload]
 
   def _cast_seq_to_seconds(self, seq, _inp_type: str):
     if not seq.dtype.name.startswith('datetime'):
