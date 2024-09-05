@@ -20,7 +20,7 @@ jobs:
       with:
         python-version: '3.11'
     - name: Set up Homebrew
-      if: ${{ matrix.os }} == macos-latest
+      if: ${{ startsWith(matrix.os, 'macos') }}
       uses: Homebrew/actions/setup-homebrew@master
     - name: make install-dependencies
       run: make install-dependencies
