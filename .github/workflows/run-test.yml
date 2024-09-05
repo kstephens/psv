@@ -13,6 +13,10 @@ jobs:
     steps:
     - name: checkout repo
       uses: actions/checkout@main
+    - name: update git submodules
+      run: |
+        git pull --recurse-submodules
+        git submodule update --remote --recursive
     - name: setup python-version
       uses: actions/setup-python@v5
       with:
