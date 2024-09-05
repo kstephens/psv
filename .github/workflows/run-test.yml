@@ -25,6 +25,6 @@ jobs:
     - name: make install-dependencies
       run: make install-dependencies
     - name: setup venv
-      run: make venv
+      run: make venv-force
     - name: run make
-      run: make venv-force && . venv/bin/activate && make
+      run: . venv/bin/activate && make
