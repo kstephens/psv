@@ -11,3 +11,10 @@ README.md: doc/README-*.md
 doc/README-10-help.md: lib/psv/* Makefile
 	bin/psv help --markdown --verbose | $(PYTHON) lib/psv/test_helper.py > tmp/README-10-help.md
 	mv tmp/README-10-help.md $@
+
+uname_o:=$(uname -o)
+install-dependencies: install-dependencies-$(uname_o)
+install-dependencies-GNU/Linux:
+	apt-get update && apt-get install -y w3m sqlite3
+install-dependencies-Darwin:
+	brew install w3m sqlite3

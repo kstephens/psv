@@ -20,11 +20,10 @@ jobs:
       with:
         python-version: '3.11'
     - name: Set up Homebrew
+      if: ${{ matrix.os }} == macos-latest
       uses: Homebrew/actions/setup-homebrew@master
-    - name: install brew packages
-      run: brew install w3m
-    - name: apt install
-      run: apt-get update && apt-get install w3m -y
+    - name: make install-dependencies
+      run: make install-dependencies
     - name: setup venv
       run: make venv
     - name: run make
