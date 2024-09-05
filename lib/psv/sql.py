@@ -38,7 +38,7 @@ $ psv -sql gebrselassie sqlite:////tmp/geb.db // md
 $ psv -sql --columns=distance,time gebrselassie sqlite:////tmp/geb.db
 
 # Query database:
-# psv -sql 'SELECT * FROM gebrselassie WHERE time > "00:07:"' sqlite:////tmp/geb.db // sort time
+$ psv -sql 'SELECT * FROM gebrselassie WHERE time > "00:07:"' sqlite:////tmp/geb.db // sort time
 
   '''
   def xform(self, _inp, _env):
