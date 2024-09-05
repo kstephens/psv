@@ -238,7 +238,7 @@ class Format():
 
 class FormatMarkdown(Format):
   def section(self, name):
-    self.row(f'# {name}')
+    self.row(f'## {name}')
     self.row()
 
   def synopsis(self, desc):
@@ -247,7 +247,7 @@ class FormatMarkdown(Format):
     self.code_end()
 
   def command_begin(self, desc):
-    self.row(f'## {self.code(desc.name)}')
+    self.row(f'### {self.code(desc.name)}')
     self.row()
 
   def emit_opts(self, title, items):

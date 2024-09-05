@@ -1,6 +1,6 @@
-# I/O
+## I/O
 
-## `in`
+### `in`
 
 `in` - Read input.
 
@@ -66,7 +66,7 @@ a	b	c	d
 
 ----------------------------------------------------------
 
-## `out`
+### `out`
 
 `out` - write output to URLs.
 
@@ -106,7 +106,7 @@ $ psv in a.tsv // -tsv // csv- // out a.csv
 
 ----------------------------------------------------------
 
-## `-sql`
+### `-sql`
 
 `-sql` - Read from a SQL database.
 
@@ -189,7 +189,7 @@ $ psv -sql --columns=distance,time gebrselassie sqlite:////tmp/geb.db
 
 ----------------------------------------------------------
 
-## `sql-`
+### `sql-`
 
 `sql-` - Write to SQL database.
 
@@ -242,9 +242,9 @@ Road|marathon|02:03:59|(Berlin 2008)
 
 ----------------------------------------------------------
 
-# Format
+## Format
 
-## `table-in`
+### `table-in`
 
 `table-in` - Parse table.
 
@@ -368,7 +368,7 @@ $ psv in users.txt // -table --fs=':' --max-cols=3
 
 ----------------------------------------------------------
 
-## `table-out`
+### `table-out`
 
 `table-out` - Generate table.
 
@@ -412,7 +412,7 @@ a|b|c|d
 
 ----------------------------------------------------------
 
-## `tsv-in`
+### `tsv-in`
 
 `tsv-in` - Parse TSV.
 
@@ -469,7 +469,7 @@ $ psv in https://tinyurl.com/4sscj338 // -tsv // md
 
 ----------------------------------------------------------
 
-## `tsv-out`
+### `tsv-out`
 
 `tsv-out` - Generate TSV.
 
@@ -496,7 +496,7 @@ a	b	c	d
 
 ----------------------------------------------------------
 
-## `csv-in`
+### `csv-in`
 
 `csv-in` - Parse CSV.
 
@@ -573,7 +573,7 @@ $ psv in a.csv // -csv // json-
 
 ----------------------------------------------------------
 
-## `csv-out`
+### `csv-out`
 
 `csv-out` - Generate CSV.
 
@@ -600,7 +600,7 @@ a,b,c,d
 
 ----------------------------------------------------------
 
-## `markdown-in`
+### `markdown-in`
 
 `markdown-in` - Parse Markdown.
 
@@ -633,7 +633,7 @@ a,b,c,d
 
 ----------------------------------------------------------
 
-## `markdown-out`
+### `markdown-out`
 
 `markdown-out` - Generate Markdown.
 
@@ -661,7 +661,7 @@ $ cat a.tsv | psv -tsv // md
 
 ----------------------------------------------------------
 
-## `json-in`
+### `json-in`
 
 `json-in` - Parse JSON.
 
@@ -680,7 +680,7 @@ Options:
 
 ----------------------------------------------------------
 
-## `json-out`
+### `json-out`
 
 `json-out` - Generate JSON array of objects.
 
@@ -728,7 +728,7 @@ $ psv in a.csv // -csv // json- // o a.json -
 
 ----------------------------------------------------------
 
-## `dataframe-in`
+### `dataframe-in`
 
 `dataframe-in` - Read Pandas Dataframe pickle.
 
@@ -741,7 +741,7 @@ Aliases: `-dataframe`
 
 ----------------------------------------------------------
 
-## `dataframe-out`
+### `dataframe-out`
 
 `dataframe-out` - Write Pandas DataFrame pickle.
 
@@ -754,7 +754,7 @@ Aliases: `dataframe-`, `dataframe`
 
 ----------------------------------------------------------
 
-## `html-out`
+### `html-out`
 
 `html-out` - Generate HTML.
 
@@ -913,7 +913,7 @@ $ w3m -dump users-with-fs.html
 
 ----------------------------------------------------------
 
-## `yaml-out`
+### `yaml-out`
 
 `yaml-out` - Generate YAML.
 
@@ -950,7 +950,7 @@ $ psv in a.csv // yaml
 
 ----------------------------------------------------------
 
-## `xls-in`
+### `xls-in`
 
 `xls-in` - Read XLS Spreadsheet.
 
@@ -996,7 +996,7 @@ $ psv in a.xlsx // -xls --no-header // md
 
 ----------------------------------------------------------
 
-## `xls-out`
+### `xls-out`
 
 `xls-out` - Generate XLS Spreadsheet.
 
@@ -1031,7 +1031,7 @@ a.xlsx: Microsoft Excel 2007+
 
 ----------------------------------------------------------
 
-## `extract`
+### `extract`
 
 `extract` - Extract fields by Regex.
 
@@ -1124,9 +1124,9 @@ $ psv in users.txt // extract --unnamed='group-%d' '^(?P<login>[^:]+)(.*)' // md
 
 ----------------------------------------------------------
 
-# Manipulation
+## Manipulation
 
-## `range`
+### `range`
 
 `range` - Subset of rows.
 
@@ -1177,7 +1177,7 @@ $ psv in a.tsv // seq --start=0 // range --step=2 // md
 
 ----------------------------------------------------------
 
-## `head`
+### `head`
 
 `head` - First N rows
 
@@ -1208,7 +1208,7 @@ $ psv in us-states.txt // -table // head 5 // md
 
 ----------------------------------------------------------
 
-## `tail`
+### `tail`
 
 `tail` - Last N rows
 
@@ -1237,7 +1237,7 @@ $ psv in us-states.txt // -table // tail 3 // md
 
 ----------------------------------------------------------
 
-## `reverse`
+### `reverse`
 
 `reverse` - Reverse rows.  Same as "range --step=-1"
 
@@ -1261,7 +1261,7 @@ $ psv in a.tsv // seq // tac // md
 
 ----------------------------------------------------------
 
-## `shuffle`
+### `shuffle`
 
 `shuffle` - shuffle rows.
 
@@ -1294,7 +1294,7 @@ $ psv in a.tsv // shuffle --seed=5 // md
 
 ----------------------------------------------------------
 
-## `copy`
+### `copy`
 
 `copy` - Copy columns.
 
@@ -1328,7 +1328,7 @@ $ psv in a.tsv // copy b:e d:f // md
 
 ----------------------------------------------------------
 
-## `cut`
+### `cut`
 
 `cut` - Cut specified columns.
 
@@ -1378,7 +1378,7 @@ $ psv in a.tsv // cut d '*' c:- // md
 
 ----------------------------------------------------------
 
-## `uniq`
+### `uniq`
 
 `uniq` - Return unique rows.
 
@@ -1391,7 +1391,7 @@ Aliases: `u`
 
 ----------------------------------------------------------
 
-## `sort`
+### `sort`
 
 `sort` - Sort rows by columns.
 
@@ -1500,7 +1500,7 @@ $ psv in us-states.csv // cast 'FIPS Code':str // sort 'FIPS Code' // head 10
 
 ----------------------------------------------------------
 
-## `grep`
+### `grep`
 
 `grep` - Search for rows where columns match a regex.
 
@@ -1570,7 +1570,7 @@ $ psv in a.tsv // grep d 'x' b '3$' // md
 
 ----------------------------------------------------------
 
-## `translate`
+### `translate`
 
 `translate` - Translate characters.
 
@@ -1637,7 +1637,7 @@ $ psv in us-states.txt // -table --header --fs="\s{2,}" // tr -d ', ' // head //
 
 ----------------------------------------------------------
 
-## `null`
+### `null`
 
 `null` - Does nothing.
 
@@ -1663,7 +1663,7 @@ $ psv in a.tsv // null IGNORED --OPTION=VALUE // md
 
 ----------------------------------------------------------
 
-## `sed`
+### `sed`
 
 `sed` - Search and replace text.
 
@@ -1704,9 +1704,9 @@ $ psv in us-states.csv // sed -F --convert-to-string @4 , _ // head 5 // md
 
 ----------------------------------------------------------
 
-# Summaries
+## Summaries
 
-## `count`
+### `count`
 
 `count` - Count of unique column values.
 
@@ -1768,7 +1768,7 @@ $ psv in transfers.csv // count --column=PayeeTransfers Payee // md
 
 ----------------------------------------------------------
 
-## `summary`
+### `summary`
 
 `summary` - Summary of column values.
 
@@ -1837,7 +1837,7 @@ $ psv in transfers.csv // cut Amount,Fee // summary Amount,Fee // md
 
 ----------------------------------------------------------
 
-## `stats`
+### `stats`
 
 `stats` - Table of column names and basic statistics.
 
@@ -1881,9 +1881,9 @@ $ psv in a.tsv // stats // cut name,count,min,max
 
 ----------------------------------------------------------
 
-# Types
+## Types
 
-## `cast`
+### `cast`
 
 `cast` - Cast column types.
 
@@ -1989,7 +1989,7 @@ $ psv in birthdays.csv // cast sec_since_1970=birthday:datetime:epoch:int
 
 ----------------------------------------------------------
 
-## `unit`
+### `unit`
 
 `unit` - Convert units.
 
@@ -2073,9 +2073,9 @@ $ psv in gebrselassie.csv // cast seconds=time:seconds // unit seconds:s meters=
 
 ----------------------------------------------------------
 
-# Metadata
+## Metadata
 
-## `add-sequence`
+### `add-sequence`
 
 `add-sequence` - Add a column with a sequence of numbers or random values.
 
@@ -2160,7 +2160,7 @@ $ psv in a.tsv // seq --uuid // md
 
 ----------------------------------------------------------
 
-## `rename-columns`
+### `rename-columns`
 
 `rename-columns` - Rename columns.
 
@@ -2194,7 +2194,7 @@ $ psv in a.tsv // rename b:Name // md
 
 ----------------------------------------------------------
 
-## `infer-objects`
+### `infer-objects`
 
 `infer-objects` - Infer column types.
 
@@ -2207,7 +2207,7 @@ Aliases: `infer`
 
 ----------------------------------------------------------
 
-## `show-columns`
+### `show-columns`
 
 `show-columns` - Table of column names and attributes.
 
@@ -2264,7 +2264,7 @@ $ psv in a.tsv // cols // cut name,dtype.name,dtype.kind,dtype.isnative // md
 
 ----------------------------------------------------------
 
-## `env-`
+### `env-`
 
 `env-` - Show env.
 
@@ -2344,9 +2344,9 @@ $ psv in a.tsv // show-columns // md // env-
 
 ----------------------------------------------------------
 
-# Expression Evaluation
+## Expression Evaluation
 
-## `eval`
+### `eval`
 
 `eval` - Evaluate expression for each row.
 
@@ -2448,7 +2448,7 @@ $ psv in a.tsv // rename d:dCamelCase // eval -n 'd_camel_case *= 2'
 
 ----------------------------------------------------------
 
-## `select`
+### `select`
 
 `select` - Select rows.
 
@@ -2482,7 +2482,7 @@ $ psv in a.tsv // select "c > 0"
 
 ----------------------------------------------------------
 
-## `repl`
+### `repl`
 
 `repl` - Start an interactive REPL.
 
@@ -2500,9 +2500,9 @@ Arguments:
 
 ----------------------------------------------------------
 
-# Documentation
+## Documentation
 
-## `example`
+### `example`
 
 `example` - Show examples.
 
@@ -2528,7 +2528,7 @@ Options:
 
 ----------------------------------------------------------
 
-## `help`
+### `help`
 
 `help` - This help document.
 
