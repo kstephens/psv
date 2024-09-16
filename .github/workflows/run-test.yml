@@ -15,19 +15,19 @@ jobs:
       uses: actions/checkout@main
       with:
         submodules: 'true'
-    - name: Set up Homebrew
-      if: ${{ startsWith(matrix.os, 'macos') }}
-      uses: Homebrew/actions/setup-homebrew@master
-    - name:  install bash
+    - name:  Set up Homebrew
+      if:    ${{ startsWith(matrix.os, 'macos') }}
+      uses:  Homebrew/actions/setup-homebrew@master
+    - name:  Install Homebrew bash
       if:    ${{ startsWith(matrix.os, 'macos') }}
       run:   brew install bash
-    - name: os-dependencies
-      run: tool/build os-dependencies
-    - name: setup python-version
-      uses: actions/setup-python@v5
+    - name:  Install os-dependencies
+      run:   tool/build os-dependencies
+    - name:  setup python-version
+      uses:  actions/setup-python@v5
       with:
         python-version: '3.11'
-    - name: venv
-      run: tool/build venv-force
-    - name: build
-      run: . venv/bin/activate && tool/build
+    - name: Create venv
+      run:  tool/build venv-force
+    - name: Run tests
+      run:  . venv/bin/activate && tool/build test
