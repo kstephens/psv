@@ -31,4 +31,4 @@ jobs:
     - name: Create venv
       run:  tool/build venv-force
     - name: Run tests
-      run:  . venv/bin/activate && tool/build test
+      run:  . venv/bin/activate && tool/build show-vars, test
