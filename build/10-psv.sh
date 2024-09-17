@@ -3,7 +3,7 @@ lib-dir lib vendor/devdriven-python/lib
 lint-dir bin lib
 test-dir tests
 requirements-dir . vendor/devdriven
-requirements-file dev-requirements.txt
+requirements-file requirements.txt dev-requirements.txt
 os_dependencies+='w3m sqlite3 '
 export PSV_CONFIG_FILE=/dev/null
 
