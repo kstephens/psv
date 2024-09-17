@@ -29,6 +29,6 @@ jobs:
       with:
         python-version: '3.11'
     - name: Create venv
-      run:  tool/build venv-force
+      run:  tool/build show-vars, venv-force
     - name: Run tests
       run:  . venv/bin/activate && tool/build show-vars, test
