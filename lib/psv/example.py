@@ -91,7 +91,7 @@ class ExampleRegistry():
 
   def all_examples(self, generate=False):
     cache = PickleCache(
-      path=resources.rel_path('example.pickle'),
+      path=resources.rel_path('example.pickle.bz2'),
       generate=self.generate_all)
     if generate:
       cache.data = self.generate_all()
