@@ -260,7 +260,10 @@ def hostname_caster():
 
   def to_hostname(val):
     try:
-      record = socket.gethostbyaddr(str(val))
+      val = str(val)
+      if val in cache:
+        return cache[val]
+      record = socket.gethostbyaddr(val)
       result = cache[val] = record[0]
       return result
     # pylint: disable-next=broad-except
@@ -272,10 +275,11 @@ def hostname_caster():
 if __name__ == '__main__':
   def main():
     caster = Caster()
-    out_type = sys.argv[1]
+    in_type = sys.argv[1]
+    out_type = sys.argv[2]
 
     def parse_input(val):
-      return caster.cast_to(val, 'numeric') or val
+      return caster.cast_to(val, in_type) or val
     while line := sys.stdin.readline():
       x = caster.cast_to(parse_input(line.strip()), out_type)
       sys.stdout.write(f'{type(x).__name__}\t{x!r}\t{str(x)!r}\n')
