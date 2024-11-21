@@ -5,6 +5,11 @@ import socket
 import sys
 from datetime import datetime, timedelta
 import pandas as pd
+import numpy
+# from devdriven import lazy_import
+# import dateparser  # type: ignore
+
+# dateparser = None
 
 NS_PER_SEC = 1000 * 1000 * 1000
 
@@ -53,6 +58,7 @@ class Caster:
     self.opts = (opts or {})
     self.to_ipaddress = ipaddress_caster()
     self.to_hostname = hostname_caster()
+    # dateparser = lazy_import.load('dateparser')
 
   def cast_to(self, val, out_type: str, inp_type: Optional[str] = None):
     return self.caster(out_type)(val, inp_type or type(val).__name__)
@@ -72,42 +78,42 @@ class Caster:
   def _cast_to_int(self, val, _inp_type: str):
     return cast_int(val)
 
-  def _cast_seq_to_float(self, val, _inp_type: str):
+  def _cast_to_float(self, val, _inp_type: str):
     return cast_float(val)
 
   def _cast_to_unix_epoch(self, val, inp_type: str):
-    if inp_type in ('float', 'int'):
+    if inp_type in NUMERIC:
       return val
-    if inp_type in ('datetime'):
+    if inp_type.startswith('datetime'):
       return val.timestamp()
-    if inp_type in ('timedelta'):
+    if inp_type.startswith('timedelta'):
       return val.total_seconds()
     return val
 
   def _cast_to_datetime(self, val, inp_type: str):
-    if inp_type in ('float', 'int'):
-      return datetime.fromtimestamp(val)
-    if inp_type in ('datetime'):
+    if inp_type.startswith('datetime'):
       return val
-    if inp_type in ('str'):
-      return None  # FIXME
+    if inp_type in NUMERIC:
+      return datetime.fromtimestamp(val)
+    if inp_type in OTHER:
+      return parse_datetime64(val)
     return val
 
   def _cast_to_timedelta(self, val, inp_type: str):
-    if inp_type in ('timedelta'):
+    if inp_type.startswith('timedelta'):
       return val
-    if inp_type in ('float', 'int'):
+    if inp_type in NUMERIC:
       return timedelta(seconds=val)
-    if inp_type in ('datetime'):
+    if inp_type.startswith('datetime'):
       return val.timestamp()
     return val
 
   def _cast_to_seconds(self, val, inp_type: str):
-    if inp_type in ('float', 'int'):
+    if inp_type in NUMERIC:
       return val
-    if inp_type in ('datetime'):
+    if inp_type.startswith('datetime'):
       return val.timestamp()
-    if inp_type in ('timedelta'):
+    if inp_type.startswith('timedelta'):
       return val.total_seconds()
     return val
 
@@ -153,7 +159,7 @@ class Caster:
     return pd.to_numeric(seq, downcast='float', errors='coerce')
 
   def _cast_seq_to_unix_epoch(self, seq, inp_type: str):
-    if inp_type in ('float', 'int'):
+    if inp_type in NUMERIC:
       return seq
     seq = self.cast_seq(seq, 'datetime')
     # ic(seq.dtype.name)
@@ -162,10 +168,12 @@ class Caster:
     return seq
 
   def _cast_seq_to_datetime(self, seq, inp_type: str):
-    if inp_type in ('float', 'int'):
-      return pd.to_datetime(seq, unit='s', origin='unix', errors='ignore', cache=True)
     if inp_type.startswith('datetime'):
       return seq
+    if inp_type in NUMERIC:
+      return pd.to_datetime(seq, unit='s', origin='unix', errors='ignore', cache=True)
+    if inp_type in OTHER:
+      return pd.Series(seq.apply(parse_datetime64))
     return pd.to_datetime(
       seq,
       errors='ignore',
@@ -180,15 +188,15 @@ class Caster:
     )
 
   def _cast_seq_to_timedelta(self, seq, inp_type: str):
-    if inp_type in ('timedelta'):
+    if inp_type.startswith('timedelta'):
       return seq
-    if inp_type in ('float', 'int'):
-      return pd.to_timedelta(seq, unit='s', errors='ignore')
-    return pd.to_timedelta(seq, errors='ignore')
+    if inp_type in NUMERIC:
+      return pd.to_timedelta(seq, unit='s', errors='ignore')  # type: ignore[call-overload]
+    return pd.to_timedelta(seq, errors='ignore')  # type: ignore[call-overload]
 
   def _cast_seq_to_seconds(self, seq, _inp_type: str):
     if not seq.dtype.name.startswith('datetime'):
-      seq = pd.to_timedelta(seq) # , errors='ignore'
+      seq = pd.to_timedelta(seq)  # , errors='ignore'
     seq = seq.dt.total_seconds()
     return seq
 
@@ -200,6 +208,10 @@ class Caster:
 
 
 ###########################################################
+
+
+OTHER = ('str', 'string', 'object')
+NUMERIC = ('float', 'float8', 'float64', 'int', 'int16', 'int32', 'int64')
 
 def cast_int(val):
   try:
@@ -213,15 +225,30 @@ def cast_float(val):
   except ValueError:
     return None
 
+def parse_datetime64(val):
+  try:
+    # nginx: time_local "27/Jun/2024:17:15:53 -0500"
+    if result := datetime.strptime(str(val), '%d/%b/%Y:%H:%M:%S %z'):
+      return numpy.datetime64(result)
+  except ValueError:
+    pass
+  try:
+    # pylint: disable-next=import-outside-toplevel
+    import dateparser
+    return numpy.datetime64(dateparser.parse(str(val)))
+  # pylint: disable-next=broad-except
+  except Exception:
+    return val
+
 def ipaddress_caster():
   cache = {}
+
   def to_ipaddr(val):
     try:
       if isinstance(val, str):
         if val in cache:
           return cache[val]
         cache[val] = ipaddr = ipaddress.ip_address(val)
-        # ic(type(ipaddr))
         return ipaddr
       return None
     except ValueError:
@@ -230,21 +257,30 @@ def ipaddress_caster():
 
 def hostname_caster():
   cache = {}
+
   def to_hostname(val):
     try:
-      record = socket.gethostbyaddr(str(val))
+      val = str(val)
+      if val in cache:
+        return cache[val]
+      record = socket.gethostbyaddr(val)
       result = cache[val] = record[0]
       return result
-    except:
+    # pylint: disable-next=broad-except
+    except Exception:
       return None
   return to_hostname
 
 
 if __name__ == '__main__':
-  caster = Caster()
-  out_type = sys.argv[1]
-  def parse_input(val):
-    return caster.cast_to(val, 'numeric') or val
-  while line := sys.stdin.readline():
-    x = caster.cast_to(parse_input(line.strip()), out_type)
-    sys.stdout.write(f'{type(x).__name__}\t{x!r}\t{str(x)!r}\n')
+  def main():
+    caster = Caster()
+    in_type = sys.argv[1]
+    out_type = sys.argv[2]
+
+    def parse_input(val):
+      return caster.cast_to(val, in_type) or val
+    while line := sys.stdin.readline():
+      x = caster.cast_to(parse_input(line.strip()), out_type)
+      sys.stdout.write(f'{type(x).__name__}\t{x!r}\t{str(x)!r}\n')
+  main()

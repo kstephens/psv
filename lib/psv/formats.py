@@ -1,22 +1,28 @@
+from typing import Any
 from io import StringIO, BytesIO
 from devdriven.util import not_implemented
 from devdriven.mime import content_type_for_suffixes
 import pandas as pd
-# from icecream import ic
 from .command import Command, section, suffix_list
 from .content import Content
 
 section('Format', 20)
 
 class FormatBase(Command):
-  def default_encoding(self):
+  def default_encoding(self) -> str:
     return 'utf-8'
 
-  def wants_input_file(self):
+  def wants_input_file(self) -> bool:
     return False
 
-  def wants_output_file(self):
+  def wants_output_file(self) -> bool:
     return False
+
+  def format_in(self, _io, _env) -> Any:
+    not_implemented()
+
+  def format_out(self, _inp, _env, _writable) -> None:
+    not_implemented()
 
 class FormatIn(FormatBase):
   def xform(self, inp, env):
@@ -35,9 +41,6 @@ class FormatIn(FormatBase):
       readable = inp.response()
     return self.format_in(readable, env)
 
-  def format_in(self, _io, _env):
-    not_implemented()
-
 class FormatOut(FormatBase):
   def xform(self, inp, env):
     self.setup_env(inp, env)
@@ -49,14 +52,11 @@ class FormatOut(FormatBase):
     self.format_out(inp, env, out)
     return out.getvalue()
 
-  def setup_env(self, _inp, env):
+  def setup_env(self, _inp, env) -> None:
     desc = self.command_descriptor()
     (env['Content-Type'], env['Content-Encoding']) = content_type_for_suffixes(suffix_list(desc))
 
-  def format_out(self, _inp, _env, _writable):
-    not_implemented()
-
-def read_table_with_header(readable, first_row_is_header, **kwargs):
+def read_table_with_header(readable, first_row_is_header, **kwargs) -> pd.DataFrame:
   # print(repr(first_row_is_header))
   header = 0 if first_row_is_header else None
   kwargs = kwargs | {'header': header}

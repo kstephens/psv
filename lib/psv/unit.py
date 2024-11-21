@@ -1,7 +1,6 @@
 from typing import List, Dict
 import re
 import pandas as pd
-# from icecream import ic
 from devdriven import lazy_import
 from .command import Command, section, command
 from .util import parse_conversions
@@ -24,6 +23,7 @@ def define_units(units: Dict[str, str], aliases: Dict[str, str]):
   u.add_enabled_aliases(new_aliases)
 
 ###############################################
+
 
 NS_PER_SEC = 1000 * 1000 * 1000
 
@@ -79,18 +79,18 @@ The unit `1/` represents the reciprocal of the previous unit.
 
   Examples:
 
-  # Convert column c from feet to meters:
-  $ psv in a.csv // unit c_in_meters=c:ft:m // md
+# Convert column c from feet to meters:
+$ psv in a.csv // unit c_in_meters=c:ft:m // md
 
-  # Convert Haile Gebrselassie's best times to minutes per mile:
-  $ psv in gebrselassie.csv // md
-  $ psv in gebrselassie.csv // cast seconds=time:seconds // unit seconds:s meters=distance:m // \
+# Convert Haile Gebrselassie's times to minutes per mile:
+$ psv in gebrselassie.csv // md
+$ psv in gebrselassie.csv // cast seconds=time:seconds // unit seconds:s meters=distance:m // \
 eval 'return {"m_per_s": meters / seconds}' // unit min_per_mile=m_per_s:mile/min:1/ // \
 cut event,distance,time,min_per_mile // md
 
 '''
   def xform(self, inp, _env):
-    define_units(UNITS, UNIT_ALIASES) # ??? DO THIS ONCE!
+    define_units(UNITS, UNIT_ALIASES)  # ??? DO THIS ONCE!
     conversions = parse_conversions(inp, self.args)
     out = inp.copy()
     for out_col, inp_col, out_units in conversions:
@@ -119,6 +119,7 @@ cut event,distance,time,min_per_mile // md
     if out_unit == '1/':
       return 1 / seq
     unit = u.Unit(out_unit)
+
     def convert(val):
       if isinstance(val, (float, int)):
         return val * unit

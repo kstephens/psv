@@ -121,6 +121,7 @@ def get_dataframe_info(dframe):
 def get_dataframe_col_info(df, col):
   dtype = df[col].dtype
   types = set()
+
   def each_type(val):
     types.add(type(val).__name__)
   df[col].apply(each_type)

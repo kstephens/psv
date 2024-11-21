@@ -2,6 +2,8 @@
 |:---------------|:----------------------------------------------------------|
 | in             | Read input.                                               |
 | out            | write output to URLs.                                     |
+| -sql           | Read from a SQL database.                                 |
+| sql-           | Write to SQL database.                                    |
 | table-in       | Parse table.                                              |
 | table-out      | Generate table.                                           |
 | tsv-in         | Parse TSV.                                                |
@@ -15,7 +17,6 @@
 | dataframe-in   | Read Pandas Dataframe pickle.                             |
 | dataframe-out  | Write Pandas DataFrame pickle.                            |
 | html-out       | Generate HTML.                                            |
-| sql-           | Write SQL.                                                |
 | yaml-out       | Generate YAML.                                            |
 | xls-in         | Read XLS Spreadsheet.                                     |
 | xls-out        | Generate XLS Spreadsheet.                                 |
@@ -32,6 +33,7 @@
 | grep           | Search for rows where columns match a regex.              |
 | translate      | Translate characters.                                     |
 | null           | Does nothing.                                             |
+| sed            | Search and replace text.                                  |
 | count          | Count of unique column values.                            |
 | summary        | Summary of column values.                                 |
 | stats          | Table of column names and basic statistics.               |

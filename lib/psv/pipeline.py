@@ -2,10 +2,12 @@ from typing import Any, Union, List
 import shlex
 import pandas as pd
 from devdriven.util import shorten_string, get_safe
+from devdriven.cli.macro import MacroExpander
 from .content import Content
 from . import command, io
 
 CommandLine = List[Union[str, List]]
+CommandList = List[List[str]]
 
 class Parser():
   def parse(self, argv: List[str], recur: bool = False) -> List[List]:
@@ -59,9 +61,24 @@ class Pipeline(command.Command):
     self.commands = []
 
   def parse_argv(self, argv: List[str]):
-    self.commands = Parser().parse(argv)
+    self.commands = self.expand_macros(argv)
     self.xforms = list(map(self.make_xform, self.commands))
     return self
+
+  def expand_macros(self, argv: List[str]) -> CommandList:
+    # ??? works fine:
+    # pylint: disable-next=no-member
+    macros = self.main.config.opt('macro', {})
+    result: CommandList = []
+    prev = Parser().parse(argv)
+    while result != prev:
+      prev = result
+      result = []
+      commands = Parser().parse(argv)
+      for cmd in commands:
+        expansion = MacroExpander(macros=macros).expand(cmd)
+        result.extend(Parser().parse(expansion))
+    return result
 
   def prepare_io(self):
     if self.xforms:

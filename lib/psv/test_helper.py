@@ -3,8 +3,9 @@ import sys
 
 def fix_line(line):
   def replace(m):
-    return f'{m[1]}...{m[3]}'
-  return re.sub(r'( *"(?:now|cwd)": *")(:?[^"]*)(")', replace, line)
+    return f'{m[1]}...{m[3]}\n'
+  return re.sub(r'( *"(?:now|cwd)": *")(:?[^"]*)("\S*)\s*', replace, line)
+
 
 if __name__ == '__main__':
   lines = sys.stdin.readlines()

@@ -3,7 +3,7 @@ from .pipeline import Parser
 def test_parse():
   def parse(argv):
     return Parser().parse(argv)
-  assert parse([]) == []
+  assert not parse([])
   assert parse(['a']) == [['a']]
   assert parse(['a', 'b']) == [['a', 'b']]
   assert parse(['a', 'b', '//', 'c']) == [['a', 'b'], ['c']]
@@ -15,7 +15,7 @@ def test_parse():
 def test_parse_recur():
   def parse(argv):
     return Parser().parse(argv, recur=True)
-  assert parse([]) == []
+  assert not parse([])
   assert parse(['a']) == [['a']]
   assert parse(['a', '//', 'b', 'c', '//']) == \
     [['a'], ['b', 'c']]

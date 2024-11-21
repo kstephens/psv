@@ -3,22 +3,22 @@
 psv - Pandas Separated Values
 
 - Copyright 2021-2024 Kurt Stephens
-- git@kurtstephens.com
+- pypi@devdriven.com
 
-`psv` is a command-line that manipulates tabular data in multiple formats.
-Its design is influenced by the `Unix Principle` of "small tools connected by pipes".
+`psv` is a command-line tool that manipulates tabular data in multiple formats.
+It is influenced by the `Unix Principle` of "small tools connected by pipes".
 
-# Features
+## Features
 
 `psv` can read and write multiple formats of data: CSV, TSV, Markdown, HTML, Pandas pickles.
 
 The string `//` is used to link commands in a pipeline.
 
-# Configuration
+## Configuration
 
 `psv` reads configuration from `~/.psv/config.yml` or `$PSV_CONFIG_FILE`.
 
-## Macros
+### Macros
 
 Macro commands are defined in `config.yml`.
 Argument substitution is similar to a Unix shell: `$1`, `$@`, etc.
@@ -29,9 +29,9 @@ macro:
   html-full: 'html- --row-index --render-links --style --sorting --filtering --filtering-tooltip "$@"'
 
 ```
-# I/O
+## I/O
 
-## `in`
+### `in`
 
 `in` - Read input.
 
@@ -97,7 +97,7 @@ a	b	c	d
 
 ----------------------------------------------------------
 
-## `out`
+### `out`
 
 `out` - write output to URLs.
 
@@ -137,9 +137,163 @@ $ psv in a.tsv // -tsv // csv- // out a.csv
 
 ----------------------------------------------------------
 
-# Format
+### `-sql`
 
-## `table-in`
+`-sql` - Read from a SQL database.
+
+```NONE
+psv -sql [--columns=COL,...] [--parse-dateslist=COL,...] [TABLE-NAME-or-SQL-QUERY] [CONNECTION-URL]
+```
+
+
+Arguments:
+
+|                            |                                                   |
+| -------------------------- | ------------------------------------------------- |
+|  `TABLE-NAME-or-SQL-QUERY` | The name of a table or a SQL query.               |
+|  `CONNECTION-URL`          | The database connection URL in sqlachmemy format. |
+
+Options:
+
+|                              |                                         |
+| ---------------------------- | --------------------------------------- |
+|  `--columns=COL,...`         | Columns to read from table.             |
+|  `--parse-dateslist=COL,...` | List of column names to parse as dates. |
+
+Examples:
+
+```NONE
+# Convert CSV to sqlite table:
+$ psv in gebrselassie.csv // sql- gebrselassie sqlite:////tmp/geb.db
+   rows_written
+0            16
+```
+
+
+```NONE
+# Format sqlite table as Markdown:
+$ psv -sql gebrselassie sqlite:////tmp/geb.db // md
+| kind          | distance     | time        | event              |
+|:--------------|:-------------|:------------|:-------------------|
+| Personal Best | 1500 m       | 00:03:33.73 | (Stuttgart 1999)   |
+| Personal Best | 1 mile       | 00:03:52.39 | (Gateshead 1999)   |
+| Personal Best | 3000 m       | 00:07:25.09 | NR (Brussels 1998) |
+| Personal Best | 2 miles      | 00:08:01.08 | NBP (Hengelo 1997) |
+| Personal Best | 5000 m       | 00:12:39.36 | (Helsinki 1998)    |
+| Personal Best | 10000 m      | 00:26:22.75 | (Hengelo 1998)     |
+| Indoors       | 800 m        | 00:01:49.35 | (Dortmund 1997)    |
+| Indoors       | 1500 m       | 00:03:31.76 | (Stuttgart 1998)   |
+| Indoors       | 2000 m       | 00:04:52.86 | (Birmingham 1998)  |
+| Indoors       | 3000 m       | 00:07:26.15 | (Karlsruhe 1998)   |
+| Indoors       | 2 miles      | 00:08:04.69 | (Birmingham 2003)  |
+| Indoors       | 5000 m       | 00:12:50.38 | (Birmingham 1999)  |
+| Road          | 10 km        | 00:27:02    | (Doha 2002)        |
+| Road          | 10 miles     | 00:44:24    | WBP (Tilburg 2005) |
+| Road          | 0.5 marathon | 00:58:55    | (Tempe 2006)       |
+| Road          | marathon     | 02:03:59    | (Berlin 2008)      |
+```
+
+
+```NONE
+# Read specific columns:
+$ psv -sql --columns=distance,time gebrselassie sqlite:////tmp/geb.db
+        distance         time
+0         1500 m  00:03:33.73
+1         1 mile  00:03:52.39
+2         3000 m  00:07:25.09
+3        2 miles  00:08:01.08
+4         5000 m  00:12:39.36
+5        10000 m  00:26:22.75
+6          800 m  00:01:49.35
+7         1500 m  00:03:31.76
+8         2000 m  00:04:52.86
+9         3000 m  00:07:26.15
+10       2 miles  00:08:04.69
+11        5000 m  00:12:50.38
+12         10 km     00:27:02
+13      10 miles     00:44:24
+14  0.5 marathon     00:58:55
+15      marathon     02:03:59
+```
+
+
+```NONE
+# Query database:
+$ psv -sql 'SELECT * FROM gebrselassie WHERE time > "00:07:"' sqlite:////tmp/geb.db // sort time
+             kind      distance         time               event
+0   Personal Best        3000 m  00:07:25.09  NR (Brussels 1998)
+4         Indoors        3000 m  00:07:26.15    (Karlsruhe 1998)
+1   Personal Best       2 miles  00:08:01.08  NBP (Hengelo 1997)
+5         Indoors       2 miles  00:08:04.69   (Birmingham 2003)
+2   Personal Best        5000 m  00:12:39.36     (Helsinki 1998)
+6         Indoors        5000 m  00:12:50.38   (Birmingham 1999)
+3   Personal Best       10000 m  00:26:22.75      (Hengelo 1998)
+7            Road         10 km     00:27:02         (Doha 2002)
+8            Road      10 miles     00:44:24  WBP (Tilburg 2005)
+9            Road  0.5 marathon     00:58:55        (Tempe 2006)
+10           Road      marathon     02:03:59       (Berlin 2008)
+```
+
+
+
+----------------------------------------------------------
+
+### `sql-`
+
+`sql-` - Write to SQL database.
+
+```NONE
+psv sql- [--if-exists=ACTION] [DST-TABLE] [CONNECTION-URL]
+```
+
+
+Arguments:
+
+|                   |                                                   |
+| ----------------- | ------------------------------------------------- |
+|  `DST-TABLE`      | Destination table name.                           |
+|  `CONNECTION-URL` | The database connection URL in sqlachmemy format. |
+
+Options:
+
+|                       |                                                              |
+| --------------------- | ------------------------------------------------------------ |
+|  `--if-exists=ACTION` | Action to take if table exists: `fail’, ‘replace’, ‘append’. |
+
+Examples:
+
+```NONE
+# Convert CSV to Sqlite table:
+$ psv in gebrselassie.csv // sql- gebrselassie 'sqlite:////tmp/geb.db'
+   rows_written
+0            16
+```
+
+
+```NONE
+# Query Sqlite:
+$ sqlite3 -header -cmd "SELECT * FROM gebrselassie WHERE time > '00:07:'" /tmp/geb.db </dev/null
+kind|distance|time|event
+Personal Best|3000 m|00:07:25.09|NR (Brussels 1998)
+Personal Best|2 miles|00:08:01.08|NBP (Hengelo 1997)
+Personal Best|5000 m|00:12:39.36|(Helsinki 1998)
+Personal Best|10000 m|00:26:22.75|(Hengelo 1998)
+Indoors|3000 m|00:07:26.15|(Karlsruhe 1998)
+Indoors|2 miles|00:08:04.69|(Birmingham 2003)
+Indoors|5000 m|00:12:50.38|(Birmingham 1999)
+Road|10 km|00:27:02|(Doha 2002)
+Road|10 miles|00:44:24|WBP (Tilburg 2005)
+Road|0.5 marathon|00:58:55|(Tempe 2006)
+Road|marathon|02:03:59|(Berlin 2008)
+```
+
+
+
+----------------------------------------------------------
+
+## Format
+
+### `table-in`
 
 `table-in` - Parse table.
 
@@ -263,7 +417,7 @@ $ psv in users.txt // -table --fs=':' --max-cols=3
 
 ----------------------------------------------------------
 
-## `table-out`
+### `table-out`
 
 `table-out` - Generate table.
 
@@ -307,7 +461,7 @@ a|b|c|d
 
 ----------------------------------------------------------
 
-## `tsv-in`
+### `tsv-in`
 
 `tsv-in` - Parse TSV.
 
@@ -364,7 +518,7 @@ $ psv in https://tinyurl.com/4sscj338 // -tsv // md
 
 ----------------------------------------------------------
 
-## `tsv-out`
+### `tsv-out`
 
 `tsv-out` - Generate TSV.
 
@@ -391,7 +545,7 @@ a	b	c	d
 
 ----------------------------------------------------------
 
-## `csv-in`
+### `csv-in`
 
 `csv-in` - Parse CSV.
 
@@ -468,7 +622,7 @@ $ psv in a.csv // -csv // json-
 
 ----------------------------------------------------------
 
-## `csv-out`
+### `csv-out`
 
 `csv-out` - Generate CSV.
 
@@ -495,7 +649,7 @@ a,b,c,d
 
 ----------------------------------------------------------
 
-## `markdown-in`
+### `markdown-in`
 
 `markdown-in` - Parse Markdown.
 
@@ -528,7 +682,7 @@ a,b,c,d
 
 ----------------------------------------------------------
 
-## `markdown-out`
+### `markdown-out`
 
 `markdown-out` - Generate Markdown.
 
@@ -556,7 +710,7 @@ $ cat a.tsv | psv -tsv // md
 
 ----------------------------------------------------------
 
-## `json-in`
+### `json-in`
 
 `json-in` - Parse JSON.
 
@@ -575,7 +729,7 @@ Options:
 
 ----------------------------------------------------------
 
-## `json-out`
+### `json-out`
 
 `json-out` - Generate JSON array of objects.
 
@@ -623,7 +777,7 @@ $ psv in a.csv // -csv // json- // o a.json -
 
 ----------------------------------------------------------
 
-## `dataframe-in`
+### `dataframe-in`
 
 `dataframe-in` - Read Pandas Dataframe pickle.
 
@@ -636,7 +790,7 @@ Aliases: `-dataframe`
 
 ----------------------------------------------------------
 
-## `dataframe-out`
+### `dataframe-out`
 
 `dataframe-out` - Write Pandas DataFrame pickle.
 
@@ -649,12 +803,12 @@ Aliases: `dataframe-`, `dataframe`
 
 ----------------------------------------------------------
 
-## `html-out`
+### `html-out`
 
 `html-out` - Generate HTML.
 
 ```NONE
-psv html-out [--title=NAME] [--header] [--simple] [--filtering] [--filtering-tooltip] [--render-link] [--sorting] [--row-index] [--table-only] [--styled]
+psv html-out [--simple] [--title=NAME] [--parent-link] [--header] [--filtering] [--filtering-tooltip] [--render-link] [--sorting] [--row-index] [--stats] [--table-only] [--styled]
 ```
 
 
@@ -662,18 +816,20 @@ Aliases: `html-`, `html`
 
 Options:
 
-|                        |                                              |
-| ---------------------- | -------------------------------------------- |
-|  `--title=NAME`        | Set `&lt;title&gt;` and add a `&lt;div&gt;`. |
-|  `--header`, `-h`      | Add table header.                            |
-|  `--simple`, `-S`      | Minimal format.                              |
-|  `--filtering`, `-f`   | Add filtering UI.                            |
-|  `--filtering-tooltip` | Add filtering tooltip.                       |
-|  `--render-link`, `-L` | Render http and ftp links.                   |
-|  `--sorting`, `-s`     | Add sorting support.                         |
-|  `--row-index`, `-i`   | Add row index to first column.               |
-|  `--table-only`, `-T`  | Render only a `&lt;table&gt;`.               |
-|  `--styled`            | Add style.                                   |
+|                        |                                                         |
+| ---------------------- | ------------------------------------------------------- |
+|  `--simple`, `-S`      | Minimal format.                                         |
+|  `--title=NAME`        | Set `&lt;title&gt;` and add a `&lt;div&gt;` at the top. |
+|  `--parent-link`, `-P` | Add `..` parent link to title `&lt;div&gt;`.            |
+|  `--header`, `-h`      | Add table header.                                       |
+|  `--filtering`, `-f`   | Add filtering UI.                                       |
+|  `--filtering-tooltip` | Add filtering tooltip.                                  |
+|  `--render-link`, `-L` | Render http and ftp links.                              |
+|  `--sorting`, `-s`     | Add sorting support.                                    |
+|  `--row-index`, `-i`   | Add row index to first column.                          |
+|  `--stats`             | Add basic stats to the title `&lt;div&gt;`.             |
+|  `--table-only`, `-T`  | Render only a `&lt;table&gt;`.                          |
+|  `--styled`            | Add style.                                              |
 
 Examples:
 
@@ -707,8 +863,9 @@ $ psv in users.txt // -table --fs=":" // html --title=users.txt // o users-with-
 
 ```NONE
 $ w3m -dump users-with-title.html
-users.txt
-┌──────┬──┬─────┬─────┬──────┬──────────────┬─────────────────┐
+┌─────────────────────────────────────────────────────────────┐
+│                          users.txt                          │
+├──────┬──┬─────┬─────┬──────┬──────────────┬─────────────────┤
 │  c1  │c2│ c3  │ c4  │  c5  │      c6      │       c7        │
 ├──────┼──┼─────┼─────┼──────┼──────────────┼─────────────────┤
 │root  │x │0    │0    │root  │/root         │/bin/bash        │
@@ -805,42 +962,7 @@ $ w3m -dump users-with-fs.html
 
 ----------------------------------------------------------
 
-## `sql-`
-
-`sql-` - Write SQL.
-
-```NONE
-psv sql- [--action=ACTION,...] [--table=TABLE]
-```
-
-
-Aliases: `sql`
-
-Options:
-
-|                        |                                          |
-| ---------------------- | ---------------------------------------- |
-|  `--action=ACTION,...` | Actions to perform: create, trunc, TODO. |
-|  `--table=TABLE`       | Table name.                              |
-
-Examples:
-
-```NONE
-# Convert TSV to SQL schema:
-$ psv in a.tsv // sql
-CREATE TABLE "__table__" (
-"a" INTEGER,
-  "b" TEXT,
-  "c" REAL,
-  "d" TEXT
-)
-```
-
-
-
-----------------------------------------------------------
-
-## `yaml-out`
+### `yaml-out`
 
 `yaml-out` - Generate YAML.
 
@@ -877,7 +999,7 @@ $ psv in a.csv // yaml
 
 ----------------------------------------------------------
 
-## `xls-in`
+### `xls-in`
 
 `xls-in` - Read XLS Spreadsheet.
 
@@ -923,7 +1045,7 @@ $ psv in a.xlsx // -xls --no-header // md
 
 ----------------------------------------------------------
 
-## `xls-out`
+### `xls-out`
 
 `xls-out` - Generate XLS Spreadsheet.
 
@@ -958,7 +1080,7 @@ a.xlsx: Microsoft Excel 2007+
 
 ----------------------------------------------------------
 
-## `extract`
+### `extract`
 
 `extract` - Extract fields by Regex.
 
@@ -1051,9 +1173,9 @@ $ psv in users.txt // extract --unnamed='group-%d' '^(?P<login>[^:]+)(.*)' // md
 
 ----------------------------------------------------------
 
-# Manipulation
+## Manipulation
 
-## `range`
+### `range`
 
 `range` - Subset of rows.
 
@@ -1104,7 +1226,7 @@ $ psv in a.tsv // seq --start=0 // range --step=2 // md
 
 ----------------------------------------------------------
 
-## `head`
+### `head`
 
 `head` - First N rows
 
@@ -1135,7 +1257,7 @@ $ psv in us-states.txt // -table // head 5 // md
 
 ----------------------------------------------------------
 
-## `tail`
+### `tail`
 
 `tail` - Last N rows
 
@@ -1164,7 +1286,7 @@ $ psv in us-states.txt // -table // tail 3 // md
 
 ----------------------------------------------------------
 
-## `reverse`
+### `reverse`
 
 `reverse` - Reverse rows.  Same as "range --step=-1"
 
@@ -1188,7 +1310,7 @@ $ psv in a.tsv // seq // tac // md
 
 ----------------------------------------------------------
 
-## `shuffle`
+### `shuffle`
 
 `shuffle` - shuffle rows.
 
@@ -1221,7 +1343,7 @@ $ psv in a.tsv // shuffle --seed=5 // md
 
 ----------------------------------------------------------
 
-## `copy`
+### `copy`
 
 `copy` - Copy columns.
 
@@ -1255,7 +1377,7 @@ $ psv in a.tsv // copy b:e d:f // md
 
 ----------------------------------------------------------
 
-## `cut`
+### `cut`
 
 `cut` - Cut specified columns.
 
@@ -1305,7 +1427,7 @@ $ psv in a.tsv // cut d '*' c:- // md
 
 ----------------------------------------------------------
 
-## `uniq`
+### `uniq`
 
 `uniq` - Return unique rows.
 
@@ -1318,7 +1440,7 @@ Aliases: `u`
 
 ----------------------------------------------------------
 
-## `sort`
+### `sort`
 
 `sort` - Sort rows by columns.
 
@@ -1427,7 +1549,7 @@ $ psv in us-states.csv // cast 'FIPS Code':str // sort 'FIPS Code' // head 10
 
 ----------------------------------------------------------
 
-## `grep`
+### `grep`
 
 `grep` - Search for rows where columns match a regex.
 
@@ -1497,7 +1619,7 @@ $ psv in a.tsv // grep d 'x' b '3$' // md
 
 ----------------------------------------------------------
 
-## `translate`
+### `translate`
 
 `translate` - Translate characters.
 
@@ -1564,7 +1686,7 @@ $ psv in us-states.txt // -table --header --fs="\s{2,}" // tr -d ', ' // head //
 
 ----------------------------------------------------------
 
-## `null`
+### `null`
 
 `null` - Does nothing.
 
@@ -1590,9 +1712,50 @@ $ psv in a.tsv // null IGNORED --OPTION=VALUE // md
 
 ----------------------------------------------------------
 
-# Summaries
+### `sed`
 
-## `count`
+`sed` - Search and replace text.
+
+```NONE
+psv sed [--fixed-strings] [--ignore-case] [--convert-to-string] [COL SEARCH REPLACE ...]
+```
+
+
+Arguments:
+
+|                           |                            |
+| ------------------------- | -------------------------- |
+|  `COL SEARCH REPLACE ...` | Search and Replace in COL. |
+
+Options:
+
+|                              |                                   |
+| ---------------------------- | --------------------------------- |
+|  `--fixed-strings`, `-F`     | Match fixed string.               |
+|  `--ignore-case`, `-i`       | Ignore case distinctions.         |
+|  `--convert-to-string`, `-S` | Convert all data to string first. |
+
+Examples:
+
+```NONE
+# Replace Population "," with "_":
+$ psv in us-states.csv // sed -F --convert-to-string @4 , _ // head 5 // md
+|   Rank | State        |   FIPS Code |   Population |
+|-------:|:-------------|------------:|-------------:|
+|      1 | California   |        6000 |   39_029_342 |
+|      2 | Texas        |       48000 |   30_029_572 |
+|      3 | Florida      |       12000 |   22_244_823 |
+|      4 | New York     |       36000 |   19_677_151 |
+|      5 | Pennsylvania |       42000 |   12_972_008 |
+```
+
+
+
+----------------------------------------------------------
+
+## Summaries
+
+### `count`
 
 `count` - Count of unique column values.
 
@@ -1654,7 +1817,7 @@ $ psv in transfers.csv // count --column=PayeeTransfers Payee // md
 
 ----------------------------------------------------------
 
-## `summary`
+### `summary`
 
 `summary` - Summary of column values.
 
@@ -1723,7 +1886,7 @@ $ psv in transfers.csv // cut Amount,Fee // summary Amount,Fee // md
 
 ----------------------------------------------------------
 
-## `stats`
+### `stats`
 
 `stats` - Table of column names and basic statistics.
 
@@ -1767,9 +1930,9 @@ $ psv in a.tsv // stats // cut name,count,min,max
 
 ----------------------------------------------------------
 
-# Types
+## Types
 
-## `cast`
+### `cast`
 
 `cast` - Cast column types.
 
@@ -1875,7 +2038,7 @@ $ psv in birthdays.csv // cast sec_since_1970=birthday:datetime:epoch:int
 
 ----------------------------------------------------------
 
-## `unit`
+### `unit`
 
 `unit` - Convert units.
 
@@ -1910,7 +2073,7 @@ $ psv in a.csv // unit c_in_meters=c:ft:m // md
 
 
 ```NONE
-# Convert Haile Gebrselassie's best times to minutes per mile:
+# Convert Haile Gebrselassie's times to minutes per mile:
 $ psv in gebrselassie.csv // md
 | kind          | distance     | time        | event              |
 |:--------------|:-------------|:------------|:-------------------|
@@ -1959,9 +2122,9 @@ $ psv in gebrselassie.csv // cast seconds=time:seconds // unit seconds:s meters=
 
 ----------------------------------------------------------
 
-# Metadata
+## Metadata
 
-## `add-sequence`
+### `add-sequence`
 
 `add-sequence` - Add a column with a sequence of numbers or random values.
 
@@ -2046,7 +2209,7 @@ $ psv in a.tsv // seq --uuid // md
 
 ----------------------------------------------------------
 
-## `rename-columns`
+### `rename-columns`
 
 `rename-columns` - Rename columns.
 
@@ -2080,7 +2243,7 @@ $ psv in a.tsv // rename b:Name // md
 
 ----------------------------------------------------------
 
-## `infer-objects`
+### `infer-objects`
 
 `infer-objects` - Infer column types.
 
@@ -2093,7 +2256,7 @@ Aliases: `infer`
 
 ----------------------------------------------------------
 
-## `show-columns`
+### `show-columns`
 
 `show-columns` - Table of column names and attributes.
 
@@ -2150,7 +2313,7 @@ $ psv in a.tsv // cols // cut name,dtype.name,dtype.kind,dtype.isnative // md
 
 ----------------------------------------------------------
 
-## `env-`
+### `env-`
 
 `env-` - Show env.
 
@@ -2187,7 +2350,7 @@ $ psv in a.tsv // show-columns // md // env-
     [
       "<< MarkdownOut: markdown-out >>",
       "<< str: | name   | types     | dtype.name   | ... >>",
-      null,
+      "text/markdown",
       null
     ],
     [
@@ -2230,9 +2393,9 @@ $ psv in a.tsv // show-columns // md // env-
 
 ----------------------------------------------------------
 
-# Expression Evaluation
+## Expression Evaluation
 
-## `eval`
+### `eval`
 
 `eval` - Evaluate expression for each row.
 
@@ -2273,7 +2436,7 @@ Options:
 Examples:
 
 ```NONE
-$ psv in a.tsv // eval "c *= 2"
+$ psv in a.tsv // eval 'c *= 2'
    a   b       c      d
 0  1  b1  47.526  xspdf
 1  2  b2 -197.46   qwer
@@ -2283,7 +2446,7 @@ $ psv in a.tsv // eval "c *= 2"
 
 
 ```NONE
-$ psv in a.tsv // eval "return c > 0"
+$ psv in a.tsv // eval 'return c > 0'
    a   b       c      d
 0  1  b1  23.763  xspdf
 1  3  b3  3451.0  bixop
@@ -2292,7 +2455,7 @@ $ psv in a.tsv // eval "return c > 0"
 
 
 ```NONE
-$ psv in a.tsv // eval "return {'i': offset, 'd_length': 2}"
+$ psv in a.tsv // eval 'return {"i": offset, "d_length": 2}'
    a   b         c      d  i  d_length
 0  1  b1    23.763  xspdf  0         2
 1  2  b2   -98.730   qwer  1         2
@@ -2302,7 +2465,7 @@ $ psv in a.tsv // eval "return {'i': offset, 'd_length': 2}"
 
 
 ```NONE
-$ psv in a.tsv // eval "return {'c': c * 2, 'f': len(d)}"
+$ psv in a.tsv // eval 'return {"c": c * 2, "f": len(d)}'
    a   b         c      d  f
 0  1  b1    47.526  xspdf  5
 1  2  b2  -197.460   qwer  4
@@ -2334,7 +2497,7 @@ $ psv in a.tsv // rename d:dCamelCase // eval -n 'd_camel_case *= 2'
 
 ----------------------------------------------------------
 
-## `select`
+### `select`
 
 `select` - Select rows.
 
@@ -2368,7 +2531,7 @@ $ psv in a.tsv // select "c > 0"
 
 ----------------------------------------------------------
 
-## `repl`
+### `repl`
 
 `repl` - Start an interactive REPL.
 
@@ -2386,9 +2549,9 @@ Arguments:
 
 ----------------------------------------------------------
 
-# Documentation
+## Documentation
 
-## `example`
+### `example`
 
 `example` - Show examples.
 
@@ -2414,7 +2577,7 @@ Options:
 
 ----------------------------------------------------------
 
-## `help`
+### `help`
 
 `help` - This help document.
 

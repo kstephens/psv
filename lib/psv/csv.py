@@ -1,4 +1,3 @@
-# from icecream import ic
 from .command import section, command
 from .formats import FormatIn, FormatOut, read_table_with_header
 

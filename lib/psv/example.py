@@ -91,11 +91,11 @@ class ExampleRegistry():
 
   def all_examples(self, generate=False):
     cache = PickleCache(
-      path=resources.rel_path('example.pickle'),
+      path=resources.rel_path('example.pickle.bz2'),
       generate=self.generate_all)
     if generate:
-      cache.set_data(self.generate_all())
-    examples = cache.data()
+      cache.data = self.generate_all()
+    examples = cache.data
     return examples
 
   def generate_all(self):
@@ -197,11 +197,13 @@ class ExampleRunner:
     self.run_in_context(ex, root_dir, bin_dir, proc)
 
   def run_in_context(self, ex, root_dir, bin_dir, proc):
-    set_seed('12345678')
-    os.environ['PSV_RAND_SEED'] = '12345678'
     root_dir = Path(root_dir).absolute()
     bin_dir = Path(bin_dir).absolute()
-    with cwd(f'{root_dir}/example'):
+    example_dir = f'{root_dir}/example'
+    set_seed('12345678')
+    os.environ['PSV_RAND_SEED'] = '12345678'
+    os.environ['PSV_CONFIG'] = f'{example_dir}/psv-config.yml'
+    with cwd(example_dir):
       proc(ex, root_dir, bin_dir)
 
   def fix_command_line(self, cmd):

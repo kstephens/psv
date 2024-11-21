@@ -8,3 +8,4 @@ __pycache__
 /mypy-report/
 /.pytest_cache
 /.mypy_cache
+/dist/

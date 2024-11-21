@@ -1,6 +1,5 @@
 import re
 import tabulate
-# from icecream import ic
 import pandas as pd
 from .command import section, command
 from .formats import FormatOut, FormatIn

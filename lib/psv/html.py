@@ -1,5 +1,4 @@
 from devdriven.html import Table
-# from icecream import ic
 from .command import section, command
 from .formats import FormatOut
 
@@ -50,8 +49,17 @@ $ w3m -dump users-with-fs.html
       col_opts = column_opts[col] = {}
       dtype = inp[col].dtype
       if dtype.kind in ('i', 'f'):
-        col_opts['numeric'] = True
-        col_opts['type'] = dtype.name
+        col_opts.update({
+          'numeric': True,
+          'sort_method': 'number',
+          'type': dtype.name,
+        })
+      if dtype.kind in ('O'):
+        type_name = infer_type_name(inp, col)
+        col_opts.update({'type': type_name})
+        if type_name == 'IPv4Address':
+          col_opts.update({'sort_method': 'dotsep'})
+        # ic((col, dtype, dtype.kind, col_opts))
     opts = {k.replace('-', '_'): v for k, v in self.opts.items()}
     options = {
       'columns': column_opts,
@@ -68,3 +76,8 @@ $ w3m -dump users-with-fs.html
       output=writeable,
     )
     table.render()
+
+def infer_type_name(inp, col):
+  if inp.shape[0] > 0:
+    return type(inp.iloc[0][col]).__name__
+  return None

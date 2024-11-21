@@ -29,7 +29,7 @@ class Main(devdriven.cli.Main):
 
   def parse_argv(self, argv: Argv):
     if not argv:
-      argv = ['help']
+      argv = ['help', '--list']
     return super().parse_argv(argv)
 
   def make_command(self, argv: Argv) -> devdriven.cli.Command:

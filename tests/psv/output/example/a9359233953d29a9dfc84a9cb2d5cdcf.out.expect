@@ -1,0 +1,9 @@
+# a9359233953d29a9dfc84a9cb2d5cdcf
+$ psv in us-states.csv // sed -F --convert-to-string @4 , _ // head 5 // md
+|   Rank | State        |   FIPS Code |   Population |
+|-------:|:-------------|------------:|-------------:|
+|      1 | California   |        6000 |   39_029_342 |
+|      2 | Texas        |       48000 |   30_029_572 |
+|      3 | Florida      |       12000 |   22_244_823 |
+|      4 | New York     |       36000 |   19_677_151 |
+|      5 | Pennsylvania |       42000 |   12_972_008 |

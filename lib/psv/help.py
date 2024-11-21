@@ -4,7 +4,6 @@ import html
 from dataclasses import dataclass, field
 import pandas as pd  # type: ignore
 import tabulate  # type: ignore
-# from icecream import ic
 from devdriven.to_dict import to_dict
 from devdriven.cli.application import app
 from devdriven.cli.descriptor import Descriptor
@@ -239,7 +238,7 @@ class Format():
 
 class FormatMarkdown(Format):
   def section(self, name):
-    self.row(f'# {name}')
+    self.row(f'## {name}')
     self.row()
 
   def synopsis(self, desc):
@@ -248,7 +247,7 @@ class FormatMarkdown(Format):
     self.code_end()
 
   def command_begin(self, desc):
-    self.row(f'## {self.code(desc.name)}')
+    self.row(f'### {self.code(desc.name)}')
     self.row()
 
   def emit_opts(self, title, items):

@@ -3,8 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>users.txt</title>
-<style>
-/** generic *****************************************/
+<style>/** generic *****************************************/
 
 body {
   font-family: Arial, Helvetica, sans-serif;
@@ -35,14 +34,32 @@ a:hover {
   background-color: #b08080;
 }
 
-.cx-title {
-  text-align: center;
-}
 div.cx-content {
   display: inline-block;
 }
 
 /** cx-table *****************************************/
+
+.cx-table thead .cx-title-row {
+  position: sticky;
+  left: 0; /* needed for sticky? */
+  background-color: #000;
+}
+.cx-table .cx-title-th {
+  position: sticky;
+  left: 0;
+  background-color: #000;
+  padding-bottom: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+.cx-title {
+  position: sticky;
+  left: 2em;
+  float: left;
+  white-space: pre;
+  font-weight: bold;
+  background-color: #000;
+}
 
 table.cx-table {
   border-collapse: collapse;
@@ -195,7 +212,6 @@ table.cx-table {
   visibility: visible;
   opacity: 1;
 }
-
 </style>
 
 
@@ -205,26 +221,19 @@ table.cx-table {
 
 
 <div class="cx-content">
-<div class="cx-title">users.txt</div>
 <table id="cx-table" class="cx-table">
 
 <thead class="cx-thead">
+<tr class="cx-title-row"><th class="cx-title-th" colspan="7"><span class="cx-title"><span class="cx-title-text">users.txt</span></span></th></tr>
 
 <tr class="cx-columms">
-
-<th class="cx-column" title="name: c1; index: 1; type: UNKNOWN"><span class='cx-column-name'>c1</span><span class='cx-column-sort-indicator'></span></th>
-
-<th class="cx-column" title="name: c2; index: 2; type: UNKNOWN"><span class='cx-column-name'>c2</span><span class='cx-column-sort-indicator'></span></th>
-
-<th class="cx-column" title="name: c3; index: 3; type: UNKNOWN"><span class='cx-column-name'>c3</span><span class='cx-column-sort-indicator'></span></th>
-
-<th class="cx-column" title="name: c4; index: 4; type: UNKNOWN"><span class='cx-column-name'>c4</span><span class='cx-column-sort-indicator'></span></th>
-
-<th class="cx-column" title="name: c5; index: 5; type: UNKNOWN"><span class='cx-column-name'>c5</span><span class='cx-column-sort-indicator'></span></th>
-
-<th class="cx-column" title="name: c6; index: 6; type: UNKNOWN"><span class='cx-column-name'>c6</span><span class='cx-column-sort-indicator'></span></th>
-
-<th class="cx-column" title="name: c7; index: 7; type: UNKNOWN"><span class='cx-column-name'>c7</span><span class='cx-column-sort-indicator'></span></th>
+<th class="cx-column" title="name: c1; index: 1; type: str"><span class="cx-column-name">c1</span><span class="cx-column-sort-indicator"></span></th>
+<th class="cx-column" title="name: c2; index: 2; type: str"><span class="cx-column-name">c2</span><span class="cx-column-sort-indicator"></span></th>
+<th class="cx-column" title="name: c3; index: 3; type: str"><span class="cx-column-name">c3</span><span class="cx-column-sort-indicator"></span></th>
+<th class="cx-column" title="name: c4; index: 4; type: str"><span class="cx-column-name">c4</span><span class="cx-column-sort-indicator"></span></th>
+<th class="cx-column" title="name: c5; index: 5; type: str"><span class="cx-column-name">c5</span><span class="cx-column-sort-indicator"></span></th>
+<th class="cx-column" title="name: c6; index: 6; type: str"><span class="cx-column-name">c6</span><span class="cx-column-sort-indicator"></span></th>
+<th class="cx-column" title="name: c7; index: 7; type: str"><span class="cx-column-name">c7</span><span class="cx-column-sort-indicator"></span></th>
 </tr>
 </thead>
 <tbody class="cx-tbody">

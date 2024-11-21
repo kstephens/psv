@@ -60,6 +60,61 @@ $ psv in a.tsv // -tsv // csv- // out a.csv
 
 ----------------------------------------------------------
 
+-sql - Read from a SQL database.
+
+  psv -sql [--columns=COL,...] [--parse-dateslist=COL,...] [TABLE-NAME-or-SQL-QUERY] [CONNECTION-URL]
+
+Arguments:
+
+  TABLE-NAME-or-SQL-QUERY | The name of a table or a SQL query.
+  CONNECTION-URL          | The database connection URL in sqlachmemy format.
+
+Options:
+
+  --columns=COL,...         | Columns to read from table.
+  --parse-dateslist=COL,... | List of column names to parse as dates.
+
+Examples:
+
+# Convert CSV to sqlite table:
+$ psv in gebrselassie.csv // sql- gebrselassie sqlite:////tmp/geb.db
+
+# Format sqlite table as Markdown:
+$ psv -sql gebrselassie sqlite:////tmp/geb.db // md
+
+# Read specific columns:
+$ psv -sql --columns=distance,time gebrselassie sqlite:////tmp/geb.db
+
+# Query database:
+$ psv -sql 'SELECT * FROM gebrselassie WHERE time > "00:07:"' sqlite:////tmp/geb.db // sort time
+
+
+----------------------------------------------------------
+
+sql- - Write to SQL database.
+
+  psv sql- [--if-exists=ACTION] [DST-TABLE] [CONNECTION-URL]
+
+Arguments:
+
+  DST-TABLE      | Destination table name.
+  CONNECTION-URL | The database connection URL in sqlachmemy format.
+
+Options:
+
+  --if-exists=ACTION | Action to take if table exists: `fail’, ‘replace’, ‘append’.
+
+Examples:
+
+# Convert CSV to Sqlite table:
+$ psv in gebrselassie.csv // sql- gebrselassie 'sqlite:////tmp/geb.db'
+
+# Query Sqlite:
+$ sqlite3 -header -cmd "SELECT * FROM gebrselassie WHERE time > '00:07:'" /tmp/geb.db </dev/null
+
+
+----------------------------------------------------------
+
   Section Format
 
 table-in - Parse table.
@@ -311,25 +366,6 @@ $ w3m -dump users-no-header.html
 $ psv in users.txt // -table --fs=":" // html -fs // o users-with-fs.html
 
 $ w3m -dump users-with-fs.html
-
-
-----------------------------------------------------------
-
-sql- - Write SQL.
-
-  psv sql- [--action=ACTION,...] [--table=TABLE]
-
-Aliases: sql
-
-Options:
-
-  --action=ACTION,... | Actions to perform: create, trunc, TODO.
-  --table=TABLE       | Table name.
-
-Examples:
-
-# Convert TSV to SQL schema:
-$ psv in a.tsv // sql
 
 
 ----------------------------------------------------------
@@ -667,6 +703,28 @@ $ psv in a.tsv // null IGNORED --OPTION=VALUE // md
 
 ----------------------------------------------------------
 
+sed - Search and replace text.
+
+  psv sed [--fixed-strings] [--ignore-case] [--convert-to-string] [COL SEARCH REPLACE ...]
+
+Arguments:
+
+  COL SEARCH REPLACE ... | Search and Replace in COL.
+
+Options:
+
+  --fixed-strings, -F     | Match fixed string.
+  --ignore-case, -i       | Ignore case distinctions.
+  --convert-to-string, -S | Convert all data to string first.
+
+Examples:
+
+# Replace Population "," with "_":
+$ psv in us-states.csv // sed -F --convert-to-string @4 , _ // head 5 // md
+
+
+----------------------------------------------------------
+
   Section Summaries
 
 count - Count of unique column values.
@@ -815,7 +873,7 @@ Examples:
 # Convert column c from feet to meters:
 $ psv in a.csv // unit c_in_meters=c:ft:m // md
 
-# Convert Haile Gebrselassie's best times to minutes per mile:
+# Convert Haile Gebrselassie's times to minutes per mile:
 $ psv in gebrselassie.csv // md
 
 $ psv in gebrselassie.csv // cast seconds=time:seconds // unit seconds:s meters=distance:m // eval 'return {"m_per_s": meters / seconds}' // unit min_per_mile=m_per_s:mile/min:1/ // cut event,distance,time,min_per_mile // md
@@ -948,13 +1006,13 @@ Options:
 
 Examples:
 
-$ psv in a.tsv // eval "c *= 2"
+$ psv in a.tsv // eval 'c *= 2'
 
-$ psv in a.tsv // eval "return c > 0"
+$ psv in a.tsv // eval 'return c > 0'
 
-$ psv in a.tsv // eval "return {'i': offset, 'd_length': 2}"
+$ psv in a.tsv // eval 'return {"i": offset, "d_length": 2}'
 
-$ psv in a.tsv // eval "return {'c': c * 2, 'f': len(d)}"
+$ psv in a.tsv // eval 'return {"c": c * 2, "f": len(d)}'
 
 $ psv in a.tsv // rename d:dCamelCase // eval +n 'dCamelCase *= 2'
 
