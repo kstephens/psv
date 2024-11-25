@@ -13,3 +13,4 @@ typeguard==4.1.5
 types-dateparser==1.2.0.*
 urllib3==2.2.2
 virtualenv==20.16.5
+astropy==6.0.1

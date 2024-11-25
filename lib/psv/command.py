@@ -3,6 +3,7 @@ import re
 import devdriven.cli.command as cmd
 from devdriven.cli.descriptor import Descriptor
 from devdriven.cli.application import app
+from devdriven.cli.macro import MacroExpander
 from devdriven.cli.types import Argv
 # from devdriven.cli.macro import MacroExpander
 from devdriven.mime import short_and_long_suffix
