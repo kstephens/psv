@@ -1,5 +1,6 @@
 __pycache__
 *.pyi
+*.profile
 /tmp/
 /venv/
 /.coverage
@@ -7,3 +8,4 @@ __pycache__
 /mypy-report/
 /.pytest_cache
 /.mypy_cache
+/dist/

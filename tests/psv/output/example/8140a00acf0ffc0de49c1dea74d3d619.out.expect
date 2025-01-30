@@ -3,6 +3,7 @@ $ psv in a.tsv // cols // cols // cut name,dtype.name // md
 | name            | dtype.name   |
 |:----------------|:-------------|
 | name            | object       |
+| types           | object       |
 | dtype.name      | object       |
 | dtype.kind      | object       |
 | dtype.char      | object       |
@@ -15,7 +16,7 @@ $ psv in a.tsv // cols // cols // cut name,dtype.name // md
 | dtype.hasobject | bool         |
 | dtype.flags     | int64        |
 | dtype.isbuiltin | int64        |
-| dtype.isnative  | int64        |
+| dtype.isnative  | bool         |
 | dtype.descr     | object       |
 | dtype.alignment | int64        |
 | dtype.base      | object       |

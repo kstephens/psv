@@ -1,0 +1,3 @@
+macro:
+  html-full: 'html- --row-index --render-links --style --sorting --filtering --filtering-tooltip --parent-link --stats "$@"'
+  nginx-log: [ extract, '^(?P<remote_addr>\S+) \S+ (?P<remote_user>\S+) \[(?P<time_local>[^\]]+)\] "(?P<request>(?P<method>\S+) (?P<path>\S+) (?P<protocol>\S+))" (?P<status>\d+) (?P<bytes_sent>\d+) "(?P<http_referrer>[^"]+)" "(?P<http_user_agent>[^"]+)"(?P<_rest_>.*)$', //, cast, remote_addr:ipaddr, time_local:datetime, status:int, bytes_sent:int ]

@@ -1,0 +1,7 @@
+# b37efbc7a8c609010eab8e706b475ca1
+$ psv in birthdays.csv // cast sec_since_1970=birthday:datetime:epoch:int
+    name      birthday  sec_since_1970
+0    Bob     5/10/1976       200534400
+1  Alice    1999-12-31       946598400
+2  Frank  Aug 28, 2012      1346112000
+3  Grace  Apr 27, 2011      1303862400

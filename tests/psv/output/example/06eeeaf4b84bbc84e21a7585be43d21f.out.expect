@@ -1,5 +1,5 @@
-# 815be0feed21abdb0d03ab7cff6ade01
-$ psv in a.tsv // eval "return {'c': c * 2, 'f': len(d)}"
+# 06eeeaf4b84bbc84e21a7585be43d21f
+$ psv in a.tsv // eval 'return {"c": c * 2, "f": len(d)}'
    a   b         c      d  f
 0  1  b1    47.526  xspdf  5
 1  2  b2  -197.460   qwer  4

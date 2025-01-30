@@ -1,0 +1,3 @@
+[submodule "vendor/devdriven-python"]
+	path = vendor/devdriven-python
+	url = git@github.com:kstephens/devdriven-python.git

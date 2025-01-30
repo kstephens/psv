@@ -1,0 +1,14 @@
+# c73c13075b0fcf655bc5e49248036810
+$ psv -sql 'SELECT * FROM gebrselassie WHERE time > "00:07:"' sqlite:////tmp/geb.db // sort time
+             kind      distance         time               event
+0   Personal Best        3000 m  00:07:25.09  NR (Brussels 1998)
+4         Indoors        3000 m  00:07:26.15    (Karlsruhe 1998)
+1   Personal Best       2 miles  00:08:01.08  NBP (Hengelo 1997)
+5         Indoors       2 miles  00:08:04.69   (Birmingham 2003)
+2   Personal Best        5000 m  00:12:39.36     (Helsinki 1998)
+6         Indoors        5000 m  00:12:50.38   (Birmingham 1999)
+3   Personal Best       10000 m  00:26:22.75      (Hengelo 1998)
+7            Road         10 km     00:27:02         (Doha 2002)
+8            Road      10 miles     00:44:24  WBP (Tilburg 2005)
+9            Road  0.5 marathon     00:58:55        (Tempe 2006)
+10           Road      marathon     02:03:59       (Berlin 2008)

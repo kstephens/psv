@@ -1,0 +1,13 @@
+# d80a3d9264105ae1855026f7872c977c
+$ psv in us-states.csv // cast 'FIPS Code':str // sort 'FIPS Code' // head 10
+    Rank                 State FIPS Code  Population
+23    24               Alabama      1000   5,074,296
+44    45              Delaware     10000   1,018,396
+48    49  District of Columbia     11000     671,803
+2      3               Florida     12000  22,244,823
+7      8               Georgia     13000  10,912,876
+39    40                Hawaii     15000   1,440,196
+37    38                 Idaho     16000   1,939,033
+5      6              Illinois     17000  12,582,032
+16    17               Indiana     18000   6,833,037
+30    31                  Iowa     19000   3,200,517

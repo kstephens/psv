@@ -1,0 +1,14 @@
+# 733ae3f3c8f4fd1819763c756cd36305
+$ sqlite3 -header -cmd "SELECT * FROM gebrselassie WHERE time > '00:07:'" /tmp/geb.db </dev/null
+kind|distance|time|event
+Personal Best|3000 m|00:07:25.09|NR (Brussels 1998)
+Personal Best|2 miles|00:08:01.08|NBP (Hengelo 1997)
+Personal Best|5000 m|00:12:39.36|(Helsinki 1998)
+Personal Best|10000 m|00:26:22.75|(Hengelo 1998)
+Indoors|3000 m|00:07:26.15|(Karlsruhe 1998)
+Indoors|2 miles|00:08:04.69|(Birmingham 2003)
+Indoors|5000 m|00:12:50.38|(Birmingham 1999)
+Road|10 km|00:27:02|(Doha 2002)
+Road|10 miles|00:44:24|WBP (Tilburg 2005)
+Road|0.5 marathon|00:58:55|(Tempe 2006)
+Road|marathon|02:03:59|(Berlin 2008)
