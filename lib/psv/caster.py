@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import List
 import re
 import ipaddress
 import socket
@@ -62,7 +62,7 @@ class Caster:
         self.to_hostname = hostname_caster()
         # dateparser = lazy_import.load('dateparser')
 
-    def cast_to(self, val, out_type: str, inp_type: Optional[str] = None):
+    def cast_to(self, val, out_type: str, inp_type: str | None = None):
         # pylint: disable-next=not-callable
         return self.caster(out_type)(val, inp_type or type(val).__name__)
 

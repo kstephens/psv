@@ -1,4 +1,4 @@
-from typing import Optional, List
+from typing import List
 import re
 from dataclasses import dataclass, field
 from devdriven.util import get_safe, glob_to_rx
@@ -14,7 +14,7 @@ Cols = List[str]
 class ArgColumn:
     name: str
     index: int = field(default=-1)
-    flag: Optional[str] = field(default=None)
+    flag: str | None = field(default=None)
     opts: dict = field(default_factory=dict)
 
 
@@ -24,7 +24,7 @@ class ArgColumnParser:
     selected: List[ArgColumn] = field(default_factory=list)
     check: bool = field(default=False)
     default_all: bool = field(default=False)
-    split_arg: Optional[str] = field(default=None)
+    split_arg: str | None = field(default=None)
 
     def parse_args(self, inp: HasCols, args: List[str]):
         self.inp_cols = get_columns(inp)
