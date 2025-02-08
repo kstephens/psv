@@ -1,4 +1,4 @@
-from typing import Any, Union, List
+from typing import Any, List
 import shlex
 import pandas as pd
 from devdriven.util import shorten_string, get_safe
@@ -6,7 +6,7 @@ from devdriven.cli.macro import MacroExpander
 from .content import Content
 from . import command, io
 
-CommandLine = List[Union[str, List]]
+CommandLine = List[str | List]
 CommandList = List[List[str]]
 
 

@@ -1,4 +1,4 @@
-from typing import Any, Optional, Union, List, Type
+from typing import Any, Optional, List, Type
 import re
 import devdriven.cli.command as cmd
 from devdriven.cli.descriptor import Descriptor
@@ -28,7 +28,7 @@ class Command(cmd.Command):
 
 
 def main_make_xform(
-    main, klass_or_name: Union[str, Type], argv: Argv
+    main, klass_or_name: str | Type, argv: Argv
 ) -> Optional[Command]:
     assert main
     # if isinstance(klass_or_name, str):

@@ -1,10 +1,10 @@
-from typing import Optional, Union, List
+from typing import Optional, List
 import re
 from dataclasses import dataclass, field
 from devdriven.util import get_safe, glob_to_rx
 import pandas as pd  # type: ignore
 
-HasCols = Union[List[str], pd.DataFrame]
+HasCols = List[str] | pd.DataFrame
 Cols = List[str]
 
 # WORK-IN-PROGRESS
