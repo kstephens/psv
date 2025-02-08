@@ -98,7 +98,7 @@ class TableOut(FormatOut):
         )
 
 
-# pylint: disable-next=too-many-arguments
+# pylint: disable-next=too-many-arguments,too-many-positional-arguments
 def format_rows(
     writeable,
     inp,
@@ -127,7 +127,7 @@ def format_rows(
         format_row([row[col] for col in columns])
 
 
-# pylint: disable-next=too-many-arguments,disable-next=too-many-locals
+# pylint: disable-next=too-many-arguments,disable-next=too-many-locals,disable-next=too-many-positional-arguments
 def parse_rows(
     readable,
     field_sep=None,

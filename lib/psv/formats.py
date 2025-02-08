@@ -39,8 +39,10 @@ class FormatIn(FormatBase):
                 readable = BytesIO(inp.decode(encoding))
             else:
                 readable = StringIO(inp)
-        if isinstance(inp, Content):
+        elif isinstance(inp, Content):
             readable = inp.response()
+        else:
+            readable = None
         return self.format_in(readable, env)
 
 

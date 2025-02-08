@@ -12,7 +12,7 @@ class Content:
     body() - the bytes of HTTP body or file contents.
     """
 
-    # pylint: disable-next=too-many-arguments
+    # pylint: disable-next=too-many-arguments,disable-next=too-many-positional-arguments
     def __init__(self, url=None, headers=None, encoding=None, stdin=None, stdout=None):
         self.url = url_normalize(url)
         self.headers = headers or {}

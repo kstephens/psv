@@ -63,6 +63,7 @@ class Caster:
         # dateparser = lazy_import.load('dateparser')
 
     def cast_to(self, val, out_type: str, inp_type: Optional[str] = None):
+        # pylint: disable-next=not-callable
         return self.caster(out_type)(val, inp_type or type(val).__name__)
 
     def caster(self, out_type: str):
@@ -140,6 +141,7 @@ class Caster:
         return self.cast_seq_type(seq, seq.dtype.name, out_type)
 
     def cast_seq_type(self, seq, inp_type: str, out_type: str):
+        # pylint: disable-next=not-callable
         return self.seq_caster(out_type)(seq, inp_type)
 
     def seq_caster(self, out_type: str):
