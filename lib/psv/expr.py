@@ -38,7 +38,7 @@ class Eval(Command):
     STATEMENT ...        |  Statements.  Final statement may return a value.
 
     --columns=COL,...    |  Columns bound within STATEMENT.  Default: input columns.
-    --normalize, -n      |  Column bound within STATEMENT are normalized to r'^[a-z0-9_]+$'.  Default: False.
+    --normalize, -n      |  Columns bound within STATEMENT are normalized to r'^[a-z0-9_]+$'.  Default: False.
 
     $ psv in a.tsv // eval 'c *= 2'
     $ psv in a.tsv // eval 'return c > 0'

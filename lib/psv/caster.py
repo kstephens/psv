@@ -148,7 +148,7 @@ class Caster:
         cast_type = self.type_aliases.get(out_type, out_type)
         if fun := getattr(self, f"_cast_seq_to_{cast_type}", None):
             return fun
-        raise Exception("unknown cast for type {out_type!r}")
+        raise Exception(f"unknown cast for type {out_type!r}")
 
     def _cast_seq_to_str(self, seq, _inp_type: str):
         return pd.Series(seq.astype(str))

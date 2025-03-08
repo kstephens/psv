@@ -12,5 +12,21 @@
   "python.analysis.extraPaths": [
     "lib",
     "vendor/devdriven-python/lib"
+  ],
+  "cSpell.words": [
+    "agg_funs",
+    "aggfunc",
+    "astropy",
+    "descr",
+    "dframe",
+    "dtypes",
+    "FIPS",
+    "funs",
+    "hasobject",
+    "isnative",
+    "itemsize",
+    "iterrows",
+    "stddef",
+    "subdtype"
   ]
 }

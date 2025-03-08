@@ -6,7 +6,6 @@ from .util import select_columns, parse_col_or_index
 
 section("Manipulation", 30)
 
-
 @command
 class Range(Command):
     """
@@ -194,18 +193,18 @@ class Uniq(Command):
 @command
 class Sort(Command):
     """
-      sort - Sort rows by columns.
-      Aliases: s
+    sort - Sort rows by columns.
+    Aliases: s
 
-      Arguments:
+    Arguments:
 
-      COL    |  Sort by COL ascending
-      COL:-  |  Sort by COL descending
-      COL:+  |  Sort by COL ascending
+    COL    |  Sort by COL ascending
+    COL:-  |  Sort by COL descending
+    COL:+  |  Sort by COL ascending
 
-      Options:
+    Options:
 
-      --reverse, -r     |  Sort descending.
+    --reverse, -r     |  Sort descending.
 
     # Sort increasing:
     $ psv in a.tsv // seq i // sort c // md
@@ -231,9 +230,9 @@ class Sort(Command):
         default_order = "-" if self.opt("reverse") else "+"
         for col in specified_cols:
             order = default_order
-            if mtch := re.match(r"^([^:]+):([-+]?)$", col):
-                col = mtch[1]
-                order = mtch[2]
+            if m := re.match(r"^([^:]+):([-+]?)$", col):
+                col = m[1]
+                order = m[2]
             col = parse_col_or_index(imp_cols, col)
             cols.append(col)
             ascending.append(order != "-")
@@ -243,17 +242,17 @@ class Sort(Command):
 @command
 class Grep(Command):
     """
-      grep - Search for rows where columns match a regex.
+    grep - Search for rows where columns match a regex.
 
-      Aliases: g
+    Aliases: g
 
-      COL REGEX ...          |  Select rows where COL REGEX pairs match.
-      REGEX                  |  Select rows where REGEX is applied to all columns.
-      --all                  |  All patterns must match.
-      --any                  |  Any pattern must match.
-      --fixed-strings, -F    |  Match fixed string.
-      --ignore-case, -i      |  Ignore case distinctions.
-      --invert-match, -v     |  Invert the sense of matching, to select non-matching rows.
+    COL REGEX ...          |  Select rows where COL REGEX pairs match.
+    REGEX                  |  Select rows where REGEX is applied to all columns.
+    --all                  |  All patterns must match.
+    --any                  |  Any pattern must match.
+    --fixed-strings, -F    |  Match fixed string.
+    --ignore-case, -i      |  Ignore case distinctions.
+    --invert-match, -v     |  Invert the sense of matching, to select non-matching rows.
 
     # Match columns by regex:
     $ psv in a.tsv // grep d 'x' // md
@@ -327,14 +326,15 @@ class Grep(Command):
 @command
 class Translate(Command):
     r"""
-      translate - Translate characters.
-      aliases: tr
+    translate - Translate characters.
 
-      Similar to Unix tr command.
+    Aliases: tr
 
-      SRC DST COL,...  |  Map chars from SRC to DST in each COL.
-      -d DEL COL,...   |  Delete chars in DEL in each COL.
-      --delete, -d     |  Delete characters.
+    Similar to Unix tr command.
+
+    SRC DST COL,...  |  Map chars from SRC to DST in each COL.
+    -d DEL COL,...   |  Delete chars in DEL in each COL.
+    --delete, -d     |  Delete characters.
 
     # Change characters in specific field:
     $ psv in us-states.txt // -table --header --fs="\s{2,}" // tr ',' '_' Population // head // md

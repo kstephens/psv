@@ -12,6 +12,8 @@ class Count(Command):
     """
     count - Count of unique column values.
 
+    Aliases: freq
+
     COL ...        |  Columns to group by.  Default: ALL COLUMNS.
     --column=NAME  |  Default: "count"
 
@@ -31,7 +33,7 @@ class Count(Command):
         cols = list(inp.columns)
         if count_col in cols:
             raise AttributeError(
-                f"--column={count_col!r} conflics with columns {cols!r}"
+                f"--column={count_col!r} conflicts with columns {cols!r}"
             )
         group_cols = select_columns(inp, split_flat(self.args, ","), check=True)
         if not group_cols:
@@ -43,28 +45,28 @@ class Count(Command):
 class Summary(Command):
     # pylint: disable=line-too-long
     r"""
-  summary - Summary of column values.
+    summary - Summary of column values.
 
-  COL,... [STAT,...] [GROUP-BY,...]    |  COLs to summarize STATs grouped by GROUP-BY
+    COL,... [STAT,...] [GROUP-BY,...]    |  COLs to summarize STATs grouped by GROUP-BY
 
-  COL,...       |  Any numeric columns separated by ",".
-  STAT,...      |  One or more of: 'count,sum,min,max,mean,median,std,skew'.\
-  See Pandas "DataFrameGroupBy" documentation.  Default: is all of them.
-  GROUP-BY,...  |  Any column not in the COL list.  Default: is all of them.
+    COL,...       |  Any numeric columns separated by ",".
+    STAT,...      |  One or more of: 'count,sum,min,max,mean,median,std,skew'.\
+    See Pandas "DataFrameGroupBy" documentation.  Default: is all of them.
+    GROUP-BY,...  |  Any column not in the COL list.  Default: is all of them.
 
-  # Summary of transfers by Payer and Payee:
-  $ psv in transfers.csv // summary Amount '*' Payer,Payee // md
+    # Summary of transfers by Payer and Payee:
+    $ psv in transfers.csv // summary Amount '*' Payer,Payee // md
 
-  # Summary of transfers by Payer:
-  $ psv in transfers.csv // summary Amount count,sum Payer // md
+    # Summary of transfers by Payer:
+    $ psv in transfers.csv // summary Amount count,sum Payer // md
 
-  # Sum of Fee by Payee:
-  $ psv in transfers.csv // summary Fee sum Payee // md
+    # Sum of Fee by Payee:
+    $ psv in transfers.csv // summary Fee sum Payee // md
 
-  # Summary of all transfer Ammount and Fee:
-  $ psv in transfers.csv // cut Amount,Fee // summary Amount,Fee // md
+    # Summary of all transfer Amount and Fee:
+    $ psv in transfers.csv // cut Amount,Fee // summary Amount,Fee // md
 
-  """
+    """
 
     # pylint: enable=line-too-long
     def xform(self, inp, _env):
@@ -88,7 +90,7 @@ class Summary(Command):
 @command
 class Stats(Command):
     """
-      stats - Table of column names and basic statistics.
+    stats - Table of column names and basic statistics.
 
     $ psv in a.tsv // stats // cols // cut name,dtype.name // md
 
@@ -100,8 +102,8 @@ class Stats(Command):
         return pd.DataFrame.from_records(get_dataframe_info(inp))
 
 
-def get_dataframe_info(dframe):
-    return [get_dataframe_col_info(dframe, col) for col in dframe.columns]
+def get_dataframe_info(df):
+    return [get_dataframe_col_info(df, col) for col in df.columns]
 
 
 def get_dataframe_col_info(df, col):

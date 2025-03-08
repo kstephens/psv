@@ -30,9 +30,9 @@ def select_columns(
     for arg in args:
         action = "+"
         col, opts = parse_column_and_opt(inp_cols, arg)
-        if mtch := opts and re.match(r"^([-+]?)(?::(.*))?$", opts):
-            action = mtch[1]
-            opts = mtch[2]
+        if m := opts and re.match(r"^([-+]?)(?::(.*))?$", opts):
+            action = m[1]
+            opts = m[2]
         col_rx = glob_to_rx(col)
         matched_cols = [col for col in inp_cols if re.match(col_rx, col)]
         if not check and not matched_cols:

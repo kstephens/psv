@@ -64,9 +64,9 @@ def select_columns(
     selected: Cols = []
     for col in args:
         action = "+"
-        if mtch := re.match(r"^([^:]+):([-+]?)$", col):
-            col = mtch.group(1)
-            action = mtch.group(2)
+        if m := re.match(r"^([^:]+):([-+]?)$", col):
+            col = m.group(1)
+            action = m.group(2)
         col = parse_col_or_index(inp_cols, col)
         col_rx = glob_to_rx(col)
         cols = [col for col in inp_cols if re.match(col_rx, col)]

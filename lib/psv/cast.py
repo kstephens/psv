@@ -18,7 +18,7 @@ class Cast(Command):
   Arguments:
 
   COL:TYPES:... ...      |  Cast COL by TYPES.
-  DST=SRC:TYPES:... ...  |  Set DST column to coersion of SRC.
+  DST=SRC:TYPES:... ...  |  Set DST column to coercion of SRC.
 
   TYPES:
 
