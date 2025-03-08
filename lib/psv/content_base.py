@@ -1,4 +1,4 @@
-from typing import Any, Optional, Iterable, Dict
+from typing import Any, Iterable, Dict
 from abc import ABC, abstractmethod
 
 # from dataclasses import dataclass, field
@@ -52,10 +52,10 @@ class ContentImpl(ABC):
 
 class Content:
     _impl: ContentImpl
-    _as_str: Optional[str]
-    _as_bytes: Optional[bytes]
-    _as_dataframe: Optional[pd.DataFrame]
-    _as_iterable: Optional[Iterable]
+    _as_str: str | None
+    _as_bytes: bytes | None
+    _as_dataframe: pd.DataFrame | None
+    _as_iterable: Iterable | None
 
     def __init__(self, impl: ContentImpl):
         self._impl = impl
@@ -148,9 +148,9 @@ class ContentDataFrame(ContentImpl):
 class ContentURL(ContentImpl):
     url: StrOrUrl
     headers: Dict[str, str] = {}
-    encoding: Optional[str] = None
-    _body: Optional[bytes] = None
-    _content: Optional[bytes] = None
+    encoding: str | None = None
+    _body: bytes | None = None
+    _content: bytes | None = None
     _response: Any = None
 
     def as_str(self) -> str:

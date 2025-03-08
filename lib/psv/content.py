@@ -1,4 +1,3 @@
-from typing import Optional  # Any, , Iterable, Dict
 from pathlib import Path
 from devdriven.tempfile import tempfile_from_readable
 from devdriven.url import url_normalize, url_is_file, url_is_stdio
@@ -36,7 +35,7 @@ class Content:
         return url_is_stdio(self.url)
 
     @property
-    def encoding(self) -> Optional[str]:
+    def encoding(self) -> str | None:
         return self._encoding
 
     @encoding.setter

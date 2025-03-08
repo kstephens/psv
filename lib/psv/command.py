@@ -1,4 +1,4 @@
-from typing import Any, Optional, Union, List, Type
+from typing import Any, List, Type
 import re
 import devdriven.cli.command as cmd
 from devdriven.cli.descriptor import Descriptor
@@ -27,9 +27,7 @@ class Command(cmd.Command):
         return self.command_descriptor().options.opt_name_normalize(name) or name
 
 
-def main_make_xform(
-    main, klass_or_name: Union[str, Type], argv: Argv
-) -> Optional[Command]:
+def main_make_xform(main, klass_or_name: str | Type, argv: Argv) -> Command | None:
     assert main
     # if isinstance(klass_or_name, str):
     #   macros = main.config.opt('macro', {})
@@ -46,7 +44,7 @@ def main_make_xform(
     return None
 
 
-def find_format(path: str, klass: Type) -> Optional[Type]:
+def find_format(path: str, klass: Type) -> Type | None:
     short_suffix, long_suffix = short_and_long_suffix(path)
     valid_descs = [dsc for dsc in app.descriptors if issubclass(dsc.klass, klass)]
     for dsc in valid_descs:
@@ -58,7 +56,7 @@ def find_format(path: str, klass: Type) -> Optional[Type]:
     return None
 
 
-def suffixes(dsc: Descriptor) -> Optional[str]:
+def suffixes(dsc: Descriptor) -> str | None:
     return dsc.metadata.get("suffixes")
 
 
@@ -72,7 +70,7 @@ def suffix_list(dsc: Descriptor) -> List[str]:
     return result
 
 
-def preferred_suffix(dsc: Descriptor) -> Optional[str]:
+def preferred_suffix(dsc: Descriptor) -> str | None:
     suf = suffix_list(dsc)
     return suf[0] if suf else None
 

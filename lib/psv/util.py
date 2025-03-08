@@ -1,9 +1,9 @@
-from typing import Union, List
+from typing import List
 import re
 from devdriven.util import split_flat, get_safe, glob_to_rx
 import pandas as pd  # type: ignore
 
-HasCols = Union[List[str], pd.DataFrame]
+HasCols = List[str] | pd.DataFrame
 Cols = List[str]
 
 
