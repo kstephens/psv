@@ -25,6 +25,7 @@ TYPES = [
     "seconds",
     "ipaddress",
     "hostname",
+    "null",
 ]
 
 TYPE_ALIASES = {
@@ -37,6 +38,8 @@ TYPE_ALIASES = {
     "sec": "seconds",
     "td": "timedelta",
     "dt": "datetime",
+    "time": "datetime",
+    "t": "datetime",
     "ip": "ipaddress",
     "ipaddr": "ipaddress",
     "epoch": "unix_epoch",
@@ -83,6 +86,9 @@ class Caster:
 
     def _cast_to_float(self, val, _inp_type: str):
         return cast_float(val)
+
+    def _cast_to_null(self, val, _inp_type: str):
+        return cast_null(val)
 
     def _cast_to_unix_epoch(self, val, inp_type: str):
         if inp_type in NUMERIC:
@@ -162,6 +168,9 @@ class Caster:
     def _cast_seq_to_float(self, seq, _inp_type: str):
         return pd.to_numeric(seq, downcast="float", errors="coerce")
 
+    def _cast_seq_to_null(self, seq, _inp_type: str):
+        return pd.Series(seq.apply(cast_null))
+
     def _cast_seq_to_unix_epoch(self, seq, inp_type: str):
         if inp_type in NUMERIC:
             return seq
@@ -233,6 +242,12 @@ def cast_float(val):
     except ValueError:
         return None
 
+def cast_null(val):
+    if isinstance(val, str) and val.upper() in null_strings:
+        return None
+    return val
+
+null_strings = {"NA", "NAN", "N/A"}
 
 def parse_datetime64(val):
     try:

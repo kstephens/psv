@@ -3,6 +3,7 @@ from devdriven.pandas import count_by, summarize
 import pandas as pd
 from .command import Command, section, command
 from .util import get_safe, select_columns
+from .column import is_quasi_scalar
 
 section("Summaries", 40)
 
@@ -108,8 +109,10 @@ def get_dataframe_info(df):
 
 def get_dataframe_col_info(df, col):
     c = df[col]
+    dtype = c.dtype
     cna = c.dropna()
-    nrows = len(df.index)
+    n_rows = len(df.index)
+    # print(f"{col=} {type(c)=} {dtype.name=} {type(c.dtype)=}")
 
     def try_this(c, f, default=None):
         if c.empty:
@@ -120,12 +123,20 @@ def get_dataframe_col_info(df, col):
         except Exception:
             return None
 
+    def if_quasi_scalar(f):
+        if is_quasi_scalar(c):
+            try_this(c, f, None)
+        else:
+            return None
+
     return {
         # pylint: disable=unnecessary-lambda
         "name": col,
         "count": c.count(),
+        "count_null": c.isnull().sum(),
+        "sum": if_quasi_scalar(lambda: cna.sum()),
         "first": try_this(c, lambda: c.iloc[0]),
-        "middle": try_this(c, lambda: c[int(nrows / 2)]),
+        "middle": try_this(c, lambda: c[int(n_rows / 2)]),
         "last": try_this(c, lambda: c.iloc[-1]),
         "min": try_this(cna, lambda: cna.min()),
         "mean": try_this(cna, lambda: cna.mean()),
@@ -137,3 +148,4 @@ def get_dataframe_col_info(df, col):
         "q75": try_this(cna, lambda: cna.quantile(0.75)),
         # pylint: enable=unnecessary-lambda
     }
+

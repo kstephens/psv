@@ -289,7 +289,7 @@ class Grep(Command):
     def add_match(self, inp, col, pat, combine_default):
         if self.opt("fixed-strings"):
             pat = re.escape(pat)
-        pat = f".*{pat}"
+        # pat = f".*{pat}"
         if self.opt("case-insensitive"):
             pat = f"(?i){pat}"
         rx = re.compile(pat)
@@ -307,7 +307,7 @@ class Grep(Command):
             # https://stackoverflow.com/a/52065957
             str_seq = inp[col].astype(str, errors="ignore").str
             # ic(str_seq)
-            match = str_seq.match(rx, na=False)
+            match = str_seq.search(rx, na=False)
         except (AttributeError, TypeError) as exc:
             self.log("warning", f"cannot match {pat!r} against column {col!r} : {exc}")
             return
@@ -353,12 +353,34 @@ class Translate(Command):
             args = self.args[2:]
         cols = select_columns(inp, split_flat(args, ","), check=True, default_all=True)
 
-        def xlate(x):
+        def translate(x):
             return str(x).translate(trans)
 
         out = inp.copy()
         for col in cols:
-            out[col] = out[col].apply(xlate)
+            out[col] = out[col].apply(translate)
+        return out
+
+
+@command
+class Transpose(Command):
+    """
+    transpose - Transpose
+
+    Aliases: xp
+    """
+    def xform(self, inp, _env):
+        col = self.opt("column", "column")
+        row_name = self.opt("row_name", "row_%02d")
+        cols = list(inp.columns)
+        if col in cols:
+            raise AttributeError(
+                f"--column={col!r} conflicts with columns {cols!r}"
+            )
+        out = inp.transpose()
+        out.reset_index(drop=True, inplace=True)
+        out.columns = [row_name % (i + 1) for i in range(len(inp))]
+        out.insert(0, col, cols)
         return out
 
 

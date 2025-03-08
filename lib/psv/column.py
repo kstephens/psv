@@ -95,3 +95,23 @@ def parse_col_or_index(cols: HasCols, arg: str, check=False) -> str:
     if check and not col:
         raise Exception(f"unknown column: {col!r} : available {cols!r}")
     return col
+
+def is_numeric(col: pd.core.series.Series) -> bool:
+    type_name = col.dtype.name
+    return (
+        type_name.startswith("int") or
+        type_name.startswith("float")
+    )
+
+def is_quasi_numeric(col: pd.core.series.Series) -> bool:
+    return (
+        is_numeric(col) or
+        col.dtype.name.startswith("datetime") or
+        col.dtype.name.startswith("timedelta")
+    )
+
+def is_quasi_scalar(col: pd.core.series.Series) -> bool:
+    return (
+        is_numeric(col) or
+        col.dtype.name.startswith("timedelta")
+    )

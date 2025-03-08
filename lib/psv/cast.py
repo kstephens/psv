@@ -1,4 +1,4 @@
-from .caster import Caster, TYPE_ALIASES
+from .caster import Caster, null_strings, TYPE_ALIASES
 from .command import Command, section, command
 from .util import parse_conversions
 
@@ -26,6 +26,7 @@ class Cast(Command):
 * `int`         -  `int64`.
 * `float`       -  `float64`.
 * `str`         -  `str`.
+* `null`        -  Convert strings {', '.join(sorted(map(repr, null_strings)))!r} to null.
 * `timedelta64` -  `timedelta64[ns]`.
 * `datetime`    -  `datetime`.
 * `unix_epoch`  -  Seconds since 1970.
